@@ -120,26 +120,168 @@ Version Control: Git & GitHub
 
 ## 📸 Screenshots
 
+1.About Us (top) - Light mode : 
+Screenshots\About us (top) - Light mode.png
 
-1. Home Page (Light Mode)
-![Home Page(Light)](screenshots/intro(light).png)
+2.About us(footer) - light mode :
+Screenshots\About us(footer) - light mode.png
 
-2.  Home Page (Dark Mode)
-![Home Page(Dark)](screenschots/intro(dark).png)
+3.About us(footer)-dark mode :
+Screenshots\About us(footer)-dark mode.png
 
-3. Login Page
-![Login Page](screenshots/login.png)
+4.About us(middle)- light mode :
+Screenshots\About us(middle)- light mode.png
 
-4. Sign Up Page
-![Sign Up Page](screenshots/signup.png)
+5.About us(middle)-dark mode :
+Screenshots\About us(middle)-dark mode.png
 
-5. Internship Page
-![Internship Page](screenshots/internship.png)
+6.About Us(top)-dark mode :
+Screenshots\About Us(top)-dark mode.png
 
-6. Course Page
-![Course Page](screenshots/course.png)
+7.Blog - dark mode:
+Screenshots\Blog - dark mode.png
 
----
+8.Blog - light mode:
+Screenshots\Blog - light mode.png
+
+9.Bookmark(bottom)- light mode:
+Screenshots\Bookmark(bottom)- light mode.png
+
+10.Bookmark(bottom)-dark mode :
+Screenshots\Bookmark(bottom)-dark mode.png
+
+11.Bookmark(top)-dark mode:
+Screenshots\Bookmark(top)-dark mode.png
+
+12.Bookmark(top)-light mode:
+Screenshots\Bookmark(top)-light mode.png
+
+13.Campus Amb(bottom)-dark mode:
+Screenshots\Campus Amb(bottom)-dark mode.png
+
+14.Campus Amb(bottom)-light mode:
+Screenshots\Campus Amb(bottom)-light mode.png
+
+15.Campus Amb(middle)- dark mode:
+Screenshots\Campus Amb(middle)- dark mode.png
+
+16.Campus Amb(middle)- light mode:
+Screenshots\Campus Amb(middle)- light mode.png
+
+17.Campus Amb(top)- dark mode:
+Screenshots\Campus Amb(top)- dark mode.png
+
+18.Campus Amb(top)-light mode :
+Screenshots\Campus Amb(top)-light mode.png
+
+19.certificates - light mode:
+Screenshots\certificates - light mode.png
+
+20.Courses(bottom)-dark mode:
+Screenshots\Courses(bottom)-dark mode.png
+
+21.Courses(bottom)-light mode:
+Screenshots\Courses(bottom)-light mode.png
+
+22.Courses(middle)-dark mode:
+Screenshots\Courses(middle)-dark mode.png
+
+23.Courses(middle)-light mode:
+Screenshots\Courses(middle)-light mode.png
+
+24.Courses(top)- light mode:
+Screenshots\Courses(top)- light mode.png
+
+25.Courses(top)-dark mode:
+Screenshots\Courses(top)-dark mode.png
+
+26.Home page (footer )- dark mode :
+Screenshots\Home page (footer )- dark mode.png
+
+27.Home page (footer) - light mode:
+Screenshots\Home page (footer) - light mode.png
+
+28.Home page (middle 2) - dark mode:
+Screenshots\Home page (middle 2) - dark mode.png
+
+29.Home page (footer) - light mode:
+Screenshots\Home page (footer) - light mode.png
+
+30.Home page (middle 2) - dark mode:
+Screenshots\Home page (middle 2) - dark mode.png
+
+31.Home page (middle) - Dark mode:
+Screenshots\Home page (middle) - Dark mode.png
+
+32.Home Page (middle) - Light mode:
+Screenshots\Home Page (middle) - Light mode.png
+
+33.Home page (middle2)-light mode:
+Screenshots\Home page (middle2)-light mode.png
+
+34.Home page (middlee) - Light mode:
+Screenshots\Home page (middlee) - Light mode.png
+
+35.Home page (testimonial) -dark mode:
+Screenshots\Home page (testimonial) -dark mode.png
+
+36.Home page (testimonial) -light mode:
+Screenshots\Home page (testimonial) -light mode.png
+
+37.Home page (Top) - Dark mode:
+Screenshots\Home page (Top) - Dark mode.png
+
+38.Home page (Top) - Light mode:
+Screenshots\Home page (Top) - Light mode.png
+
+39.Home page(middlee)- Dark mode:
+Screenshots\Home page(middlee)- Dark mode.png
+
+40.Internship(bottom)- dark mode:
+Screenshots\Internship(bottom)- dark mode.png
+
+41.Internship(bottom)-light mode:
+Screenshots\Internship(bottom)-light mode.png
+
+42.Internship(top)-dark mode:
+Screenshots\Internship(top)-dark mode.png
+
+43.Internship(top)-light mode:
+Screenshots\Internship(top)-light mode.png
+
+44.log in - light mode:
+Screenshots\log in - light mode.png
+
+45.projects(bottom)-dark mode:
+Screenshots\projects(bottom)-dark mode.png
+
+46.projects(bottom)-light mode:
+Screenshots\projects(bottom)-light mode.png
+
+47.projects(middle)-dark mode:
+Screenshots\projects(middle)-dark mode.png
+
+48.projects(middle)-light mode:
+Screenshots\projects(middle)-light mode.png
+
+49.projects(top)-dark mode:
+Screenshots\projects(top)-dark mode.png
+
+50.projects(top)-light mode:
+Screenshots\projects(top)-light mode.png
+
+51.Services(bottom)-light mode:
+Screenshots\Services(bottom)-light mode.png
+
+52.Services(middle)- light mode:
+Screenshots\Services(middle)- light mode.png
+
+53.Services(top)-light mode:
+Screenshots\Services(top)-light mode.png
+
+54.sign up - light mode:
+Screenshots\sign up - light mode.png
+
 ## 🌐 Community & Support
 💬 Join the GSSoC community discussions.
 🐛 Report bugs or request features via GitHub Issues.
