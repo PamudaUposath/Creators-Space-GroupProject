@@ -112,7 +112,7 @@ if (toggleTechFilters && techStackFilters) {
 
     try {
       // Load projects from JSON file
-      const jsonResponse = await fetch('./src/data/projects.json');
+      const jsonResponse = await fetch('../src/data/projects.json');
       const jsonProjects = await jsonResponse.json();
 
       // Load additional projects from GitHub API

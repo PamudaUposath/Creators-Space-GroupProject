@@ -1,6 +1,6 @@
 # 🌐 Creators-Space
 
-<img src="./assets/images/logo.png" alt="Creators-Space Logo" height="100px" />
+<img src="../assets/images/logo.png" alt="Creators-Space Logo" height="100px" />
 
 
 Creators-Space is a modern tech-learning platform created to empower students and professionals through high-quality content and career-oriented resources.

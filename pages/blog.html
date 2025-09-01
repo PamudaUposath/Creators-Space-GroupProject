@@ -5,10 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blog | Creators-Space</title>
-  <link rel="stylesheet" href="./src/css/style.css" />
-  <link rel="stylesheet" href="./src/css/utils.css">
-  <link rel="stylesheet" href="./src/css/responsive.css" />
-  <link rel="stylesheet" href="./src/css/blog.css" />
+  <link rel="stylesheet" href="../src/css/style.css" />
+  <link rel="stylesheet" href="../src/css/utils.css">
+  <link rel="stylesheet" href="../src/css/responsive.css" />
+  <link rel="stylesheet" href="../src/css/blog.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 </head>
@@ -17,16 +17,16 @@
   <!-- Navbar -->
   <div class="navbar">
     <h1><a href="./">
-        <img id="navbar-logo" width="80px" src="./assets/images/logo-nav-light.png" alt="logo Creators-Space">
+        <img id="navbar-logo" width="80px" src="../assets/images/logo-nav-light.png" alt="logo Creators-Space">
         <br>Creators-Space</a></h1>
     <div class="nav-links align-items-center">
-      <a href="index.html">Home</a>
+      <a href="../index.html">Home</a>
       <a href="about.html">About Us</a>
       <a href="courses.html">Courses</a>
-      <a href="services.html" class="active">Services</a>
+      <a href="services.html">Services</a>
       <a href="internship.html">Internship</a>
       <a href="campus-ambassador.html">Campus Ambassador</a>
-      <a href="blog.html">Blog</a>
+      <a href="blog.html" class="active">Blog</a>
       <a href="bookmarked.html">BookMarks</a>
       <a href="projects.html">Projects</a>
       <!-- Navbar -->
@@ -77,7 +77,7 @@
 
   <section class="blog-container">
     <div class="blog-card">
-      <img src="assets/images/blogpage/jsin30days.png" alt="Blog thumbnail" />
+      <img src="../assets/images/blogpage/jsin30days.png" alt="Blog thumbnail" />
       <div class="blog-content">
         <span class="blog-category">JavaScript</span>
         <div class="blog-title">Mastering JavaScript in 30 Days</div>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="blog-card">
-      <img src="assets/images/blogpage/ui-ux.jpeg" alt="Blog thumbnail" />
+      <img src="../assets/images/blogpage/ui-ux.jpeg" alt="Blog thumbnail" />
       <div class="blog-content">
         <span class="blog-category">UI/UX</span>
         <div class="blog-title">UI/UX Trends to Watch in 2025</div>
@@ -99,7 +99,7 @@
     </div>
 
     <div class="blog-card">
-      <img src="assets/images/blogpage/techstartup.jpeg" alt="Blog thumbnail" />
+      <img src="../assets/images/blogpage/techstartup.jpeg" alt="Blog thumbnail" />
       <div class="blog-content">
         <span class="blog-category">StartUp</span>
         <div class="blog-title">How to Launch Your Tech Startup</div>
@@ -112,7 +112,7 @@
 
   <footer class="footer">
     <div class="social">
-      <h1><img width="80px" src="./assets/images/logo.png" alt="logo Anurag Vishwakarma's Creators-Space">
+      <h1><img width="80px" src="../assets/images/logo.png" alt="logo Anurag Vishwakarma's Creators-Space">
         <br>Creators-Space
       </h1>
       <h3>Social Media</h3>
@@ -139,9 +139,9 @@
     </div>
   </footer>
 
-  <script src="./src/js/navbar.js"></script>
-  <script src="./src/js/auth.js"></script>
-  <script src="./src/js/utils.js"></script>
+  <script src="../src/js/navbar.js"></script>
+  <script src="../src/js/auth.js"></script>
+  <script src="../src/js/utils.js"></script>
 
   <!-- Dark mode + logo switch -->
   <script>
@@ -151,9 +151,9 @@
 
     function updateLogo() {
       if (body.classList.contains('dark')) {
-        logo.src = './assets/images/logo-nav-dark.png';
+        logo.src = '../assets/images/logo-nav-dark.png';
       } else {
-        logo.src = './assets/images/logo-nav-light.png';
+        logo.src = '../assets/images/logo-nav-light.png';
       }
     }
 

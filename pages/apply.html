@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Apply Now | Creators-Space</title>
-  <link rel="stylesheet" href="./src/css/style.css">
-  <link rel="stylesheet" href="./src/css/utils.css">
-  <link rel="stylesheet" href="./src/css/responsive.css">
+  <link rel="stylesheet" href="../src/css/style.css">
+  <link rel="stylesheet" href="../src/css/utils.css">
+  <link rel="stylesheet" href="../src/css/responsive.css">
   <style>
     body {
       background: linear-gradient(135deg, #e0f7fa, #fff3e0);
@@ -130,7 +130,7 @@
 
     async function loadCourses() {
       try {
-        const res = await fetch("./src/data/internship.json");
+        const res = await fetch("../src/data/internship.json");
         if (!res.ok) throw new Error("Failed to load internships");
 
         const data = await res.json();
@@ -191,7 +191,7 @@
       if (valid) {
         document.getElementById("success-msg").style.display = "block";
         setTimeout(() => {
-          window.location.href = "index.html";
+          window.location.href = "../index.html";
         }, 2000);
       }
     });

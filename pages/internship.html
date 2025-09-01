@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Internships | Creators-Space</title>
- <link rel="stylesheet" href="./src/css/courses.css">
- <link rel="stylesheet" href="./src/css/style.css">
-   <link rel="stylesheet" href="./src/css/utils.css">
- <link rel="stylesheet" href="./src/css/internship.css">
- <link rel="stylesheet" href="./src/css/responsive.css">
+ <link rel="stylesheet" href="../src/css/courses.css">
+ <link rel="stylesheet" href="../src/css/style.css">
+   <link rel="stylesheet" href="../src/css/utils.css">
+ <link rel="stylesheet" href="../src/css/internship.css">
+ <link rel="stylesheet" href="../src/css/responsive.css">
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -17,14 +17,14 @@
   <!-- Navbar -->
   <div class="navbar">
     <h1><a href="./">
-        <img id="navbar-logo" width="80px" src="./assets/images/logo-nav-light.png" alt="logo Creators-Space">
+        <img id="#navbar-logo" width="80px" src="../assets/images/logo-nav-light.png" alt="logo Creators-Space">
         <br>Creators-Space</a></h1>
     <div class="nav-links align-items-center">
-      <a href="index.html">Home</a>
+      <a href="../index.html">Home</a>
       <a href="about.html">About Us</a>
       <a href="courses.html">Courses</a>
-      <a href="services.html" class="active">Services</a>
-      <a href="internship.html">Internship</a>
+      <a href="services.html">Services</a>
+      <a href="internship.html" class="active">Internship</a>
       <a href="campus-ambassador.html">Campus Ambassador</a>
       <a href="blog.html">Blog</a>
        <a href="bookmarked.html">BookMarks</a>
@@ -142,7 +142,7 @@
   <!-- Footer -->
     <footer class="footer">
         <div class="social">
-            <h1><img width="80px" src="./assets/images/logo.png" alt="logo Anurag Vishwakarma's Creators-Space">
+            <h1><img width="80px" src="../assets/images/logo.png" alt="logo Anurag Vishwakarma's Creators-Space">
               <br>Creators-Space</h1>
             <h3>Social Media</h3>
             <div class="all-social-links">
@@ -179,8 +179,8 @@
         </div>
     </footer>
 
-   <script src="./src/js/navbar.js"></script>
-   <script src="./src/js/utils.js"></script>
+   <script src="../src/js/navbar.js"></script>
+   <script src="../src/js/utils.js"></script>
 
 
   <!-- Loading Internship dynamically from data/internship.json -->
@@ -188,7 +188,7 @@
   async function loadInternships() {
     const container = document.getElementById("internship-list");
     try {
-      const res = await fetch("./src/data/internship.json");
+      const res = await fetch("../src/data/internship.json");
       if (!res.ok) throw new Error("Failed to fetch");
 
       const internships = await res.json();
@@ -247,9 +247,9 @@
     
     // Change navbar logo based on theme
     if (body.classList.contains('dark')) {
-      navbarLogo.src = "./assets/images/logo-nav-dark.png"; // Dark mode logo
+      navbarLogo.src = "../assets/images/logo-nav-dark.png"; // Dark mode logo
     } else {
-      navbarLogo.src = "./assets/images/logo-nav-light.png"; // Light mode logo
+      navbarLogo.src = "../assets/images/logo-nav-light.png"; // Light mode logo
 
     }
   });
@@ -264,7 +264,7 @@
     });
   });
 </script>
-<script src="./src/js/auth.js"></script>
+<script src="../src/js/auth.js"></script>
 
 </body>
 </html>
