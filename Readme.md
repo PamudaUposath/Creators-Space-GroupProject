@@ -70,6 +70,19 @@ cd Creators-Space
 # Open in browser
 Open index.html in your preferred web browser
 ```
+## 🌿 Branch Structure
+
+Our project follows a clear Git workflow for collaboration:
+
+| Branch Name          | Purpose                                           |
+|---------------------|--------------------------------------------------|
+| main                | Stable production-ready code                     |
+| development         | Active development and integration of features  |
+| feature/<feature>   | Individual feature branches                      |
+| docs/<doc-update>   | Documentation updates                            |
+
+> 💡 For your contribution, create a branch from `development` following the naming convention above.
+
 
 ## 👨‍💻 Developer
 
@@ -155,3 +168,4 @@ Please check out our CONTRIBUTING.md for guidelines.
 ## 🛡️ License
 
 © 2024 - 2025 Creators-Space. All rights reserved.
+
