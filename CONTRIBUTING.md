@@ -82,3 +82,18 @@ cd Creators-Space
 # Open in browser
 Open index.html in your preferred web browser
 ```
+
+## How to Contribute Without Coding
+You can support the project in many non-coding ways:
+- **Testing:** Run the project and report any bugs or unexpected behavior.
+- **Issue Creation:** Open GitHub Issues to document problems, errors, or suggestions.
+- **Documentation:** Fix typos, improve clarity, or add missing instructions.
+- **Screenshots / Visuals:** Add or update screenshots, diagrams, or illustrations.
+- **Ideas & Feedback:** Suggest improvements for features, design, or usability.
+- **Reviewing PRs:** Read other people’s contributions and give constructive feedback.
+
+## Workflow
+1. Fork this repository.
+2. Create a new branch for your changes.
+   ```bash
+   git checkout -b docs/non-coder-contribution
