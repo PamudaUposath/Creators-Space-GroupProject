@@ -290,9 +290,27 @@ Screenshots\sign up - light mode.png
 
 ## 🤝 Contributing
 We welcome contributions from the community!
+
 Please check out our CONTRIBUTING.md for guidelines.
 
 ---
+
+## FAQ
+
+**Q1: I can’t run the project, what should I do?**  
+A: Double-check the setup instructions in this README. If problems persist, open an Issue and describe the steps you followed.
+
+**Q2: Do I need coding knowledge to contribute?**  
+A: No. You can help by testing, improving documentation, reporting issues, or suggesting ideas.
+
+**Q3: What if I find a bug?**  
+A: Please create a GitHub Issue with steps to reproduce the problem.
+
+**Q4: Can I suggest new features?**  
+A: Yes, open a Feature Request issue and describe your idea.
+
+**Q5: Where can I ask for help?**  
+A: You can open a Discussion or Issue in this repository if you’re stuck.
 
 ## 🛡️ License
 
