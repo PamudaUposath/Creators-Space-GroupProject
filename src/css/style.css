@@ -380,126 +380,157 @@ body.dark #our-course-h1:hover {
 
 
 /* footer CSS */
+/* Modern Footer CSS */
 .footer {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: space-around;
-  background-color: black;
-  color: white;
-  padding: 20px;
-  border-start-start-radius: 10px;
-  border-start-end-radius: 10px;
+  align-items: flex-start;
+  background: #111; /* darker modern black */
+  color: #fff;
+  padding: 20px 20px 20px 20px;
   position: relative;
-  padding-bottom: 30px !important;
+  font-family: 'Segoe UI', sans-serif;
+  align-items: center;
 }
 
+/* Headings */
 .footer h3 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Links */
 .footer a {
-  color: white;
+  color: #ccc;
   text-decoration: none;
-  margin: 5px;
+  transition: color 0.3s ease;
 }
 
 .footer a:hover {
-  color: #f0f0f0;
+  color: #1e90ff;
 }
 
+/* Social section */
 .footer .social {
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  gap: 15px;
 }
 
-.footer .social h1 {
-  font-size: 36px;
-  font-weight: bold;
-  color: white;
+.footer .social img {
+  width: 60px;
   margin-bottom: 10px;
-  text-align: center;
+}
+
+.footer .all-social-links {
+  display: flex;
+  gap: 10px;
 }
 
 .footer .social svg {
   width: 40px;
   height: 40px;
-  object-fit: cover;
-  margin: 5px;
   border-radius: 50%;
-  background-color: white;
-  border: 1px solid white;
-  transition: transform 0.3s ease, color 0.3s ease;
+  background: #222;
+  padding: 8px;
+  transition: all 0.3s ease;
 }
 
 .footer .social svg:hover {
-  transform: scale(1.05);
-  background-color: rgba(245, 244, 244, 0.466);
-  border: 1px solid rgba(245, 244, 244, 0.466);
-  transition: transform 0.3s ease, color 0.3s ease;
+  transform: scale(1.1);
+  background: #1e90ff;
+  fill: #fff;
 }
 
+/* Contact Section */
 .footer .contact {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-.contact a {
-  color: #b3b3b3;
-  text-decoration: none;
+.footer .contact p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
 }
 
-.contact a:hover {
-  text-decoration: underline;
-  color: white;
+.footer .contact a:hover {
+  color: #1e90ff;
 }
 
-#envelope-icon, #call-icon {
-  margin-right: 10px;
-}
-
+/* Form Section */
 .footer .form {
   display: flex;
   flex-direction: column;
-  padding-bottom: 30px;
+  gap: 10px;
+  width: 250px;
 }
 
 .footer .form input,
 .footer .form textarea {
+  padding: 10px 15px;
+  border-radius: 8px;
   border: none;
   outline: none;
-  padding: 10px;
-  margin: 5px;
-  width: 200px;
-  border-radius: 5px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.footer .form-columns {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* stack on smaller screens */
+}
+
+.footer .form .left-column,
+.footer .form .right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1; /* equal width columns */
+}
+
+.footer .form input:focus,
+.footer .form textarea:focus {
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+}
+
+.footer .form textarea {
+  resize: none;
+  min-height: 80px;
 }
 
 .footer .form button {
-  border: none;
-  outline: none;
-  background-color: blue;
-  color: white;
+  background: #1e90ff;
+  color: #fff;
   padding: 10px;
-  margin: 5px;
-  width: 100px;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .footer .form button:hover {
-  background-color: white;
-  color: blue;
+  background: #fff;
+  color: #1e90ff;
+  transform: scale(1.05);
 }
 
+/* Copyright */
 .footer .copy {
-  text-align: center;
-  margin-top: 20px;
-  position: absolute;
-  bottom: 10px;
   width: 100%;
+  text-align: center;
+  color: #777;
+  margin-top: 30px;
+  font-size: 13px;
 }
 
 /* This CSS is for testimonial */
