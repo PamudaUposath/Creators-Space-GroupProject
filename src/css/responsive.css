@@ -1,4 +1,10 @@
 @media screen and (max-width: 768px) {
+
+    h1 {
+        font-size: 3rem;
+        line-height: 1.3;
+    }
+
     .navbar .nav-links {
         display: none;
     }
@@ -26,7 +32,7 @@
         font-size: larger;
         height: 90vh;
     }
-    
+
     .navbar .nav-links.active a {
         margin: 5px;
     }
@@ -49,16 +55,19 @@
         background-color: #181818;
         border: 1px solid #444;
     }
+
     body.dark .navbar .nav-links.active a,
     body.dark .navbar .nav-links.active a.btn {
         color: #fff;
         background-color: transparent;
         border-color: #fff;
     }
+
     body.dark .navbar .nav-links.active a.btn {
         background-color: #fff;
         color: #222;
     }
+
     body.dark .navbar .nav-links.active a.btn:hover {
         background-color: #222;
         color: #fff;
@@ -66,14 +75,14 @@
 
     @keyframes animate-center-image {
         50% {
-            width: 220px;
-            height: 220px;
+            width: 120px;
+            height: 120px;
 
         }
 
         100% {
-            width: 200px;
-            height: 200px;
+            width: 100px;
+            height: 100px;
         }
     }
 
@@ -170,6 +179,7 @@
         background-color: #181818;
         color: #fff;
     }
+
     body.dark .footer a {
         color: #fff;
     }
@@ -183,24 +193,27 @@
 }
 
 
-@media screen and (max-width: 710px){
-    #testimonial-card-1{
-      display: none;
+@media screen and (max-width: 710px) {
+    #testimonial-card-1 {
+        display: none;
     }
+
     #getCertificate {
         max-width: 300px;
         min-width: 280px;
     }
+
     div#certificate-template-part {
         overflow-x: scroll;
     }
+
     div#captureArea {
         transform: translateX(250px);
     }
 }
 
-@media screen and (max-width: 1090px){
-  #testimonial-card-3{
-    display: none;
-  }
+@media screen and (max-width: 1090px) {
+    #testimonial-card-3 {
+        display: none;
+    }
 }
