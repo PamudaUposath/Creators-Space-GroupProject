@@ -386,26 +386,37 @@ body.dark #our-course-h1:hover {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: flex-start;
-  background: #111; /* darker modern black */
-  color: #fff;
-  padding: 20px 20px 20px 20px;
-  position: relative;
-  font-family: 'Segoe UI', sans-serif;
-  align-items: center;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* gradient instead of flat black */
+  color: #e0e0e0;
+  padding: 50px 10% 30px;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Headings */
 .footer h3 {
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  color: #ffffff;
+  position: relative;
+}
+
+.footer h3::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: #1e90ff;
+  margin-top: 6px;
+  border-radius: 2px;
 }
 
 /* Links */
 .footer a {
-  color: #ccc;
+  color: #cccccc;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -423,42 +434,45 @@ body.dark #our-course-h1:hover {
 }
 
 .footer .social img {
-  width: 60px;
-  margin-bottom: 10px;
+  width: 70px;
+  margin-bottom: 15px;
 }
 
 .footer .all-social-links {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .footer .social svg {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: #222;
-  padding: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
   transition: all 0.3s ease;
+  fill: #ffffff;
 }
 
 .footer .social svg:hover {
-  transform: scale(1.1);
+  transform: translateY(-4px) scale(1.1);
   background: #1e90ff;
   fill: #fff;
+  box-shadow: 0 4px 12px rgba(30, 144, 255, 0.6);
 }
 
 /* Contact Section */
 .footer .contact {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .footer .contact p {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #ccc;
+  color: #cccccc;
+  font-size: 15px;
 }
 
 .footer .contact a:hover {
@@ -469,48 +483,43 @@ body.dark #our-course-h1:hover {
 .footer .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 250px;
+  gap: 12px;
+  width: 280px;
 }
 
 .footer .form input,
 .footer .form textarea {
-  padding: 10px 15px;
+  padding: 12px 15px;
   border-radius: 8px;
   border: none;
   outline: none;
   font-size: 14px;
   transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
 }
 
-.footer .form-columns {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap; /* stack on smaller screens */
-}
-
-.footer .form .left-column,
-.footer .form .right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1; /* equal width columns */
+.footer .form input::placeholder,
+.footer .form textarea::placeholder {
+  color: #aaa;
 }
 
 .footer .form input:focus,
 .footer .form textarea:focus {
-  box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.6);
 }
 
 .footer .form textarea {
   resize: none;
-  min-height: 80px;
+  min-height: 90px;
 }
 
+/* Button */
 .footer .form button {
-  background: #1e90ff;
+  background: linear-gradient(90deg, #1e90ff, #9333ea);
   color: #fff;
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
@@ -519,10 +528,22 @@ body.dark #our-course-h1:hover {
 }
 
 .footer .form button:hover {
-  background: #fff;
-  color: #1e90ff;
-  transform: scale(1.05);
+  background: linear-gradient(90deg, #9333ea, #1e90ff);
+  transform: scale(1.07);
+  box-shadow: 0 4px 12px rgba(30, 144, 255, 0.6);
 }
+
+/* Bottom Copyright */
+.footer-bottom {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  color: #aaa;
+  margin-top: 30px;
+  width: 100%;
+}
+
 
 /* Copyright */
 .footer .copy {
