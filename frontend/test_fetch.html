@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Path Test</title>
+</head>
+<body>
+    <button onclick="testFetch()">Test Fetch</button>
+    <div id="result"></div>
+    
+    <script>
+    function testFetch() {
+        console.log('Current URL:', window.location.href);
+        console.log('Testing fetch to ../backend/auth/signup_process.php');
+        
+        fetch('../backend/auth/signup_process.php', {
+            method: 'POST',
+            body: new FormData()
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response URL:', response.url);
+            return response.text();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            document.getElementById('result').innerHTML = '<pre>' + data + '</pre>';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').innerHTML = 'Error: ' + error.message;
+        });
+    }
+    </script>
+</body>
+</html>

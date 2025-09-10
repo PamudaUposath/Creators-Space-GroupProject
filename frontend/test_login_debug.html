@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Debug Test</title>
+</head>
+<body>
+    <h1>Login Debug Test</h1>
+    
+    <form id="test-login-form">
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" value="pamuda@mailinator.com" required>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" value="Pamuda@123" required>
+        </div>
+        <button type="submit">Test Login</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('test-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
+            
+            const formData = new FormData(this);
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = 'Testing login...';
+            
+            fetch('/Creators-Space-GroupProject/backend/auth/login_process.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Login response:', data);
+                resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                
+                if (data.success) {
+                    console.log('Login successful, would redirect to:', data.data.redirect);
+                    resultDiv.innerHTML += '<p style="color: green;">Login successful! Would redirect to: ' + data.data.redirect + '</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            });
+        });
+    </script>
+</body>
+</html>
