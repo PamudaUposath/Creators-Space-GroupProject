@@ -1,0 +1,226 @@
+CREATORS-SPACE E-LEARNING MANAGEMENT SYSTEM - ENTITY RELATIONSHIP DIAGRAM
+
+================================================================================
+                              TABLES OVERVIEW
+================================================================================
+
++----------------+      +----------------+      +----------------+
+|     USERS      |      |    COURSES     |      |    LESSONS     |
+|----------------|      |----------------|      |----------------|
+| id (PK)        |      | id (PK)        |      | id (PK)        |
+| first_name     |      | title          |      | course_id (FK) |
+| last_name      |      | slug           |      | title          |
+| email (UNIQUE) |      | description    |      | content        |
+| username       |      | instructor_id  |      | video_url      |
+| password_hash  |      | image_url      |      | position       |
+| role           |      | price          |      | duration       |
+| is_active      |      | duration       |      | is_free        |
+| reset_token    |      | level          |      | created_at     |
+| reset_expires  |      | is_active      |      +----------------+
+| profile_image  |      | created_at     |
+| skills         |      | updated_at     |
+| created_at     |      +----------------+
+| updated_at     |
++----------------+
+
++------------------+    +------------------+    +------------------+
+|   ENROLLMENTS    |    |   CERTIFICATES   |    |    BOOKMARKS     |
+|------------------|    |------------------|    |------------------|
+| id (PK)          |    | id (PK)          |    | id (PK)          |
+| user_id (FK)     |    | user_id (FK)     |    | user_id (FK)     |
+| course_id (FK)   |    | course_id (FK)   |    | course_id (FK)   |
+| enrolled_at      |    | certificate_code |    | created_at       |
+| completed_at     |    | issued_at        |    +------------------+
+| progress         |    +------------------+
+| UNIQUE(user,crs) |
++------------------+
+
++--------------------+    +-------------------------+    +------------------+
+|    INTERNSHIPS     |    | INTERNSHIP_APPLICATIONS |    |     SERVICES     |
+|--------------------|    |-------------------------|    |------------------|
+| id (PK)            |    | id (PK)                 |    | id (PK)          |
+| title              |    | user_id (FK)            |    | title            |
+| company            |    | internship_id (FK)      |    | description      |
+| description        |    | status                  |    | icon             |
+| requirements       |    | applied_at              |    | is_active        |
+| duration           |    | UNIQUE(user,internship) |    | created_at       |
+| location           |    +-------------------------+    +------------------+
+| is_remote          |
+| application_deadline|
+| is_active          |
+| created_at         |
++--------------------+
+
++----------------------+    +---------------------------+    +-------------------------+
+|      BLOG_POSTS      |    |  NEWSLETTER_SUBSCRIPTIONS |    |  CAMPUS_AMBASSADOR_APPS |
+|----------------------|    |---------------------------|    |-------------------------|
+| id (PK)              |    | id (PK)                   |    | id (PK)                 |
+| title                |    | email (UNIQUE)            |    | user_id (FK)            |
+| slug (UNIQUE)        |    | is_active                 |    | college_name            |
+| content              |    | subscribed_at             |    | year_of_study           |
+| excerpt              |    +---------------------------+    | motivation              |
+| author_id (FK)       |                                    | status                  |
+| featured_image       |                                    | applied_at              |
+| is_published         |                                    +-------------------------+
+| published_at         |
+| created_at           |
+| updated_at           |
++----------------------+
+
+================================================================================
+                              RELATIONSHIPS
+================================================================================
+
+USERS (1) ──────────── COURSES (many)
+    │                      │
+    │                      │ instructor_id FK
+    │
+    │
+USERS (1) ──────────── ENROLLMENTS (many)
+    │                      │
+    │                      │ user_id FK
+    │
+    │
+USERS (1) ──────────── CERTIFICATES (many)
+    │                      │
+    │                      │ user_id FK
+    │
+    │
+USERS (1) ──────────── BOOKMARKS (many)
+    │                      │
+    │                      │ user_id FK
+    │
+    │
+USERS (1) ──────────── INTERNSHIP_APPLICATIONS (many)
+    │                      │
+    │                      │ user_id FK
+    │
+    │
+USERS (1) ──────────── BLOG_POSTS (many)
+    │                      │
+    │                      │ author_id FK
+    │
+    │
+USERS (1) ──────────── CAMPUS_AMBASSADOR_APPLICATIONS (many)
+                           │
+                           │ user_id FK
+
+
+COURSES (1) ──────────── LESSONS (many)
+    │                        │
+    │                        │ course_id FK
+    │
+    │
+COURSES (1) ──────────── ENROLLMENTS (many)
+    │                        │
+    │                        │ course_id FK
+    │
+    │
+COURSES (1) ──────────── CERTIFICATES (many)
+    │                        │
+    │                        │ course_id FK
+    │
+    │
+COURSES (1) ──────────── BOOKMARKS (many)
+                             │
+                             │ course_id FK
+
+
+INTERNSHIPS (1) ──────────── INTERNSHIP_APPLICATIONS (many)
+                                 │
+                                 │ internship_id FK
+
+================================================================================
+                               CONSTRAINTS
+================================================================================
+
+PRIMARY KEYS:
+- All tables have auto-incrementing 'id' as primary key
+
+FOREIGN KEYS:
+- courses.instructor_id → users.id (SET NULL on delete)
+- lessons.course_id → courses.id (CASCADE on delete)
+- enrollments.user_id → users.id (CASCADE on delete)
+- enrollments.course_id → courses.id (CASCADE on delete)
+- certificates.user_id → users.id (CASCADE on delete)
+- certificates.course_id → courses.id (CASCADE on delete)
+- bookmarks.user_id → users.id (CASCADE on delete)
+- bookmarks.course_id → courses.id (CASCADE on delete)
+- internship_applications.user_id → users.id (CASCADE on delete)
+- internship_applications.internship_id → internships.id (CASCADE on delete)
+- blog_posts.author_id → users.id (SET NULL on delete)
+- campus_ambassador_applications.user_id → users.id (CASCADE on delete)
+
+UNIQUE CONSTRAINTS:
+- users.email
+- users.username
+- courses.slug
+- certificates.certificate_code
+- blog_posts.slug
+- newsletter_subscriptions.email
+- enrollments (user_id, course_id)
+- bookmarks (user_id, course_id)
+- internship_applications (user_id, internship_id)
+
+ENUMS:
+- users.role: 'user', 'instructor', 'admin'
+- courses.level: 'beginner', 'intermediate', 'advanced'
+- internship_applications.status: 'pending', 'accepted', 'rejected'
+- campus_ambassador_applications.status: 'pending', 'accepted', 'rejected'
+
+INDEXES (Recommended):
+- users.email (for login)
+- courses.instructor_id
+- courses.slug
+- enrollments.user_id
+- enrollments.course_id
+- lessons.course_id
+- blog_posts.author_id
+- blog_posts.slug
+
+================================================================================
+                           BUSINESS RULES
+================================================================================
+
+1. USER MANAGEMENT:
+   - Users can have roles: user, instructor, admin
+   - Only active users can login
+   - Email must be unique across all users
+   - Password reset tokens expire after 1 hour
+
+2. COURSE MANAGEMENT:
+   - Only instructors and admins can create courses
+   - Courses have slugs for SEO-friendly URLs
+   - Courses can have multiple lessons ordered by position
+   - Courses can be free (price = 0) or paid
+
+3. ENROLLMENT SYSTEM:
+   - Users can enroll in multiple courses
+   - One enrollment record per user per course
+   - Progress is tracked as percentage (0-100)
+   - Completion date is set when progress reaches 100%
+
+4. CERTIFICATION:
+   - Certificates are issued upon course completion
+   - Each certificate has a unique code for verification
+   - Only completed enrollments can generate certificates
+
+5. BOOKMARKING:
+   - Users can bookmark courses for later reference
+   - One bookmark record per user per course
+
+6. INTERNSHIP APPLICATIONS:
+   - Users can apply to multiple internships
+   - One application per user per internship
+   - Applications have status: pending, accepted, rejected
+
+7. BLOG SYSTEM:
+   - Only instructors and admins can write blog posts
+   - Posts have slugs for SEO-friendly URLs
+   - Posts can be published or draft
+
+8. CAMPUS AMBASSADOR PROGRAM:
+   - Users can apply to become campus ambassadors
+   - Applications include college information and motivation
+
+================================================================================
