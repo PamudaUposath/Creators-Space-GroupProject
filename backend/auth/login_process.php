@@ -49,9 +49,6 @@ try {
         errorResponse('Account is deactivated. Please contact support.', 403);
     }
 
-    // Regenerate session ID to prevent session fixation
-    session_regenerate_id(true);
-
     // Set session variables
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['first_name'] = $user['first_name'];
@@ -60,6 +57,9 @@ try {
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role'];
     $_SESSION['logged_in_at'] = time();
+    
+    // Regenerate session ID to prevent session fixation after setting session data
+    session_regenerate_id(true);
 
     // Handle remember me functionality
     if ($rememberMe) {

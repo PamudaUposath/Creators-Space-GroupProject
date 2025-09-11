@@ -7,7 +7,7 @@ $additionalJS = ['./src/js/about.js', './src/js/newsletter.js', './src/js/scroll
 
 // Include header
 include './includes/header.php';
-<body id="main-body" class="overflow-x-hidden">
+?>
 
     <!-- Hero Section -->
     <section class="about-hero">

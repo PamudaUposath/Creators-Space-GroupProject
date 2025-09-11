@@ -4,6 +4,9 @@
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
 
+// Check if user was an admin before destroying session
+$wasAdmin = isAdmin();
+
 // Log the logout activity if user is logged in
 if (isLoggedIn()) {
     logActivity($_SESSION['user_id'], 'logout', 'User logged out');
@@ -24,7 +27,13 @@ session_regenerate_id(true);
 
 $_SESSION['message'] = 'You have been logged out successfully.';
 
-// Redirect to home page
-header('Location: ../../frontend/index.php');
+// Redirect based on user type
+if ($wasAdmin) {
+    // Redirect admin to admin login page
+    header('Location: ../public/admin_login.php');
+} else {
+    // Redirect regular users to frontend
+    header('Location: ../../frontend/index.php');
+}
 exit;
 ?>

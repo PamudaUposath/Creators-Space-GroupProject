@@ -294,10 +294,9 @@ if ($message) {
     }
     
     .btn.logout-btn {
-      background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
       color: #ffffff;
       border-color: rgba(255,255,255,0.2);
-      box-shadow: 0 8px 25px rgba(149,165,166,0.3);
       font-size: 0.85rem;
       padding: 0.6rem 1.2rem;
     }
@@ -325,7 +324,9 @@ if ($message) {
     }
     
     .btn.logout-btn:hover {
-      box-shadow: 0 15px 35px rgba(149,165,166,0.4);
+      transform: none;
+      box-shadow: none;
+      background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
     }
     
     /* Mobile Navigation Toggle */
@@ -1451,7 +1452,7 @@ if ($message) {
             <a href="projects.php">Projects</a>
           <?php endif; ?>
           <a href="blog.php">Blog</a>
-          <a href="./certificate/">Certificates</a>
+          <a href="./certificate.php/">Certificates</a>
         </div>
           
         <!-- Authentication Section -->
@@ -1461,13 +1462,10 @@ if ($message) {
             <a href="./signup.php" class="btn signup">Sign Up</a>
           </div>
         <?php else: ?>
-          <div id="userSection">
-            <span>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</span>
-            <?php if ($user['role'] === 'admin'): ?>
-              <a href="backend/admin/dashboard.php" class="btn admin-btn">Admin Panel</a>
-            <?php endif; ?>
-            <a href="profile.php" class="btn profile-btn">Profile</a>
-            <a href="backend/auth/logout.php" class="btn logout-btn">Logout</a>
+          <div id="signout-button">
+            <a href="../backend/auth/logout.php" class="btn logout-btn">
+              Sign Out
+            </a>
           </div>
         <?php endif; ?>
       </div>

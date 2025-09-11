@@ -346,7 +346,7 @@ include './includes/header.php';
 
       const formData = new FormData(this);
 
-      fetch('backend/auth/signup_process.php', {
+      fetch('../backend/auth/signup_process.php', {
         method: 'POST',
         body: formData
       })

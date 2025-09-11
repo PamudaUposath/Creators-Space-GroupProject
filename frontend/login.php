@@ -273,8 +273,9 @@ include './includes/header.php';
       loginBtn.textContent = 'Logging in...';
 
       const formData = new FormData(this);
+      console.log('Attempting login with URL: ../backend/auth/login_process.php');
 
-      fetch('../backend/auth/login_process.php', {
+      fetch('../backend/auth/login_process.php?t=' + Date.now(), {
         method: 'POST',
         body: formData
       })
@@ -347,7 +348,7 @@ include './includes/header.php';
 
       const formData = new FormData(this);
 
-      fetch('backend/auth/forgot_password.php', {
+      fetch('../backend/auth/forgot_password.php', {
         method: 'POST',
         body: formData
       })

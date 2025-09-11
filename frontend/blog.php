@@ -7,6 +7,7 @@ $bodyClass = "overflow-x-hidden";
 
 // Include header
 include './includes/header.php';
+?>
     <!-- Dark Mode Toggle -->
     <div class="toggle-switch">
         <label class="switch-label">

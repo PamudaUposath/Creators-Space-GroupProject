@@ -188,13 +188,13 @@ window.userAuth = {
 // Course interaction functions
 function toggleBookmark(courseId) {
     if (!window.userAuth.isLoggedIn) {
-        showToast("Please login to bookmark courses", 'warning');
+        showToast("Please login to bookmark courses", "warning");
         return;
     }
     
     // TODO: Implement bookmark functionality with backend
     console.log("Bookmarking course:", courseId);
-    showToast("Bookmark functionality will be implemented with backend integration", 'info');
+    showToast("Bookmark functionality will be implemented with backend integration", "info");
 }
 
 function enrollCourse(courseId) {
@@ -205,7 +205,7 @@ function enrollCourse(courseId) {
     
     // TODO: Implement enrollment functionality with backend
     console.log("Enrolling in course:", courseId);
-    showToast("Enrollment functionality will be implemented with backend integration", 'info');
+    showToast("Enrollment functionality will be implemented with backend integration", "info");
 }
 
 // Search and filter functionality
@@ -241,7 +241,7 @@ function filterCourses() {
 
 // Load more functionality (placeholder)
 document.getElementById("loadMoreBtn").addEventListener("click", function() {
-    showToast("Load more functionality will be implemented with backend integration", 'info');
+    showToast("Load more functionality will be implemented with backend integration", "info");
 });
 ';
 

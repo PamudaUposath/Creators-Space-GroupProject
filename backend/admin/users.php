@@ -378,7 +378,7 @@ try {
             </div>
             <div class="user-info">
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['first_name']); ?>!</span>
-                <a href="/backend/auth/logout.php" class="btn btn-danger">Logout</a>
+                <a href="../auth/logout.php" class="btn btn-danger">Logout</a>
             </div>
         </div>
     </header>

@@ -7,6 +7,7 @@ $additionalJS = ['./src/js/services.js'];
 
 // Include header
 include './includes/header.php';
+?>
     <!-- MAIN SECTION -->
     <section class="main">
         <h1>Our Professional Services</h1>

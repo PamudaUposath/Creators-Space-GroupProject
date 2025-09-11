@@ -145,7 +145,7 @@ if ($message) {
             <a href="projects.php">Projects</a>
           <?php endif; ?>
           <a href="blog.php">Blog</a>
-          <a href="./certificate/">Certificates</a>
+          <a href="./certificate.php/">Certificates</a>
         </div>
           
         <!-- Authentication Section -->
@@ -158,10 +158,10 @@ if ($message) {
           <div id="userSection">
             <span>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</span>
             <?php if ($user['role'] === 'admin'): ?>
-              <a href="backend/admin/dashboard.php" class="btn admin-btn">Admin Panel</a>
+              <a href="../backend/admin/dashboard.php" class="btn admin-btn">Admin Panel</a>
             <?php endif; ?>
             <a href="profile.php" class="btn profile-btn">Profile</a>
-            <a href="backend/auth/logout.php" class="btn logout-btn">Logout</a>
+            <a href="../backend/auth/logout.php" class="btn logout-btn">Logout</a>
           </div>
         <?php endif; ?>
       </div>
