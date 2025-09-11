@@ -274,7 +274,7 @@ body {
   object-fit: cover;
 } */
 
-  /* courses-heading */
+/* courses-heading */
 #our-course-h1 {
   font-size: 2.4rem;
   font-weight: 800;
@@ -296,7 +296,7 @@ body.dark #our-course-h1:hover {
   color: #ff512f;
 }
 
-  /* courses */
+/* courses */
 /* COURSES SECTION */
 #courses {
   display: grid;
@@ -306,6 +306,7 @@ body.dark #our-course-h1:hover {
   width: 100%;
   box-sizing: border-box;
   background-color: var(--bg-color);
+  margin: auto;
 }
 
 /* Individual course box */
@@ -315,14 +316,14 @@ body.dark #our-course-h1:hover {
   border-radius: 20px;
   padding: 30px 20px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .course:hover {
   transform: translateY(-10px);
-  box-shadow: 0 8px 30px rgba(255,255,255,0.1);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
 }
 
 /* Image */
@@ -380,126 +381,160 @@ body.dark #our-course-h1:hover {
 
 
 /* footer CSS */
+/* Modern Footer CSS */
 .footer {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: space-around;
-  background-color: black;
-  color: white;
-  padding: 20px;
-  border-start-start-radius: 10px;
-  border-start-end-radius: 10px;
+  align-items: flex-start;
+  background: #111;
+  /* darker modern black */
+  color: #fff;
+  padding: 20px 20px 20px 20px;
   position: relative;
-  padding-bottom: 30px !important;
+  font-family: 'Segoe UI', sans-serif;
+  align-items: center;
 }
 
+/* Headings */
 .footer h3 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Links */
 .footer a {
-  color: white;
+  color: #ccc;
   text-decoration: none;
-  margin: 5px;
+  transition: color 0.3s ease;
 }
 
 .footer a:hover {
-  color: #f0f0f0;
+  color: #1e90ff;
 }
 
+/* Social section */
 .footer .social {
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  gap: 15px;
 }
 
-.footer .social h1 {
-  font-size: 36px;
-  font-weight: bold;
-  color: white;
+.footer .social img {
+  width: 60px;
   margin-bottom: 10px;
-  text-align: center;
+}
+
+.footer .all-social-links {
+  display: flex;
+  gap: 10px;
 }
 
 .footer .social svg {
   width: 40px;
   height: 40px;
-  object-fit: cover;
-  margin: 5px;
   border-radius: 50%;
-  background-color: white;
-  border: 1px solid white;
-  transition: transform 0.3s ease, color 0.3s ease;
+  background: #222;
+  padding: 8px;
+  transition: all 0.3s ease;
 }
 
 .footer .social svg:hover {
-  transform: scale(1.05);
-  background-color: rgba(245, 244, 244, 0.466);
-  border: 1px solid rgba(245, 244, 244, 0.466);
-  transition: transform 0.3s ease, color 0.3s ease;
+  transform: scale(1.1);
+  background: #1e90ff;
+  fill: #fff;
 }
 
+/* Contact Section */
 .footer .contact {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-.contact a {
-  color: #b3b3b3;
-  text-decoration: none;
+.footer .contact p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
 }
 
-.contact a:hover {
-  text-decoration: underline;
-  color: white;
+.footer .contact a:hover {
+  color: #1e90ff;
 }
 
-#envelope-icon, #call-icon {
-  margin-right: 10px;
-}
-
+/* Form Section */
 .footer .form {
   display: flex;
   flex-direction: column;
-  padding-bottom: 30px;
+  gap: 10px;
+  width: 250px;
 }
 
 .footer .form input,
 .footer .form textarea {
+  padding: 10px 15px;
+  border-radius: 8px;
   border: none;
   outline: none;
-  padding: 10px;
-  margin: 5px;
-  width: 200px;
-  border-radius: 5px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.footer .form-columns {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  /* stack on smaller screens */
+}
+
+.footer .form .left-column,
+.footer .form .right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  /* equal width columns */
+}
+
+.footer .form input:focus,
+.footer .form textarea:focus {
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+}
+
+.footer .form textarea {
+  resize: none;
+  min-height: 80px;
 }
 
 .footer .form button {
-  border: none;
-  outline: none;
-  background-color: blue;
-  color: white;
+  background: #1e90ff;
+  color: #fff;
   padding: 10px;
-  margin: 5px;
-  width: 100px;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .footer .form button:hover {
-  background-color: white;
-  color: blue;
+  background: #fff;
+  color: #1e90ff;
+  transform: scale(1.05);
 }
 
+/* Copyright */
 .footer .copy {
-  text-align: center;
-  margin-top: 20px;
-  position: absolute;
-  bottom: 10px;
   width: 100%;
+  text-align: center;
+  color: #777;
+  margin-top: 30px;
+  font-size: 13px;
 }
 
 /* This CSS is for testimonial */
@@ -527,7 +562,8 @@ body.dark #our-course-h1:hover {
 /* 3D Hover Effect */
 .testimonial-card:hover {
   transform: translateY(-12px) scale(1.03) rotateX(3deg) rotateY(-3deg);
-  box-shadow: 0 20px 40px rgba(0, 255, 255, 0.25); /* Aqua glow */
+  box-shadow: 0 20px 40px rgba(0, 255, 255, 0.25);
+  /* Aqua glow */
   cursor: pointer;
 }
 
@@ -552,11 +588,11 @@ body.dark #our-course-h1:hover {
 }
 
 /* Scroll to top */
-#scrollTopBtn { 
+#scrollTopBtn {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 999; 
+  z-index: 999;
   border: none;
   outline: none;
   background-color: #0a0a0a;
@@ -564,7 +600,7 @@ body.dark #our-course-h1:hover {
   cursor: pointer;
   padding: 10px 15px;
   border-radius: 50%;
-  box-shadow:  0 12px 20px rgba(20, 5, 158, 0.3);
+  box-shadow: 0 12px 20px rgba(20, 5, 158, 0.3);
   opacity: 0;
   pointer-events: none;
   transition: all 0.4s ease;
@@ -572,7 +608,7 @@ body.dark #our-course-h1:hover {
   transform: translateY(65px);
 }
 
-#scrollTopBtn svg{
+#scrollTopBtn svg {
   width: 24px;
   height: 24px;
   transition: transform 0.4s ease;
@@ -580,41 +616,50 @@ body.dark #our-course-h1:hover {
   position: relative;
   top: 4px;
 }
-#scrollTopBtn.show{
+
+#scrollTopBtn.show {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
 
 }
-#scrollTopBtn:hover{
+
+#scrollTopBtn:hover {
   background-color: #093586;
   transform: translateY(0) scale(1.05);
-  box-shadow: 0 0 10px rgba(14 , 39 , 182 , 0.4);
+  box-shadow: 0 0 10px rgba(14, 39, 182, 0.4);
 }
-#scrollTopBtn:hover svg{
+
+#scrollTopBtn:hover svg {
   transform: scale(1.1);
   top: 0;
 }
-.dark #scrollTopBtn{
+
+.dark #scrollTopBtn {
   background-color: white;
-  
+
 }
+
 .dark #scrollTopBtn svg {
-  fill: #0a0a0a; /* arrow color for dark mode */
+  fill: #0a0a0a;
+  /* arrow color for dark mode */
 }
 
 /* bounce animation added to back to top */
 @keyframes bounce {
-  0% , 100%{
+
+  0%,
+  100% {
     transform: translateY(0);
   }
-  50%{
+
+  50% {
     transform: translateY(-6px);
   }
 }
 
 /* apply bounce when not hover  */
-#scrollTopBtn.bounce:not(:hover) svg{
+#scrollTopBtn.bounce:not(:hover) svg {
   animation: bounce 2s infinite;
 }
 
@@ -657,7 +702,7 @@ body.dark #our-course-h1:hover {
   transition: 0.3s;
 }
 
-.checkbox:checked ~ .slider {
+.checkbox:checked~.slider {
   background-color: var(--light);
 }
 
@@ -676,7 +721,7 @@ body.dark #our-course-h1:hover {
   transition: 0.3s;
 }
 
-.checkbox:checked ~ .slider::before {
+.checkbox:checked~.slider::before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -703,19 +748,23 @@ body.dark .navbar {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
 body.dark .navbar h1,
 body.dark .navbar a {
   color: #fff;
 }
+
 body.dark .navbar a.btn {
   background-color: #222;
   color: #fff;
   border-color: #fff;
 }
+
 body.dark .navbar a.btn:hover {
   background-color: #fff;
   color: #222;
 }
+
 /* White underline for nav links in dark mode */
 body.dark .navbar .nav-links a::after {
   content: "";
@@ -776,6 +825,7 @@ body.dark .footer {
   background-color: #181818;
   color: #fff;
 }
+
 body.dark .footer a {
   color: #fff;
 }
@@ -785,6 +835,7 @@ body.dark .testimonial-card {
   background-color: #fff;
   color: #222;
 }
+
 /* Why Learn With Us Section */
 #why-learn {
   padding: 60px 20px;
