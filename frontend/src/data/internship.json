@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Web Dev Intern",
+    "company": "CreatorSpace",
+    "type": "Remote",
+    "duration": "2 Months",
+    "stipend": "Unpaid",
+    "image": "https://cdn-icons-png.flaticon.com/512/919/919827.png",
+    "responsibilities": [
+      "Develop frontend UI with HTML, CSS, JavaScript",
+      "Collaborate with backend team",
+      "Fix bugs and improve UX"
+    ],
+    "applyLink": "#"
+  },
+  {
+    "title": "AI Intern",
+    "company": "CreatorSpace",
+    "type": "In-Office",
+    "duration": "3 Months",
+    "stipend": "5000",
+    "image": "https://abctrainings.in/media/thumbnails/machine_learning.jpeg",
+    "responsibilities": [
+      "Build ML models using Python",
+      "Data collection & preprocessing",
+      "Deploy models on cloud"
+    ],
+    "applyLink": "#"
+  },
+  {
+    "title": "UI/UX Intern",
+    "company": "CreatorSpace",
+    "type": "Remote",
+    "duration": "1 Month",
+    "stipend": "3000",
+    "image": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+    "responsibilities": [
+      "Create wireframes using Figma",
+      "Conduct user research",
+      "Improve usability & accessibility"
+    ],
+    "applyLink": "#"
+  }
+]

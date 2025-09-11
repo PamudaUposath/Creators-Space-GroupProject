@@ -1,0 +1,102 @@
+# Environment and Configuration Files
+.env
+.env.local
+.env.production
+config.php
+config.local.php
+
+# Database Configuration (if using separate config files)
+backend/config/db_config.local.php
+
+# Logs
+*.log
+logs/
+error.log
+access.log
+
+# Cache
+cache/
+tmp/
+temp/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup Files
+*.bak
+*.backup
+*.old
+
+# Uploaded Files (if storing uploads in project)
+uploads/
+user_uploads/
+profile_images/
+
+# Sessions (if storing in files)
+sessions/
+
+# Composer
+vendor/
+composer.lock
+
+# NPM (if using Node.js tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production Build Files
+dist/
+build/
+
+# Security
+*.pem
+*.key
+*.crt
+ssl/
+
+# Database Dumps
+*.sql.gz
+*.sql.bz2
+database_backup/
+
+# Email Templates (sensitive)
+email_templates/*.local.html
+
+# Testing
+phpunit.xml
+.phpunit.result.cache
+
+# Coverage Reports
+coverage/
+
+# Documentation Build
+docs/_build/
+
+# Temporary PHP Files
+*.tmp.php
+
+# User Data (if storing locally)
+user_data/
+certificates/generated/
+
+# Development Only
+*.dev.php
+test_data/
+sample_data/
+
+# Error Files
+php_errors.log
