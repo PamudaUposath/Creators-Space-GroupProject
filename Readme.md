@@ -169,9 +169,16 @@ $DB_PASS = '';              // Your MySQL password
 cd frontend
 php -S localhost:8000
 
+# Powershell only
+& "C:\xampp\php\php.exe" -S localhost:8000 
+
+
 # Backend (Port 8080) - In another terminal
 cd backend/public
 php -S localhost:8080
+
+# Powershell only
+& "C:\xampp\php\php.exe" -S localhost:8080 
 ```
 
 ### 5. Access the Application
