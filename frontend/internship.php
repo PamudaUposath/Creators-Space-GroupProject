@@ -3,92 +3,56 @@
 $pageTitle = "Internship";
 $pageDescription = "Explore exciting internship opportunities with Creators-Space";
 $additionalCSS = ['./src/css/internship.css', './src/css/courses.css'];
-$additionalJS = ['./src/js/internship.js'];
 
 // Include header
 include './includes/header.php';
 ?>
-    <!-- Dark Mode Toggle -->
-    <div class="toggle-switch">
-        <label class="switch-label">
-            <input type="checkbox" class="checkbox" id="dark-mode-toggle" />
-            <span class="slider"></span>
-        </label>
-    </div>
 
-    <!-- MAIN SECTION -->
-    <section class="main">
-        <h1>Exciting Internship Opportunities</h1>
-        <p>Launch your career with hands-on experience from top organizations.</p>
-    </section>
+    <!-- Main Content Container -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Exciting Internship Opportunities</h1>
+            <p class="page-subtitle">Launch your career with hands-on experience from top organizations.</p>
+        </div>
 
-    <!-- INTERNSHIP CARDS -->
-    <div class="courses-container" id="internship-list">
-        <p>Loading internships...</p>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="social">
-            <h1><img width="80px" src="./assets/images/logo.png" alt="logo Creators-Space">
-              <br>Creators-Space</h1>
-            <h3>Social Media</h3>
-            <div class="all-social-links">
-                <a target="_blank" href="https://linkedin.com/in/anuragvishwakarma">
-                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 100" id="linkedin">
-                        <path d="M55.35,44.17h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11Zm0,0h.07v-.11ZM50.8,3.77A45.67,45.67,0,1,0,96.48,49.44,45.73,45.73,0,0,0,50.8,3.77ZM36.65,77.77H25.51V40.26H36.65ZM31.08,35.4A6.45,6.45,0,1,1,37.52,29,6.44,6.44,0,0,1,31.08,35.4ZM79.77,77.77H68.63V59.36c0-4.15-.08-9.49-5.78-9.49s-6.67,4.52-6.67,9.19V77.77H45.05V40.26H55.7v5.17h.16a11.69,11.69,0,0,1,10.53-5.78c11.27,0,13.34,7.42,13.34,17.06Z"></path>
-                    </svg>
-                </a>
-                <a target="_blank" href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" data-name="Instagram w/circle" viewBox="0 0 19.2 19.2" id="instagram">
-                        <path d="M13.498 6.651a1.656 1.656 0 0 0-.95-.949 2.766 2.766 0 0 0-.928-.172c-.527-.024-.685-.03-2.02-.03s-1.493.006-2.02.03a2.766 2.766 0 0 0-.929.172 1.656 1.656 0 0 0-.949.95 2.766 2.766 0 0 0-.172.928c-.024.527-.03.685-.03 2.02s.006 1.493.03 2.02a2.766 2.766 0 0 0 .172.929 1.656 1.656 0 0 0 .95.949 2.766 2.766 0 0 0 .928.172c.527.024.685.03 2.02.03s1.493-.006 2.02-.03a2.766 2.766 0 0 0 .929-.172 1.656 1.656 0 0 0 .949-.95 2.766 2.766 0 0 0 .172-.928c.024-.527.03-.685.03-2.02s-.006-1.493-.03-2.02a2.766 2.766 0 0 0-.172-.929zM9.6 12.819A3.219 3.219 0 1 1 12.819 9.6 3.219 3.219 0 0 1 9.6 12.819zm3.346-5.814a.752.752 0 1 1 .752-.752.752.752 0 0 1-.752.752z"></path>
-                        <circle cx="9.6" cy="9.6" r="2.086"></circle>
-                        <path d="M9.6 0a9.6 9.6 0 1 0 9.6 9.6A9.6 9.6 0 0 0 9.6 0zM15.681 11.672a3.89 3.89 0 0 1-.246 1.288 2.73 2.73 0 0 1-1.561 1.561 3.89 3.89 0 0 1-1.288.246c-.534.024-.7.031-2.086.031s-1.552-.007-2.086-.031a3.89 3.89 0 0 1-1.288-.246 2.73 2.73 0 0 1-1.561-1.561 3.89 3.89 0 0 1-.246-1.288C5.295 11.138 5.288 10.972 5.288 9.586s.007-1.552.031-2.086a3.89 3.89 0 0 1 .246-1.288A2.73 2.73 0 0 1 7.126 4.651a3.89 3.89 0 0 1 1.288-.246C8.948 4.381 9.114 4.374 10.5 4.374s1.552.007 2.086.031a3.89 3.89 0 0 1 1.288.246 2.73 2.73 0 0 1 1.561 1.561 3.89 3.89 0 0 1 .246 1.288c.024.534.031.7.031 2.086s-.007 1.552-.031 2.086z"></path>
-                    </svg>
-                </a>
-                <a target="_blank" href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" fill="none" viewBox="0 0 512 512" id="twitter">
-                        <g clip-path="url(#clip0_84_15697)">
-                            <rect width="512" height="512" fill="#000" rx="60"></rect>
-                            <path fill="#fff" d="M355.904 100H408.832L293.2 232.16L429.232 412H322.72L239.296 302.928L143.84 412H90.8805L214.56 270.64L84.0645 100H193.28L268.688 199.696L355.904 100ZM337.328 380.32H366.656L177.344 130.016H145.872L337.328 380.32Z"></path>
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_84_15697">
-                                <rect width="512" height="512" fill="#fff"></rect>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </a>
+        <!-- Internship Search and Filter -->
+        <section class="search-section">
+            <div class="container">
+                <div class="search-controls">
+                    <input type="text" id="search-input" placeholder="Search internships..." class="search-input">
+                    <select id="filter-type" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="Remote">Remote</option>
+                        <option value="On-site">On-site</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                    <select id="filter-duration" class="filter-select">
+                        <option value="">All Durations</option>
+                        <option value="1-3 months">1-3 months</option>
+                        <option value="3-6 months">3-6 months</option>
+                        <option value="6+ months">6+ months</option>
+                    </select>
+                </div>
             </div>
-        </div>
-       
-        <div class="contact">
-            <h3>Contact Us</h3>
-            <p><a href="mailto:21brac0401@polygwalior.ac.in"><i class="fa-solid fa-envelope" id="envelope-icon"></i>21brac0401@polygwalior.ac.in</a></p>
-            <br>
-            <p><a href="tel:+9188xxxxxx89"><i class="fa-solid fa-phone" id="call-icon"></i>+91 88xxxxxx89</a></p>
-        </div>
+        </section>
 
-        <div class="form">
-            <h3>Get In Touch</h3>
-            <input type="text" placeholder="Your name">
-            <input type="email" placeholder="Your email">
-            <textarea type="text" placeholder="Your message"></textarea>
-            <button>Send</button>
-        </div>
-        <div class="copy">
-            <p>Copyright &copy; 2024 - 2025 Creators-Space. All rights reserved.</p>
-        </div>
-    </footer>
+        <!-- Internship Cards -->
+        <section class="section">
+            <div class="container">
+                <div class="courses-container" id="internship-list">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading internships...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
-    <!-- Scripts -->
-    <script src="./src/js/navbar.js"></script>
-    <script src="./src/js/internship.js"></script>
-    <script src="./src/js/utils.js"></script>
-    <script src="./src/js/mobile-responsive.js"></script>
-
-    <!-- Loading Internship dynamically from data/internship.json -->
+    <!-- Custom JavaScript for Internship Page -->
     <script>
+    // Loading Internship dynamically from data/internship.json
     async function loadInternships() {
         const container = document.getElementById("internship-list");
         try {
@@ -98,66 +62,186 @@ include './includes/header.php';
             const internships = await res.json();
             container.innerHTML = "";
 
-            internships.forEach((item) => {
+            if (internships.length === 0) {
+                container.innerHTML = "<p style='text-align:center;color:#666;font-size:1.2rem;'>No internships available at the moment.</p>";
+                return;
+            }
+
+            internships.forEach((item, index) => {
                 const responsibilitiesHTML = item.responsibilities
-                    .map(task => `<li>${task}</li>`)
-                    .join("");
+                    ? item.responsibilities.map(task => `<li>${task}</li>`).join("")
+                    : "<li>Responsibilities will be discussed during the application process.</li>";
 
                 const card = document.createElement("div");
-                card.className = "card";
+                card.className = "card internship-card";
+                card.setAttribute('data-type', item.type || '');
+                card.setAttribute('data-duration', item.duration || '');
                 card.innerHTML = `
                     <div class="card-content">
-                        <img src="${item.image}" alt="${item.title}" />
-                        <h3>${item.title}</h3>
-                        <p>Company: ${item.company}</p>
-                        <p>Duration: ${item.duration} | Location: ${item.type}</p>
-                        <p>Stipend: ${item.stipend}</p>
-                        <div class="card-buttons">
-                            <button class="button toggle-btn">View More</button>
-                            <a href="${item.applyLink}" class="button">Apply Now</a>
+                        <div class="card-header">
+                            <img src="${item.image || './assets/images/webdev.png'}" alt="${item.title}" class="company-logo" />
+                            <div class="internship-badge">${item.type || 'Remote'}</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="internship-title">${item.title}</h3>
+                            <p class="company-name"><i class="fas fa-building"></i> ${item.company}</p>
+                            <div class="internship-meta">
+                                <span class="duration"><i class="fas fa-clock"></i> ${item.duration || 'Flexible'}</span>
+                                <span class="stipend"><i class="fas fa-money-bill-wave"></i> ${item.stipend || 'Unpaid'}</span>
+                            </div>
+                            <div class="card-buttons">
+                                <button class="button toggle-btn" data-index="${index}">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <a href="${item.applyLink || '#'}" class="button apply-btn" target="_blank">
+                                    <i class="fas fa-paper-plane"></i> Apply Now
+                                </a>
+                            </div>
                         </div>
                         
-                        <div class="syllabus">
-                            <h4>Responsibilities:</h4>
+                        <div class="syllabus internship-details">
+                            <h4><i class="fas fa-tasks"></i> Key Responsibilities:</h4>
                             <ul>${responsibilitiesHTML}</ul>
+                            
+                            ${item.requirements ? `
+                                <h4><i class="fas fa-check-circle"></i> Requirements:</h4>
+                                <ul>${item.requirements.map(req => `<li>${req}</li>`).join("")}</ul>
+                            ` : ''}
+                            
+                            ${item.benefits ? `
+                                <h4><i class="fas fa-gift"></i> Benefits:</h4>
+                                <ul>${item.benefits.map(benefit => `<li>${benefit}</li>`).join("")}</ul>
+                            ` : ''}
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
 
+            // Add event listeners for toggle buttons
             document.querySelectorAll(".toggle-btn").forEach((btn) => {
                 btn.addEventListener("click", () => {
                     const card = btn.closest(".card");
+                    const isExpanded = card.classList.contains("expanded");
+                    
+                    // Close all other expanded cards
+                    document.querySelectorAll(".card.expanded").forEach(c => {
+                        if (c !== card) {
+                            c.classList.remove("expanded");
+                            c.querySelector(".toggle-btn").innerHTML = '<i class="fas fa-eye"></i> View Details';
+                        }
+                    });
+                    
+                    // Toggle current card
                     card.classList.toggle("expanded");
-                    btn.textContent = card.classList.contains("expanded") ? "View Less" : "View More";
+                    btn.innerHTML = isExpanded 
+                        ? '<i class="fas fa-eye"></i> View Details'
+                        : '<i class="fas fa-eye-slash"></i> View Less';
                 });
             });
+
+            // Initialize search and filter functionality
+            initializeSearchAndFilter();
+
         } catch (err) {
-            container.innerHTML = "<p style='color:red;text-align:center;font-size:20px;'>Couldn't load the internships.</p>";
+            container.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Unable to load internships at the moment.</p>
+                    <button onclick="loadInternships()" class="retry-btn">
+                        <i class="fas fa-redo"></i> Retry
+                    </button>
+                </div>
+            `;
             console.error("Error loading internships:", err);
         }
     }
 
-    // Load internships when page loads
-    window.addEventListener('DOMContentLoaded', loadInternships);
+    // Search and Filter functionality
+    function initializeSearchAndFilter() {
+        const searchInput = document.getElementById('search-input');
+        const filterType = document.getElementById('filter-type');
+        const filterDuration = document.getElementById('filter-duration');
+        const cards = document.querySelectorAll('.internship-card');
 
-    // Dark Mode Toggle
-    const toggle = document.getElementById('dark-mode-toggle');
-    const body = document.body;
+        function filterInternships() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedType = filterType.value;
+            const selectedDuration = filterDuration.value;
 
-    toggle.addEventListener('change', () => {
-        body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-    });
+            cards.forEach(card => {
+                const title = card.querySelector('.internship-title').textContent.toLowerCase();
+                const company = card.querySelector('.company-name').textContent.toLowerCase();
+                const type = card.getAttribute('data-type');
+                const duration = card.getAttribute('data-duration');
 
-    // Load saved dark mode preference
-    if (localStorage.getItem('darkMode') === 'true') {
-        body.classList.add('dark-mode');
-        toggle.checked = true;
+                const matchesSearch = title.includes(searchTerm) || company.includes(searchTerm);
+                const matchesType = !selectedType || type === selectedType;
+                const matchesDuration = !selectedDuration || duration.includes(selectedDuration);
+
+                if (matchesSearch && matchesType && matchesDuration) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                    card.classList.remove('expanded'); // Close expanded cards when hidden
+                }
+            });
+
+            // Show "no results" message if no cards are visible
+            const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+            const container = document.getElementById('internship-list');
+            
+            // Remove existing no-results message
+            const existingNoResults = container.querySelector('.no-results');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+
+            if (visibleCards.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.innerHTML = `
+                    <div class="no-results-content">
+                        <i class="fas fa-search"></i>
+                        <p>No internships match your search criteria.</p>
+                        <button onclick="clearFilters()" class="clear-filters-btn">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
+                `;
+                container.appendChild(noResults);
+            }
+        }
+
+        // Add event listeners
+        searchInput.addEventListener('input', filterInternships);
+        filterType.addEventListener('change', filterInternships);
+        filterDuration.addEventListener('change', filterInternships);
     }
-';
 
+    // Clear all filters
+    function clearFilters() {
+        document.getElementById('search-input').value = '';
+        document.getElementById('filter-type').value = '';
+        document.getElementById('filter-duration').value = '';
+        
+        // Show all cards
+        document.querySelectorAll('.internship-card').forEach(card => {
+            card.style.display = 'block';
+        });
+
+        // Remove no-results message
+        const noResults = document.querySelector('.no-results');
+        if (noResults) {
+            noResults.remove();
+        }
+    }
+
+    // Load internships when page loads
+    document.addEventListener('DOMContentLoaded', loadInternships);
+    </script>
+
+<?php
 // Include footer
 include './includes/footer.php';
 ?>

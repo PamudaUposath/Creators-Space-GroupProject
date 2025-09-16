@@ -3,6 +3,7 @@
 $pageTitle = "Courses";
 $pageDescription = "Explore our comprehensive courses in web development, programming, and technology.";
 $additionalCSS = ['./src/css/courses.css'];
+$additionalJS = ['./src/js/courses.js'];
 
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user_id']);
@@ -56,27 +57,33 @@ $courses = [
 // Include header
 include './includes/header.php';
 ?>
-    <!-- Hero Section -->
-    <section class="courses-hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Explore Our Courses</h1>
-                <p>Discover a wide range of technology courses designed to advance your career and skills</p>
-                <div class="search-bar">
-                    <input type="text" placeholder="Search courses..." id="courseSearch">
-                    <button type="button" class="btn"><i class="fas fa-search"></i></button>
+    <!-- Main Content Container -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Explore Our Courses</h1>
+            <p class="page-subtitle">Discover a wide range of technology courses designed to advance your career and skills</p>
+            
+            <!-- Enhanced Search Bar -->
+            <div class="search-container">
+                <div class="search-bar-wrapper">
+                    <div class="search-input-group">
+                        <input type="text" placeholder="Search courses..." id="courseSearch" class="search-input">
+                        <button type="button" id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Filters Section -->
-    <section class="filters-section">
-        <div class="container">
-            <div class="filters">
+        <!-- Filters Section -->
+        <section class="section">
+            <div class="filters-container">
                 <div class="filter-group">
-                    <label>Category:</label>
-                    <select id="categoryFilter">
+                    <label class="filter-label">Category:</label>
+                    <select id="categoryFilter" class="filter-select">
                         <option value="">All Categories</option>
                         <option value="web-development">Web Development</option>
                         <option value="design">Design</option>
@@ -85,8 +92,8 @@ include './includes/header.php';
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Level:</label>
-                    <select id="levelFilter">
+                    <label class="filter-label">Level:</label>
+                    <select id="levelFilter" class="filter-select">
                         <option value="">All Levels</option>
                         <option value="beginner">Beginner</option>
                         <option value="intermediate">Intermediate</option>
@@ -94,59 +101,55 @@ include './includes/header.php';
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label>Price:</label>
-                    <select id="priceFilter">
+                    <label class="filter-label">Price:</label>
+                    <select id="priceFilter" class="filter-select">
                         <option value="">All Prices</option>
                         <option value="free">Free</option>
                         <option value="paid">Paid</option>
                     </select>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Courses Grid -->
-    <section class="courses-grid-section">
-        <div class="container">
-            <div id="coursesGrid" class="courses-grid">
+        <!-- Courses Grid -->
+        <section class="section">
+            <div id="coursesGrid" class="offerings-grid">
                 <?php foreach ($courses as $course): ?>
-                    <div class="course-card" data-level="<?php echo strtolower($course['level']); ?>">
-                        <div class="course-image">
-                            <img src="<?php echo htmlspecialchars($course['image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>">
+                    <div class="card course-card" data-level="<?php echo strtolower($course['level']); ?>">
+                        <div style="position: relative;">
+                            <img src="<?php echo htmlspecialchars($course['image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 1rem;">
                             <?php if ($isLoggedIn): ?>
-                                <button class="bookmark-btn" onclick="toggleBookmark(<?php echo $course['id']; ?>)">
+                                <button onclick="toggleBookmark(<?php echo $course['id']; ?>)" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
                                     <i class="far fa-bookmark"></i>
                                 </button>
                             <?php endif; ?>
                         </div>
-                        <div class="course-content">
-                            <div class="course-meta">
-                                <span class="level level-<?php echo strtolower($course['level']); ?>"><?php echo $course['level']; ?></span>
-                                <span class="duration"><?php echo $course['duration']; ?></span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span class="modern-gradient-text" style="font-weight: 600; font-size: 0.9rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.1); border-radius: 15px;"><?php echo $course['level']; ?></span>
+                            <span style="color: #7f8c8d; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
+                        </div>
+                        <h3 style="color: #2c3e50; margin: 0.5rem 0; font-size: 1.3rem;"><?php echo htmlspecialchars($course['title']); ?></h3>
+                        <p style="color: #34495e; line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars($course['description']); ?></p>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
+                            <i class="fas fa-user"></i>
+                            <span><?php echo htmlspecialchars($course['instructor']); ?></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                            <div style="font-size: 1.2rem; font-weight: 700;">
+                                <?php if ($course['price'] > 0): ?>
+                                    <span class="modern-gradient-text">$<?php echo number_format($course['price'], 2); ?></span>
+                                <?php else: ?>
+                                    <span style="color: #27ae60;">Free</span>
+                                <?php endif; ?>
                             </div>
-                            <h3 class="course-title"><?php echo htmlspecialchars($course['title']); ?></h3>
-                            <p class="course-description"><?php echo htmlspecialchars($course['description']); ?></p>
-                            <div class="course-instructor">
-                                <i class="fas fa-user"></i>
-                                <span><?php echo htmlspecialchars($course['instructor']); ?></span>
-                            </div>
-                            <div class="course-footer">
-                                <div class="course-price">
-                                    <?php if ($course['price'] > 0): ?>
-                                        <span class="price">$<?php echo number_format($course['price'], 2); ?></span>
-                                    <?php else: ?>
-                                        <span class="free">Free</span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="course-actions">
-                                    <?php if ($isLoggedIn): ?>
-                                        <button class="btn enroll-btn" onclick="enrollCourse(<?php echo $course['id']; ?>)">
-                                            Enroll Now
-                                        </button>
-                                    <?php else: ?>
-                                        <a href="login.php" class="btn">Login to Enroll</a>
-                                    <?php endif; ?>
-                                </div>
+                            <div>
+                                <?php if ($isLoggedIn): ?>
+                                    <button class="btn login" onclick="enrollCourse(<?php echo $course['id']; ?>)" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">
+                                        Enroll Now
+                                    </button>
+                                <?php else: ?>
+                                    <a href="login.php" class="btn login" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">Login to Enroll</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -154,26 +157,32 @@ include './includes/header.php';
             </div>
 
             <!-- Load More Button -->
-            <div class="load-more-section">
-                <button id="loadMoreBtn" class="btn secondary">Load More Courses</button>
+            <div style="text-align: center; margin-top: 3rem;">
+                <button id="loadMoreBtn" class="hero-btn">Load More Courses</button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Start Learning?</h2>
-                <p>Join thousands of students and advance your career with our expert-led courses</p>
-                <?php if (!$isLoggedIn): ?>
-                    <a href="signup.php" class="btn primary">Get Started Free</a>
-                <?php else: ?>
-                    <a href="profile.php" class="btn primary">View My Courses</a>
-                <?php endif; ?>
+        <!-- CTA Section -->
+        <section class="section cta-section">
+            <div class="cta-container">
+                <h2 class="section-title cta-title">Ready to Start Learning?</h2>
+                <p class="cta-description">Join thousands of students and advance your career with our expert-led courses</p>
+                <div class="hero-actions">
+                    <?php if (!$isLoggedIn): ?>
+                        <a href="signup.php" class="hero-btn">
+                            <i class="fas fa-rocket"></i>
+                            Get Started Free
+                        </a>
+                    <?php else: ?>
+                        <a href="profile.php" class="hero-btn">
+                            <i class="fas fa-user-graduate"></i>
+                            View My Courses
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
 <?php
 // Set additional JS for this page
@@ -224,8 +233,8 @@ function filterCourses() {
     const courses = document.querySelectorAll(".course-card");
 
     courses.forEach(course => {
-        const title = course.querySelector(".course-title").textContent.toLowerCase();
-        const description = course.querySelector(".course-description").textContent.toLowerCase();
+        const title = course.querySelector("h3").textContent.toLowerCase();
+        const description = course.querySelector("p").textContent.toLowerCase();
         const level = course.dataset.level;
 
         const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
