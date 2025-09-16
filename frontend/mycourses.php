@@ -2,8 +2,8 @@
 // Set page-specific variables
 $pageTitle = "My Courses";
 $pageDescription = "View your enrolled courses and continue your learning journey.";
-$additionalCSS = ['./src/css/mycourses.css'];
-$additionalJS = ['./src/js/mycourses.js'];
+$additionalCSS = ['./src/css/mycourses.css', './src/css/modal.css'];
+$additionalJS = ['./src/js/modal-utility.js', './src/js/mycourses.js'];
 
 // Start session to check login status
 session_start();

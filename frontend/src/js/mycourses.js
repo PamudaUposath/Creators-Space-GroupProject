@@ -60,33 +60,44 @@ function showEmptyState() {
 
 function continueCourse(courseId) {
     console.log('Continuing course:', courseId);
-    alert('Redirecting to course content...');
+    Modal.alert('Course Access', 'Redirecting to course content...', 'info');
+    
+    // Simulate redirect delay
+    setTimeout(() => {
+        // Replace with actual course navigation logic
+        window.location.href = `course-content.php?id=${courseId}`;
+    }, 1500);
 }
 
 function removeCourse(index) {
-    if (confirm('Are you sure you want to remove this course from your enrolled courses?')) {
-        let enrolledCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
-        enrolledCourses.splice(index, 1);
-        localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
-        
-        showToast('Course removed successfully!');
-        loadEnrolledCourses();
-    }
+    const enrolledCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+    const courseName = enrolledCourses[index]?.title || 'Course';
+    
+    Modal.confirm(
+        'Remove Course',
+        `Are you sure you want to remove "${courseName}" from your enrolled courses? This action cannot be undone.`,
+        () => {
+            // Confirmed - remove the course
+            enrolledCourses.splice(index, 1);
+            localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
+            
+            Modal.toast(`${courseName} removed successfully!`, 'success');
+            loadEnrolledCourses();
+        },
+        () => {
+            // Cancelled - show info message
+            Modal.toast('Course removal cancelled', 'info', 2000);
+        },
+        {
+            confirmText: 'Remove Course',
+            cancelText: 'Keep Course',
+            confirmClass: 'btn-danger'
+        }
+    );
 }
 
 
-// Simple toast notification
-function showToast(message) {
-    let toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');
-    toast.innerText = message;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.classList.add('fade-out');
-        toast.addEventListener('transitionend', () => {
-            toast.remove();
-        });
-    }, 2000);
+// Legacy wrapper for backwards compatibility
+function showToast(message, type = 'success') {
+    Modal.toast(message, type);
 }
