@@ -6,8 +6,98 @@ class CourseSearch {
     this.suggestionsContainer = document.getElementById('searchSuggestions');
     this.coursesGrid = document.getElementById('coursesGrid');
     this.courses = this.extractCourseData();
+    this.config = this.getSearchConfiguration();
     
     this.init();
+  }
+
+  // Search configuration object for better maintainability
+  getSearchConfiguration() {
+    return {
+      // Keywords for search suggestions - easily extensible
+      keywords: [
+        // Programming Languages
+        'javascript', 'python', 'java', 'typescript', 'php', 'c++', 'c#', 'go', 'rust',
+        
+        // Web Development
+        'web development', 'frontend', 'backend', 'full stack', 'fullstack',
+        'html', 'css', 'react', 'angular', 'vue', 'node.js', 'express',
+        
+        // Design & UI/UX
+        'ui/ux', 'design', 'user interface', 'user experience', 'figma', 'photoshop',
+        'graphic design', 'web design', 'responsive design',
+        
+        // Data & Analytics
+        'data science', 'machine learning', 'artificial intelligence', 'ai', 'data analysis',
+        'statistics', 'big data', 'analytics',
+        
+        // Mobile Development
+        'mobile development', 'ios', 'android', 'react native', 'flutter', 'swift', 'kotlin',
+        
+        // DevOps & Infrastructure
+        'devops', 'docker', 'kubernetes', 'aws', 'azure', 'cloud computing', 'ci/cd',
+        
+        // Databases
+        'database', 'sql', 'mysql', 'postgresql', 'mongodb', 'redis',
+        
+        // General Programming Concepts
+        'programming', 'coding', 'software development', 'algorithms', 'data structures',
+        'api', 'rest', 'graphql', 'microservices'
+      ],
+      
+      // Search options
+      maxSuggestions: 5,
+      minQueryLength: 1,
+      searchDelay: 300, // milliseconds
+      
+      // Categories for filtering (can be extended)
+      categories: [
+        'programming', 'design', 'data-science', 'mobile', 'web-development'
+      ],
+      
+      // Levels for filtering
+      levels: ['beginner', 'intermediate', 'advanced']
+    };
+  }
+
+  // Method to add custom keywords dynamically
+  addKeywords(newKeywords) {
+    if (Array.isArray(newKeywords)) {
+      this.config.keywords.push(...newKeywords);
+      // Remove duplicates
+      this.config.keywords = [...new Set(this.config.keywords)];
+    }
+  }
+
+  // Method to remove keywords
+  removeKeywords(keywordsToRemove) {
+    if (Array.isArray(keywordsToRemove)) {
+      this.config.keywords = this.config.keywords.filter(
+        keyword => !keywordsToRemove.includes(keyword)
+      );
+    }
+  }
+
+  // Method to update search configuration
+  updateConfig(newConfig) {
+    this.config = { ...this.config, ...newConfig };
+  }
+
+  // Method to get keywords from course content (for auto-generation)
+  extractKeywordsFromCourses() {
+    const extractedKeywords = new Set();
+    
+    this.courses.forEach(course => {
+      // Extract common words from titles and descriptions
+      const words = course.searchText.split(/\s+/)
+        .filter(word => word.length > 3) // Only words longer than 3 characters
+        .map(word => word.toLowerCase())
+        .filter(word => /^[a-zA-Z]+$/.test(word)); // Only alphabetic words
+      
+      words.forEach(word => extractedKeywords.add(word));
+    });
+    
+    return Array.from(extractedKeywords);
   }
 
   init() {
@@ -106,7 +196,7 @@ class CourseSearch {
     
     if (suggestions.length > 0) {
       this.suggestionsContainer.innerHTML = suggestions
-        .slice(0, 5) // Limit to 5 suggestions
+        .slice(0, this.config.maxSuggestions) // Use configurable max suggestions
         .map(suggestion => `
           <div class="search-suggestion-item" data-suggestion="${suggestion}">
             ${this.highlightMatch(suggestion, query)}
@@ -141,14 +231,13 @@ class CourseSearch {
       if (course.title.includes(queryLower)) {
         suggestions.add(course.title);
       }
-      
-      // Add relevant keywords
-      const keywords = ['javascript', 'web development', 'ui/ux', 'design', 'programming', 'frontend', 'backend', 'full stack'];
-      keywords.forEach(keyword => {
-        if (keyword.includes(queryLower) && queryLower.length > 1) {
-          suggestions.add(keyword);
-        }
-      });
+    });
+    
+    // Add relevant keywords from configuration
+    this.config.keywords.forEach(keyword => {
+      if (keyword.includes(queryLower) && queryLower.length >= this.config.minQueryLength) {
+        suggestions.add(keyword);
+      }
     });
     
     return Array.from(suggestions);
@@ -318,3 +407,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Export for global access
 window.CourseSearch = CourseSearch;
+
+/*
+ * Usage Examples for Extensible Search Configuration:
+ * 
+ * 1. Add new keywords dynamically:
+ *    courseSearch.addKeywords(['blockchain', 'cryptocurrency', 'nft']);
+ * 
+ * 2. Remove specific keywords:
+ *    courseSearch.removeKeywords(['outdated-tech', 'deprecated']);
+ * 
+ * 3. Update search configuration:
+ *    courseSearch.updateConfig({
+ *      maxSuggestions: 8,
+ *      minQueryLength: 2,
+ *      searchDelay: 500
+ *    });
+ * 
+ * 4. Extract keywords from existing course content:
+ *    const autoKeywords = courseSearch.extractKeywordsFromCourses();
+ *    courseSearch.addKeywords(autoKeywords);
+ * 
+ * 5. Load keywords from external API:
+ *    fetch('/api/search-keywords')
+ *      .then(response => response.json())
+ *      .then(keywords => courseSearch.addKeywords(keywords));
+ * 
+ * 6. Category-specific keyword management:
+ *    const designKeywords = ['sketch', 'adobe xd', 'wireframing', 'prototyping'];
+ *    courseSearch.addKeywords(designKeywords);
+ */

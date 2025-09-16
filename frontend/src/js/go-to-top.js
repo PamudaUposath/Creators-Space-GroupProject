@@ -10,6 +10,7 @@ class GoToTopButton {
     
     this.button = null;
     this.isVisible = false;
+    this.throttledScrollHandler = null; // Store reference to throttled scroll handler
     this.init();
   }
 
@@ -44,7 +45,7 @@ class GoToTopButton {
   attachEventListeners() {
     // Scroll event with throttling for performance
     let ticking = false;
-    const handleScroll = () => {
+    this.throttledScrollHandler = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           this.handleScroll();
@@ -54,7 +55,7 @@ class GoToTopButton {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', this.throttledScrollHandler, { passive: true });
 
     // Click event for smooth scroll to top
     this.button.addEventListener('click', (e) => {
@@ -130,7 +131,12 @@ class GoToTopButton {
     if (this.button && this.button.parentNode) {
       this.button.parentNode.removeChild(this.button);
     }
-    window.removeEventListener('scroll', this.handleScroll);
+    
+    // Remove the correct throttled scroll handler reference
+    if (this.throttledScrollHandler) {
+      window.removeEventListener('scroll', this.throttledScrollHandler);
+      this.throttledScrollHandler = null;
+    }
   }
 }
 
