@@ -1,4 +1,9 @@
+// Internship page specific functionality
 document.addEventListener("DOMContentLoaded", () => {
+  // Internship-specific code can be added here
+  console.log("Internship page loaded");
+});
+ntListener("DOMContentLoaded", () => {
   const checkbox = document.querySelector("input[type='checkbox']");
   const savedTheme = localStorage.getItem("theme");
 

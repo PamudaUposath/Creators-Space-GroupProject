@@ -2,14 +2,6 @@
 session_start();
 include './includes/header.php';
 ?>
-    <!-- Dark Mode Toggle -->
-    <div class="toggle-switch">
-        <label class="switch-label">
-            <input onclick="toggleDarkMode()" type="checkbox" class="checkbox">
-            <span class="slider"></span>
-        </label>
-    </div>
-
     <!-- Hero Section with Animation -->
     <div class="main">
         <h1>Campus Ambassador Program</h1>
@@ -98,19 +90,6 @@ include './includes/header.php';
             <p>&copy; 2024 Creators-Space. All rights reserved.</p>
         </div>
     </div>
-
-    <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
-
-        // Load saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            document.querySelector('.checkbox').checked = true;
-        }
-    </script>
 
 <?php
 // Include footer

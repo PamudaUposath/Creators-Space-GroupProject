@@ -1,0 +1,882 @@
+/* ================================================
+   CREATORS-SPACE UNIFIED DARK MODE STYLES
+   ================================================ */
+
+/* ================================================
+   LAYOUT AND ALIGNMENT FIXES
+   ================================================ */
+
+/* Universal body alignment fixes */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  transition: background 0.5s ease, color 0.3s ease;
+  padding-top: 0; /* Remove conflicting padding */
+}
+
+/* Animated Background Particles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="30" r="2.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="70" r="1.8" fill="rgba(255,255,255,0.12)"/></svg>') repeat;
+  animation: particleFloat 20s linear infinite;
+  pointer-events: none;
+  z-index: -2;
+}
+
+@keyframes particleFloat {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-100vh) rotate(360deg); }
+}
+
+/* Container standardization */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+/* ================================================
+   DARK MODE TOGGLE STYLES
+   ================================================ */
+
+.dark-mode-toggle {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 10001;
+  width: 60px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  padding: 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  --light: #d8dbe0;
+  --dark: #28292c;
+  --link: rgb(27, 129, 112);
+  --link-hover: rgb(24, 94, 82);
+}
+
+.switch-label {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--dark);
+  border-radius: 25px;
+  cursor: pointer;
+  border: 3px solid var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.switch-label:hover {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.checkbox {
+  position: absolute;
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  transition: 0.3s;
+}
+
+.checkbox:checked ~ .slider {
+  background-color: var(--light);
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  box-shadow: inset 12px -4px 0px 0px var(--light);
+  background-color: var(--dark);
+  transition: 0.3s;
+}
+
+.checkbox:checked ~ .slider::before {
+  transform: translateX(26px);
+  background-color: var(--dark);
+  box-shadow: none;
+}
+
+/* ================================================
+   LIGHT THEME STYLES
+   ================================================ */
+
+/* Light Mode Text Colors */
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body p,
+body span,
+body div {
+  color: #ffffff;
+}
+
+body a {
+  color: #ffffff;
+}
+
+body a:hover {
+  color: #f0f0f0;
+}
+
+/* Navbar alignment fixes */
+body .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, rgba(40,40,80,0.9) 0%, rgba(60,60,100,0.9) 100%);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  padding: 1rem 0;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+body .navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+body .navbar:hover::before {
+  opacity: 1;
+}
+
+body .navbar h1 a {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+body .navbar h1 a:hover {
+  color: #667eea !important;
+  text-shadow: 0 0 20px rgba(102,126,234,0.8);
+}
+
+body .navbar .nav-links a {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+body .navbar .nav-links a::after {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+body .navbar .nav-links a:hover {
+  color: #ffffff !important;
+  text-shadow: 0 0 8px rgba(255,255,255,0.6);
+}
+
+/* Main content spacing */
+.main,
+.hero-section,
+main,
+section:first-of-type {
+  margin-top: 80px; /* Space for fixed navbar */
+}
+
+/* Light Mode Main Section */
+body .main {
+  background: transparent;
+  color: #ffffff;
+  margin-top: 80px !important;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+body .main h1 {
+  color: #ffffff;
+  text-shadow: 0 3px 15px rgba(0,0,0,0.4);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+body .main p {
+  color: #f0f0f0;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Hero section alignment */
+.hero-section {
+  margin-top: 80px !important;
+  padding: 4rem 2rem !important;
+  min-height: auto;
+}
+
+.hero-content-centered {
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* Section spacing fixes */
+.features-section,
+.courses-section,
+.stats-container {
+  margin: 2rem auto !important;
+  max-width: 1200px;
+  padding: 3rem 2rem;
+}
+
+/* Newsletter section (Stay Updated) - ensure good contrast in both modes */
+.newsletter-section {
+  background: rgba(246, 248, 250, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.newsletter-section h2 {
+  color: #2c3e50 !important;
+}
+
+.newsletter-section p {
+  color: #5a6c7d !important;
+}
+
+/* Stats container - override inline styles for better visibility */
+.stats-container h2 {
+  color: #2c3e50 !important;
+}
+
+.stats-container p {
+  color: #5a6c7d !important;
+}
+
+/* Features section - ensure proper text colors */
+.features-section h2,
+.features-section .section-title {
+  color: #2c3e50 !important;
+}
+
+.features-section .feature-card h3 {
+  color: #2c3e50 !important;
+}
+
+.features-section .feature-card p {
+  color: #5a6c7d !important;
+}
+
+/* About page hero fix */
+.about-hero,
+.courses-hero,
+.services-hero,
+.internship-hero,
+.campus-hero,
+.blog-hero,
+.projects-hero {
+  margin-top: 80px !important;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+/* Section spacing standardization */
+section {
+  padding: 2rem 0;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* Grid and flexbox alignment fixes */
+.grid,
+.features-grid,
+.courses-grid,
+.stats-grid {
+  display: grid;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.features-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.courses-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Light Mode Cards and Components */
+body .card,
+body .course,
+body .service-card,
+body .internship-card,
+body .project-card,
+body .blog-card,
+body .course-card,
+body .newsletter-card,
+body .mobile-component,
+body .campus-card,
+body .bookmark-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+body .card:hover,
+body .course:hover,
+body .service-card:hover,
+body .internship-card:hover,
+body .project-card:hover,
+body .blog-card:hover,
+body .course-card:hover,
+body .newsletter-card:hover,
+body .mobile-component:hover,
+body .campus-card:hover,
+body .bookmark-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+/* Light Mode Footer */
+body .footer {
+  background: linear-gradient(135deg, rgba(20,20,40,0.9) 0%, rgba(40,40,80,0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: #ffffff;
+}
+
+body .footer a {
+  color: #ffffff;
+}
+
+body .footer a:hover {
+  color: #667eea;
+}
+
+/* Light Mode Forms */
+body input,
+body textarea,
+body select {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+body input::placeholder,
+body textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body input:focus,
+body textarea:focus,
+body select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Light Mode Buttons */
+body .btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+body .btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+body .btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  color: #ffffff;
+}
+
+body .btn-primary:hover {
+  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* ================================================
+   DARK MODE STYLES
+   ================================================ */
+
+/* Base Dark Mode Styles */
+body.dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #ffffff;
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+/* Remove particles in dark mode */
+body.dark::before {
+  display: none;
+}
+
+/* Dark Mode Text Colors */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6 {
+  color: #ffffff;
+}
+
+body.dark p,
+body.dark span,
+body.dark div {
+  color: #e0e0e0;
+}
+
+body.dark a {
+  color: #66b3ff;
+}
+
+body.dark a:hover {
+  color: #4da6ff;
+}
+
+/* ================================================
+   NAVBAR DARK MODE
+   ================================================ */
+body.dark .navbar {
+  background-color: rgba(24, 24, 24, 0.95);
+  border: 1px solid #444;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.dark .navbar h1,
+body.dark .navbar a {
+  color: #fff;
+}
+
+body.dark .navbar a.btn {
+  background-color: #333;
+  color: #fff;
+  border-color: #666;
+}
+
+body.dark .navbar a.btn:hover {
+  background-color: #555;
+  color: #fff;
+  border-color: #888;
+}
+
+body.dark .navbar .nav-links a::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background-color: white;
+  transition: width 0.3s ease;
+  width: 0;
+}
+
+body.dark .navbar .nav-links a:hover::after,
+body.dark .navbar .nav-links a.active::after {
+  width: 100%;
+}
+
+body.dark #navbar-logo {
+  filter: brightness(1.2);
+}
+
+/* ================================================
+   MAIN SECTION DARK MODE
+   ================================================ */
+body.dark .main {
+  background-color: transparent;
+  color: #fff;
+  margin-top: 80px !important;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+body.dark .main h1 {
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+body.dark .main p {
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Dark mode hero section */
+body.dark .hero-section {
+  margin-top: 80px !important;
+  padding: 4rem 2rem !important;
+}
+
+body.dark .hero-content-centered {
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* Dark mode section spacing */
+body.dark .features-section,
+body.dark .courses-section,
+body.dark .stats-container {
+  margin: 2rem auto !important;
+  max-width: 1200px;
+  padding: 3rem 2rem;
+}
+
+/* Dark mode - Newsletter section */
+body.dark .newsletter-section {
+  background: rgba(42, 42, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark .newsletter-section h2 {
+  color: #ffffff !important;
+}
+
+body.dark .newsletter-section p {
+  color: #cccccc !important;
+}
+
+/* Dark mode - Stats container */
+body.dark .stats-container h2 {
+  color: #ffffff !important;
+}
+
+body.dark .stats-container p {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Dark mode - Features section */
+body.dark .features-section h2,
+body.dark .features-section .section-title {
+  color: #ffffff !important;
+}
+
+body.dark .features-section .feature-card h3 {
+  color: #ffffff !important;
+}
+
+body.dark .features-section .feature-card p {
+  color: #cccccc !important;
+}
+
+body.dark .about-hero {
+  margin-top: 80px !important;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+/* ================================================
+   COURSES DARK MODE
+   ================================================ */
+body.dark .course {
+  background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .course:hover {
+  background: linear-gradient(145deg, #333, #1f1f1f);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .course h3 {
+  color: #fff;
+}
+
+body.dark .course p {
+  color: #ccc;
+}
+
+body.dark .course-info button {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #fff;
+}
+
+body.dark .course-info button:hover {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+body.dark .syllabus {
+  background-color: #2d2d2d;
+  border-top: 1px solid #444;
+}
+
+body.dark .syllabus h4 {
+  color: #fff;
+}
+
+body.dark .syllabus ul {
+  color: #ccc;
+}
+
+/* ================================================
+   CARDS DARK MODE
+   ================================================ */
+body.dark .card,
+body.dark .course,
+body.dark .service-card,
+body.dark .internship-card,
+body.dark .project-card,
+body.dark .blog-card,
+body.dark .course-card,
+body.dark .newsletter-card,
+body.dark .mobile-component,
+body.dark .campus-card,
+body.dark .bookmark-card {
+  background-color: #2d2d2d;
+  border: 1px solid #444;
+  color: #fff;
+}
+
+body.dark .card:hover,
+body.dark .course:hover,
+body.dark .service-card:hover,
+body.dark .internship-card:hover,
+body.dark .project-card:hover,
+body.dark .blog-card:hover,
+body.dark .course-card:hover,
+body.dark .newsletter-card:hover,
+body.dark .mobile-component:hover,
+body.dark .campus-card:hover,
+body.dark .bookmark-card:hover {
+  background-color: #333;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .testimonial-card {
+  background-color: #2d2d2d;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark .why-card {
+  background-color: #2d2d2d;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark .why-card:hover {
+  border-color: #66b3ff;
+  background-color: #333;
+}
+
+body.dark .why-card p {
+  color: #ccc;
+}
+
+/* ================================================
+   FORMS DARK MODE
+   ================================================ */
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background-color: #2d2d2d;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark input:focus,
+body.dark textarea:focus,
+body.dark select:focus {
+  border-color: #66b3ff;
+  box-shadow: 0 0 5px rgba(102, 179, 255, 0.3);
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #aaa;
+}
+
+body.dark .btn {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark .btn:hover {
+  background-color: #555;
+  border-color: #777;
+}
+
+body.dark .btn-primary {
+  background-color: #66b3ff;
+  border-color: #66b3ff;
+  color: #000;
+}
+
+body.dark .btn-primary:hover {
+  background-color: #4da6ff;
+  border-color: #4da6ff;
+}
+
+/* ================================================
+   FOOTER DARK MODE
+   ================================================ */
+body.dark .footer {
+  background-color: #0f0f0f;
+  border-top: 1px solid #333;
+  color: #fff;
+}
+
+body.dark .footer a {
+  color: #66b3ff;
+}
+
+body.dark .footer a:hover {
+  color: #4da6ff;
+}
+
+body.dark .footer h3 {
+  color: #fff;
+}
+
+body.dark .footer p {
+  color: #ccc;
+}
+
+/* ================================================
+   SCROLL TO TOP BUTTON DARK MODE
+   ================================================ */
+body.dark #scrollTopBtn {
+  background-color: #333;
+  border: 1px solid #555;
+  color: #fff;
+}
+
+body.dark #scrollTopBtn:hover {
+  background-color: #555;
+}
+
+body.dark #scrollTopBtn svg {
+  fill: #fff;
+}
+
+/* ================================================
+   RESPONSIVE ADJUSTMENTS
+   ================================================ */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .navbar-container {
+    padding: 0 1rem;
+  }
+  
+  .grid,
+  .features-grid,
+  .courses-grid,
+  .stats-grid {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+  
+  .main,
+  .hero-section,
+  main,
+  section:first-of-type {
+    margin-top: 70px;
+  }
+  
+  .dark-mode-toggle {
+    top: 70px;
+    right: 15px;
+    width: 50px;
+    height: 25px;
+  }
+  
+  .toggle-switch {
+    width: 50px;
+    height: 25px;
+  }
+  
+  .slider::before {
+    width: 17px;
+    height: 17px;
+    top: 2px;
+    left: 4px;
+  }
+  
+  .checkbox:checked ~ .slider::before {
+    transform: translateX(21px);
+  }
+}
+
+/* ================================================
+   TRANSITIONS AND ANIMATIONS
+   ================================================ */
+body.dark * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

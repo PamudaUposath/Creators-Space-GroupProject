@@ -8,7 +8,9 @@
 }
 
 .service-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -20,6 +22,8 @@
 .service-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(102, 126, 234, 0.6);
 }
 
 .service-icon {
@@ -77,8 +81,16 @@
 
 /* Dark mode styles */
 body.dark .service-card {
-  background: #2a2a2a;
+  background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+body.dark .service-card:hover {
+  background: linear-gradient(145deg, #333, #1f1f1f);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: #66b3ff;
 }
 
 body.dark .service-card h3 {
@@ -86,9 +98,13 @@ body.dark .service-card h3 {
 }
 
 body.dark .service-card p {
-  color: #bbb;
+  color: #e0e0e0;
 }
 
 body.dark .service-features li {
   color: #ccc;
+}
+
+body.dark .service-features li::before {
+  color: #66b3ff;
 }

@@ -38,40 +38,16 @@ if ($message) {
   <link rel="stylesheet" href="./src/css/responsive.css">
   <link rel="stylesheet" href="./src/css/mobile-components.css">
   <link rel="stylesheet" href="./src/css/newsletter.css">
+  <link rel="stylesheet" href="./src/css/dark-mode.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
     integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   
   <!-- Enhanced Stylish CSS for Index Page -->
   <style>
-    /* Modern Gradient Background */
-    body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
+    /* Home page specific enhancements - theme handled globally */
     
-    /* Animated Background Particles */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="30" r="2.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="70" r="1.8" fill="rgba(255,255,255,0.12)"/></svg>') repeat;
-      animation: particleFloat 20s linear infinite;
-      pointer-events: none;
-      z-index: -1;
-    }
-    
-    @keyframes particleFloat {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(-100vh) rotate(360deg); }
-    }
-    
-    /* Modern Stylish Navbar */
+    /* Enhanced navbar styles specific to home page */
     .navbar {
       position: fixed;
       top: 0;
@@ -465,9 +441,21 @@ if ($message) {
       padding: 0.5rem 0;
     }
     
-    /* Add body padding for fixed navbar */
-    body {
-      padding-top: 80px;
+    /* Main content should align properly with fixed navbar */
+    .main {
+      margin-top: 80px !important;
+      padding: 3rem 2rem !important;
+    }
+    
+    /* Hero section alignment fixes */
+    .hero-section {
+      margin-top: 80px !important;
+      padding: 4rem 2rem !important;
+    }
+    
+    /* Ensure sections don't overlap navbar */
+    section:first-of-type {
+      margin-top: 80px !important;
     }
     
     /* Mobile Navigation Toggle */
@@ -1425,6 +1413,9 @@ if ($message) {
       }
     }
   </style>
+
+  <!-- Dark Mode Controller Script -->
+  <script src="./src/js/dark-mode.js"></script>
 </head>
 
 <body id="main-body" class="overflow-x-hidden">

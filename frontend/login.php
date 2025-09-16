@@ -29,10 +29,43 @@ include './includes/header.php';
     }
 
     body {
-      background: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.3s ease;
+    }
+
+    /* Animated Background Particles for light mode */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1.5" fill="rgba(255,255,255,0.15)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="30" r="2.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="70" r="1.8" fill="rgba(255,255,255,0.12)"/></svg>') repeat;
+      animation: particleFloat 20s linear infinite;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    /* Dark mode styles for body */
+    body.dark {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #ffffff;
+    }
+
+    /* Remove particles in dark mode */
+    body.dark::before {
+      display: none;
     }
 
     .main-content {
@@ -44,19 +77,37 @@ include './includes/header.php';
     }
 
     .container {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       padding: 2rem;
       border-radius: 12px;
       width: 100%;
       max-width: 400px;
       box-shadow: 0 8px 150px rgba(0, 0, 0, 0.15);
-      border: 1px solid #ccc;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       font-weight: 500;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Dark mode styles for container */
+    body.dark .container {
+      background: rgba(40, 44, 52, 0.95);
+      border: 1px solid #444;
+      color: #ffffff;
+      box-shadow: 0 8px 150px rgba(0, 0, 0, 0.3);
     }
 
     h2 {
       text-align: center;
       margin-bottom: 1rem;
+      color: #2d3748;
+      transition: color 0.3s ease;
+      font-weight: 600;
+    }
+
+    /* Dark mode styles for headings */
+    body.dark h2 {
+      color: #ffffff;
     }
 
     .form-group {
@@ -67,6 +118,14 @@ include './includes/header.php';
     label {
       display: block;
       margin-bottom: 5px;
+      color: #4a5568;
+      transition: color 0.3s ease;
+      font-weight: 500;
+    }
+
+    /* Dark mode styles for labels */
+    body.dark label {
+      color: #e0e0e0;
     }
 
     input[type="email"],
@@ -74,8 +133,33 @@ include './includes/header.php';
       width: 100%;
       padding: 10px;
       padding-right: 40px;
-      border: 1px solid #ccc;
+      border: 1px solid rgba(102, 126, 234, 0.3);
       border-radius: 6px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2d3748;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    /* Dark mode styles for inputs */
+    body.dark input[type="email"],
+    body.dark input[type="password"] {
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      color: #ffffff;
+    }
+
+    body.dark input[type="email"]:focus,
+    body.dark input[type="password"]:focus {
+      border-color: #66b3ff;
     }
 
     .toggle-password {
@@ -83,7 +167,17 @@ include './includes/header.php';
       right: 10px;
       top: 38px;
       cursor: pointer;
-      color: #555;
+      color: #667eea;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: #4c51bf;
+    }
+
+    /* Dark mode styles for toggle password */
+    body.dark .toggle-password {
+      color: #e0e0e0;
     }
 
     .inline-feedback {
@@ -105,8 +199,24 @@ include './includes/header.php';
       text-align: right;
       margin-bottom: 1rem;
       font-size: 0.9rem;
-      color: black;
+      color: #667eea;
       text-decoration: none;
+      transition: color 0.3s ease;
+      font-weight: 500;
+    }
+
+    .forgot-password:hover {
+      color: #4c51bf;
+      text-decoration: underline;
+    }
+
+    /* Dark mode styles for forgot password link */
+    body.dark .forgot-password {
+      color: #66b3ff;
+    }
+
+    body.dark .forgot-password:hover {
+      color: #4da6ff;
     }
 
     .signup-page {
@@ -114,8 +224,32 @@ include './includes/header.php';
       text-align: center;
       margin-bottom: 1rem;
       font-size: 0.9rem;
-      color: black;
+      color: #333;
       text-decoration: none;
+    }
+
+    .signup-page a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .signup-page a:hover {
+      color: #4c51bf;
+      text-decoration: underline;
+    }
+
+    /* Dark mode styles for signup page link */
+    body.dark .signup-page {
+      color: #e0e0e0;
+    }
+
+    body.dark .signup-page a {
+      color: #66b3ff;
+    }
+
+    body.dark .signup-page a:hover {
+      color: #4da6ff;
     }
 
     .btn {
@@ -123,14 +257,41 @@ include './includes/header.php';
       padding: 10px;
       border: none;
       border-radius: 6px;
-      background-color: #0d0d0d;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       font-weight: bold;
       cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
 
     .btn:disabled {
-      background-color: #999;
+      background: #999;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Dark mode styles for button */
+    body.dark .btn {
+      background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    body.dark .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+    }
+
+    body.dark .btn:disabled {
+      background: #666;
+      transform: none;
+      box-shadow: none;
     }
 
     .spinner {
@@ -164,6 +325,34 @@ include './includes/header.php';
       margin-top: 1rem;
       padding-top: 1rem;
       border-top: 1px solid #eee;
+      transition: border-color 0.3s ease;
+    }
+
+    /* Dark mode styles for forgot password section */
+    body.dark .forgot-password-section {
+      border-top: 1px solid #444;
+    }
+
+    .back-to-home {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #555;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .back-to-home:hover {
+      color: #667eea;
+    }
+
+    /* Dark mode styles for back to home link */
+    body.dark .back-to-home {
+      color: #e0e0e0;
+    }
+
+    body.dark .back-to-home:hover {
+      color: #66b3ff;
     }
 
     .forgot-form {
@@ -173,14 +362,30 @@ include './includes/header.php';
     .forgot-form.active {
       display: block;
     }
+
+    /* Dark mode styles for reset password form */
+    body.dark .forgot-form h3 {
+      color: #ffffff;
+    }
+
+    body.dark .forgot-form p {
+      color: #b3b3b3 !important;
+    }
+
+    body.dark .forgot-form a {
+      color: #66b3ff;
+    }
+
+    body.dark .forgot-form a:hover {
+      color: #4da6ff;
+    }
   </style>
 </head>
 
 <body>
   <div class="main-content">
     <div class="container">
-      <a href="index.php"
-      style="display: inline-block; margin-bottom: 10px; font-size: 14px; color: #555; text-decoration: none;">
+      <a href="index.php" class="back-to-home">
       ← Back to Homepage
     </a>
     
@@ -225,7 +430,7 @@ include './includes/header.php';
     <div class="forgot-password-section">
       <div id="forgot-form" class="forgot-form">
         <h3>Reset Password</h3>
-        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem; transition: color 0.3s ease;">
           Enter your email address and we'll send you a link to reset your password.
         </p>
         <form id="forgot-password-form" method="POST" action="../backend/auth/forgot_password.php">
@@ -236,7 +441,7 @@ include './includes/header.php';
           <button type="submit" class="btn">Send Reset Link</button>
           <div class="spinner" id="forgot-spinner"></div>
         </form>
-        <a href="#" onclick="toggleForgotPassword()" style="font-size: 0.9rem; color: #666;">← Back to Login</a>
+        <a href="#" onclick="toggleForgotPassword()" style="font-size: 0.9rem; color: #666; transition: color 0.3s ease;">← Back to Login</a>
       </div>
     </div>
   </div>

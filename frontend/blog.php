@@ -8,14 +8,6 @@ $bodyClass = "overflow-x-hidden";
 // Include header
 include './includes/header.php';
 ?>
-    <!-- Dark Mode Toggle -->
-    <div class="toggle-switch">
-        <label class="switch-label">
-            <input onclick="toggleDarkMode()" type="checkbox" class="checkbox">
-            <span class="slider"></span>
-        </label>
-    </div>
-
     <!-- Hero Section with Animation -->
     <div class="main">
         <h1>Tech Insights & Tutorials</h1>
@@ -154,17 +146,6 @@ include './includes/header.php';
 <?php
 // Set custom JS for this page
 $customJS = '
-function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-}
-
-// Load saved dark mode preference
-if (localStorage.getItem("darkMode") === "true") {
-    document.body.classList.add("dark-mode");
-    document.querySelector(".checkbox").checked = true;
-}
-
 // Blog filtering functionality
 document.addEventListener("DOMContentLoaded", function() {
     const filterBtns = document.querySelectorAll(".filter-btn");

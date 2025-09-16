@@ -39,6 +39,7 @@ if ($message) {
   <link rel="stylesheet" href="./src/css/responsive.css">
   <link rel="stylesheet" href="./src/css/mobile-components.css">
   <link rel="stylesheet" href="./src/css/newsletter.css">
+  <link rel="stylesheet" href="./src/css/dark-mode.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
     integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -119,6 +120,9 @@ if ($message) {
   <?php if (isset($customStyles)): ?>
     <style><?php echo $customStyles; ?></style>
   <?php endif; ?>
+
+  <!-- Dark Mode Controller Script -->
+  <script src="./src/js/dark-mode.js"></script>
 </head>
 <body<?php echo isset($bodyClass) ? ' class="' . $bodyClass . '"' : ''; ?>>
 

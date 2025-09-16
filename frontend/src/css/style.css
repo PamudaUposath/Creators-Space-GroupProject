@@ -327,14 +327,6 @@ body {
   color: #240d64;
 }
 
-body.dark #our-course-h1 {
-  color: #00c6ff;
-}
-
-body.dark #our-course-h1:hover {
-  color: #ff512f;
-}
-
   /* courses */
 /* COURSES SECTION */
 #courses {
@@ -665,13 +657,6 @@ body.dark #our-course-h1:hover {
   transform: scale(1.1);
   top: 0;
 }
-.dark #scrollTopBtn{
-  background-color: white;
-  
-}
-.dark #scrollTopBtn svg {
-  fill: #0a0a0a; /* arrow color for dark mode */
-}
 
 /* bounce animation added to back to top */
 @keyframes bounce {
@@ -688,173 +673,6 @@ body.dark #our-course-h1:hover {
   animation: bounce 2s infinite;
 }
 
-/* Dark Mode Switch Styles  */
-.toggle-switch {
-  position: relative;
-  width: 60px;
-  height: 10px;
-  margin-left: auto;
-  margin-right: 40px;
-  margin-bottom: 30px;
-  padding: 10px;
-  --light: #d8dbe0;
-  --dark: #28292c;
-  --link: rgb(27, 129, 112);
-  --link-hover: rgb(24, 94, 82);
-}
-
-.switch-label {
-  position: absolute;
-  width: 100%;
-  height: 30px;
-  background-color: var(--dark);
-  border-radius: 25px;
-  cursor: pointer;
-  border: 3px solid var(--dark);
-}
-
-.checkbox {
-  position: absolute;
-  display: none;
-}
-
-.slider {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 25px;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-}
-
-.checkbox:checked ~ .slider {
-  background-color: var(--light);
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 5px;
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  -webkit-box-shadow: inset 12px -4px 0px 0px var(--light);
-  box-shadow: inset 12px -4px 0px 0px var(--light);
-  background-color: var(--dark);
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-}
-
-.checkbox:checked ~ .slider::before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-  background-color: var(--dark);
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-/* Dark Mode Switch Styles for Body element*/
-
-body.dark {
-  background-color: #222;
-}
-
-body.dark h1,
-body.dark .support a {
-  color: #fff;
-}
-
-/* Dark mode for navbar */
-body.dark .navbar {
-  background-color: rgba(24, 24, 24, 0.6);
-  border: 1px solid #444;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-body.dark .navbar h1,
-body.dark .navbar a {
-  color: #fff;
-}
-body.dark .navbar a.btn {
-  background-color: #222;
-  color: #fff;
-  border-color: #fff;
-}
-body.dark .navbar a.btn:hover {
-  background-color: #fff;
-  color: #222;
-}
-/* White underline for nav links in dark mode */
-body.dark .navbar .nav-links a::after {
-  content: "";
-  display: block;
-  height: 1px;
-  background-color: white;
-  transition: width 0.3s ease;
-  width: 0;
-}
-
-body.dark .navbar .nav-links a:hover::after,
-body.dark .navbar .nav-links a.active::after {
-  width: 100%;
-}
-
-/* Dark mode for main section */
-body.dark .main {
-  background-color: #222;
-  color: #fff;
-}
-
-/* Dark mode for courses */
-/* body.dark .course,
-body.dark .course-info {
-  background-color: #222 !important;
-  color: #fff !important;
-  border-color: #fff !important;
-}
-body.dark .course-info button {
-  background-color: #fff;
-  color: #222;
-}
-body.dark .course-info button:hover {
-  background-color: black;
-  color: #fff;
-} */
-
-/* DARK MODE OVERRIDE */
-body.dark .course {
-  background: linear-gradient(145deg, #111, #1d1d1d);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark .course-info button {
-  background-color: #fff;
-  color: #000;
-}
-
-body.dark .course-info button:hover {
-  background-color: transparent;
-  color: #fff;
-  border: 1px solid #fff;
-}
-
-/* Dark mode for footer */
-body.dark .footer {
-  background-color: #181818;
-  color: #fff;
-}
-body.dark .footer a {
-  color: #fff;
-}
-
-/* Dark mode for testimonial cards */
-body.dark .testimonial-card {
-  background-color: #fff;
-  color: #222;
-}
 /* Why Learn With Us Section */
 #why-learn {
   padding: 60px 20px;

@@ -8,14 +8,6 @@ $additionalJS = ['./src/js/internship.js'];
 // Include header
 include './includes/header.php';
 ?>
-    <!-- Dark Mode Toggle -->
-    <div class="toggle-switch">
-        <label class="switch-label">
-            <input type="checkbox" class="checkbox" id="dark-mode-toggle" />
-            <span class="slider"></span>
-        </label>
-    </div>
-
     <!-- MAIN SECTION -->
     <section class="main">
         <h1>Exciting Internship Opportunities</h1>
