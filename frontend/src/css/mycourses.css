@@ -76,33 +76,33 @@ body {
 
 
 
-.courses-hero {.courses-hero {
+.courses-hero {
 
-  text-align: center;  text-align: center;
+  text-align: center;
 
-  padding: 2rem 0;  padding: 2rem 0;
+  padding: 2rem 0;
 
-  background: rgba(255, 255, 255, 0.05);  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 
-  backdrop-filter: blur(20px);  backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
 
-  margin-bottom: 3rem;  margin-bottom: 3rem;
+  margin-bottom: 3rem;
 
-}}
+}
 
 
 
-.courses-hero h1 {.courses-hero h1 {
+.courses-hero h1 {
 
-  font-size: 2.5rem;  font-size: 2.5rem;
+  font-size: 2.5rem;
 
-  color: #ffffff;  color: #ffffff;
+  color: #ffffff;
 
-  margin-bottom: 1rem;  margin-bottom: 1rem;
+  margin-bottom: 1rem;
 
-  font-weight: 700;  font-weight: 700;
+  font-weight: 700;
 
-}}
+}
 
 
 
