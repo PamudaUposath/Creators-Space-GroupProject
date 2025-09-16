@@ -5,19 +5,23 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/PHP-8.0%2B-blue)](https://www.php.net/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-orange)](https://www.mysql.com/)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com/PamudaUposath/Creators-Space-GroupProject)
 
 **Creators-Space** is a comprehensive e-learning management system built with PHP and MySQL, designed to empower the next generation of tech innovators through quality education and hands-on learning experiences.
 
-## 🚀 Major Update - PHP + MySQL Implementation
+## 🚀 Latest Updates - Full Database Integration & Enhanced Features
 
-This project has been completely restructured and upgraded from a static HTML/localStorage system to a full-featured PHP + MySQL web application with:
+This project has been completely upgraded to a full-featured PHP + MySQL web application with real-time database integration:
 
-- ✅ **Backend Architecture**: Organized into `frontend/` and `backend/` directories
-- ✅ **User Authentication**: Secure login/signup with password hashing and session management
-- ✅ **Admin Panel**: Complete administrative dashboard for user and content management
-- ✅ **Database Integration**: MySQL database with proper relationships and constraints
-- ✅ **Security Features**: CSRF protection, rate limiting, secure password reset
-- ✅ **Role-based Access**: User, Instructor, and Admin roles with appropriate permissions
+- ✅ **Database-Driven Courses**: Real courses fetched from MySQL database with instructor information
+- ✅ **Smart Course Categorization**: Automatic course categorization based on content analysis
+- ✅ **Image Management**: Comprehensive image management system for courses with fallback support
+- ✅ **Enhanced Search & Filtering**: Advanced search functionality with multiple filter options
+- ✅ **User Authentication**: Complete session-based authentication with secure password handling
+- ✅ **Admin Dashboard**: Comprehensive admin panel with user and course management
+- ✅ **Mobile Responsive**: Fully responsive design optimized for all devices
+- ✅ **Certificate System**: Digital certificate generation and verification
+- ✅ **Progress Tracking**: Real-time learning progress and course completion tracking
 
 ---
 
@@ -26,44 +30,76 @@ This project has been completely restructured and upgraded from a static HTML/lo
 ```
 Creators-Space-GroupProject/
 ├── frontend/                    # Client-facing application
-│   ├── index.php               # Homepage
-│   ├── login.php               # User login
+│   ├── index.php               # Homepage with hero section
+│   ├── about.php               # About page with dark mode
+│   ├── login.php               # User authentication
 │   ├── signup.php              # User registration
-│   ├── courses.php             # Course catalog
-│   ├── profile.php             # User profile
-│   ├── assets/                 # Images, CSS, JS
-│   ├── src/                    # Source files
-│   └── README.md               # Frontend documentation
+│   ├── courses.php             # Database-driven course catalog
+│   ├── mycourses.php           # User enrolled courses
+│   ├── blog.php                # Educational blog
+│   ├── projects.php            # Project showcase
+│   ├── internship.php          # Internship opportunities
+│   ├── services.php            # Platform services
+│   ├── campus-ambassador.php   # Ambassador program
+│   ├── certificate.php         # Certificate verification
+│   ├── includes/               # Shared components
+│   │   ├── header.php          # Navigation header
+│   │   └── footer.php          # Site footer
+│   ├── assets/                 # Static assets
+│   │   ├── images/             # Course and UI images
+│   │   │   ├── blogpage/       # Blog post images
+│   │   │   └── aboutpage/      # About page assets
+│   │   ├── animations/         # Loading animations
+│   │   └── certificate/        # Certificate templates
+│   └── src/                    # Source files
+│       ├── css/                # Stylesheets
+│       │   ├── style.css       # Main styles
+│       │   ├── courses.css     # Course-specific styles
+│       │   ├── about.css       # About page styles
+│       │   └── *.css           # Component-specific styles
+│       ├── js/                 # JavaScript modules
+│       │   ├── courses.js      # Advanced search & filtering
+│       │   ├── about.js        # Dark mode & animations
+│       │   ├── navbar.js       # Navigation functionality
+│       │   └── *.js            # Component scripts
+│       └── data/               # Static data files
+│           ├── projects.json   # Project data
+│           ├── services.json   # Services data
+│           └── internship.json # Internship data
 ├── backend/                     # Server-side application
-│   ├── public/                 # Public backend entry points
-│   │   └── admin_login.php     # Admin login
-│   ├── auth/                   # Authentication endpoints
-│   │   ├── signup_process.php
-│   │   ├── login_process.php
-│   │   ├── logout.php
-│   │   ├── forgot_password.php
-│   │   └── reset_password.php
-│   ├── admin/                  # Admin panel
-│   │   ├── dashboard.php
-│   │   └── users.php
 │   ├── config/                 # Configuration
-│   │   └── db_connect.php
+│   │   └── db_connect.php      # Database connection
+│   ├── auth/                   # Authentication endpoints
+│   │   ├── signup_process.php  # Registration handler
+│   │   ├── login_process.php   # Login handler
+│   │   ├── logout.php          # Logout handler
+│   │   ├── forgot_password.php # Password reset
+│   │   └── reset_password.php  # Password reset handler
+│   ├── admin/                  # Admin panel
+│   │   ├── dashboard.php       # Admin dashboard
+│   │   └── users.php           # User management
+│   ├── public/                 # Public backend entry
+│   │   ├── admin_login.php     # Admin authentication
+│   │   └── index.php           # Backend API entry
 │   ├── sql/                    # Database files
-│   │   ├── db_schema.sql
-│   │   └── seed_admin.sql
+│   │   ├── db_schema.sql       # Database structure
+│   │   └── seed_admin.sql      # Admin user seed
 │   ├── lib/                    # Helper libraries
-│   ├── ER_ASCII.txt           # Database ER diagram
-│   └── README.md              # Backend documentation
-├── docs/                       # Documentation and screenshots
-│   ├── INSTALL.md             # Installation guide
-│   ├── STATUS.md              # Project status
-│   └── *.png                  # Screenshot files
+│   │   └── helpers.php         # Utility functions
+│   ├── add_sample_data.php     # Sample course data
+│   ├── update_course_images.php # Image management
+│   ├── dashboard_stats.php     # Analytics data
+│   └── ER_ASCII.txt           # Database ER diagram
+├── docs/                       # Documentation
+│   ├── INSTALL.md             # Detailed installation guide
+│   ├── STATUS.md              # Development status
+│   ├── CLEANUP.md             # Code cleanup notes
+│   ├── MOBILE_RESPONSIVE.md   # Mobile design guide
+│   ├── SYSTEM_TEST.md         # Testing documentation
+│   └── *.png                  # Screenshots
+├── index.php                   # Root redirect
 ├── setup.bat                   # Windows setup script
 ├── setup.sh                   # Linux/macOS setup script
-├── .gitignore
-├── CODE_OF_CONDUCT.md
-├── CONTRIBUTING.md
-├── LICENSE
 └── README.md                  # This file
 ```
 
@@ -75,27 +111,42 @@ Creators-Space-GroupProject/
 - **Secure Authentication**: Registration, login, logout with session management
 - **Password Security**: Hashed passwords using PHP's `password_hash()`
 - **Password Reset**: Secure token-based password reset via email
-- **Role-based Access**: User, Instructor, and Admin roles
-- **Profile Management**: Users can manage their profiles and preferences
+- **Role-based Access**: User, Instructor, and Admin roles with permissions
+- **Profile Management**: Comprehensive user profile with skills tracking
+- **Session Security**: Secure session handling and automatic timeout
 
 ### 📚 Course Management
-- **Course Catalog**: Browse and search available courses
-- **Enrollment System**: Users can enroll in courses
-- **Progress Tracking**: Track learning progress and completion
-- **Certificates**: Generate certificates upon course completion
-- **Bookmarking**: Save courses for later reference
+- **Database-Driven Catalog**: Real-time course data from MySQL database
+- **Smart Categorization**: Automatic course categorization (Web Dev, Design, Programming, Data Science, Mobile, DevOps)
+- **Advanced Search**: Intelligent search with suggestions and keyword matching
+- **Multi-Filter System**: Filter by category, level, price, and instructor
+- **Image Management**: Comprehensive image system with fallback support
+- **Enrollment System**: Seamless course enrollment with progress tracking
+- **Instructor Profiles**: Detailed instructor information and credentials
 
 ### 🎓 Learning Features
 - **Interactive Lessons**: Structured course content with video support
-- **Projects Portfolio**: Showcase user projects and work
-- **Skills Tracking**: Track and display user skills and achievements
-- **Blog System**: Educational articles and tech insights
+- **Progress Tracking**: Real-time learning progress and completion analytics
+- **Certificate Generation**: Digital certificates with verification codes
+- **Bookmarking System**: Save and organize favorite courses
+- **Course Reviews**: Rating and review system for courses
+- **Learning Paths**: Guided learning trajectories for different skills
+
+### 💻 Frontend Features
+- **Responsive Design**: Mobile-first design optimized for all devices
+- **Dark Mode Support**: Comprehensive dark theme with smooth transitions
+- **Modern UI/UX**: Glassmorphism design with CSS animations
+- **Performance Optimized**: Lazy loading and optimized asset delivery
+- **Accessibility**: WCAG compliant with keyboard navigation support
+- **PWA Ready**: Progressive Web App capabilities
 
 ### 💼 Career Services
-- **Internship Portal**: Browse and apply for internship opportunities
-- **Campus Ambassador Program**: Student ambassador applications
-- **Career Guidance**: Professional development resources
-- **Networking**: Connect with instructors and peers
+- **Internship Portal**: Browse and apply for internship opportunities with JSON data
+- **Campus Ambassador Program**: Student ambassador application system
+- **Project Showcase**: Portfolio system for displaying user projects
+- **Career Guidance**: Professional development resources and mentorship
+- **Networking Hub**: Connect with instructors, peers, and industry professionals
+- **Blog Platform**: Educational articles and tech insights
 
 ### 🔧 Admin Panel
 - **User Management**: Manage users, roles, and permissions
@@ -131,10 +182,11 @@ Creators-Space-GroupProject/
 ## 🚀 Quick Start
 
 ### Prerequisites
-- PHP 8.0 or higher
-- MySQL 8.0 or higher
-- Web server (Apache/Nginx) or PHP built-in server
-- Git (for cloning the repository)
+- **PHP 8.0 or higher** with extensions: PDO, PDO_MySQL, session, json
+- **MySQL 8.0 or higher** / MariaDB 10.4+
+- **Web server** (Apache/Nginx) or PHP built-in server
+- **Git** for cloning the repository
+- **XAMPP/WAMP/MAMP** (recommended for local development)
 
 ### 1. Clone the Repository
 ```bash
@@ -146,7 +198,7 @@ cd Creators-Space-GroupProject
 ```bash
 # Create MySQL database
 mysql -u root -p
-CREATE DATABASE creators_space;
+CREATE DATABASE creators_space DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 exit
 
 # Import schema and seed data
@@ -157,82 +209,187 @@ mysql -u root -p creators_space < backend/sql/seed_admin.sql
 ### 3. Configure Database Connection
 Edit `backend/config/db_connect.php`:
 ```php
+<?php
+// Database configuration
 $DB_HOST = '127.0.0.1';
 $DB_NAME = 'creators_space';
 $DB_USER = 'root';          // Your MySQL username
-$DB_PASS = '';              // Your MySQL password
+$DB_PASS = '';              // Your MySQL password (empty for XAMPP default)
+$DB_CHARSET = 'utf8mb4';
+?>
 ```
 
-### 4. Start Development Server
+### 4. Add Sample Data (Optional)
 ```bash
-# Frontend (Port 8000)
-cd frontend
+# Add sample courses and users
+cd backend
+php add_sample_data.php
+
+# Update course images
+php update_course_images.php
+```
+
+### 5. Start Development Server
+
+#### Option A: PHP Built-in Server (Recommended)
+```bash
+# From project root
 php -S localhost:8000
 
-# Powershell only
-& "C:\xampp\php\php.exe" -S localhost:8000 
+# Or for Windows with XAMPP
+C:\xampp\php\php.exe -S localhost:8000
 
-
-# Backend (Port 8080) - In another terminal
-cd backend/public
-php -S localhost:8080
-
-# Powershell only
-& "C:\xampp\php\php.exe" -S localhost:8080 
+# Access at: http://localhost:8000/frontend/
 ```
 
-### 5. Access the Application
-- **Frontend**: http://localhost:8000
-- **Admin Panel**: http://localhost:8080/admin_login.php
+#### Option B: XAMPP/WAMP Setup
+1. Move project to `htdocs/` directory
+2. Start Apache and MySQL from XAMPP control panel
+3. Access at: `http://localhost/Creators-Space-GroupProject/frontend/`
 
-### Default Admin Credentials
+### 6. Access the Application
+- **Frontend Homepage**: `http://localhost:8000/frontend/`
+- **Course Catalog**: `http://localhost:8000/frontend/courses.php`
+- **Admin Panel**: `http://localhost:8000/backend/public/admin_login.php`
+- **User Login**: `http://localhost:8000/frontend/login.php`
+
+### 7. Default Credentials
+**Admin Account:**
 - **Email**: `admin@creatorsspace.local`
-- **Password**: `password` (change this immediately!)
+- **Password**: `admin123` 
+
+**Test User Account:**
+- **Email**: `user@example.com`
+- **Password**: `password123`
+
+> ⚠️ **Security Note**: Change default passwords immediately in production!
 
 ---
 
-## 📸 Screenshots
+## 🛠 Development & Troubleshooting
 
-### Homepage
-![Homepage](docs/intro(light).png)
+### Common Issues & Solutions
 
-### Admin Dashboard
-![Admin Dashboard](docs/course.png)
+#### Database Connection Issues
+```php
+// Error: "Access denied for user"
+// Solution: Check credentials in backend/config/db_connect.php
+$DB_USER = 'your_mysql_username';
+$DB_PASS = 'your_mysql_password';
+```
 
-### User Login
-![Login Page](docs/login.png)
+#### Image Loading Issues
+```bash
+# Ensure proper server setup from project root
+php -S localhost:8000
 
-### Course Catalog
-![Courses](docs/course.png)
+# Images should load from: /frontend/assets/images/
+# Check image paths in database with:
+php backend/update_course_images.php
+```
+
+#### Course Data Not Showing
+```bash
+# Add sample data if database is empty
+cd backend
+php add_sample_data.php
+```
+
+### Development Commands
+```bash
+# Start development server
+php -S localhost:8000
+
+# Add sample data
+php backend/add_sample_data.php
+
+# Update course images
+php backend/update_course_images.php
+
+# Check database status
+php backend/dashboard_stats.php
+```
+
+### Browser Testing
+- **Desktop**: Chrome, Firefox, Safari, Edge
+- **Mobile**: iOS Safari, Android Chrome
+- **Responsive**: All screen sizes 320px+
 
 ---
 
 ## 🏗️ Database Schema
 
-The system uses a well-structured MySQL database with the following key entities:
+The system uses a robust MySQL database with comprehensive relationships:
 
-- **Users**: Authentication and profile information
-- **Courses**: Course content and metadata
-- **Lessons**: Individual course modules
-- **Enrollments**: User-course relationships
-- **Certificates**: Completion certificates
-- **Internships**: Career opportunities
-- **Blog Posts**: Educational content
+### Core Tables
+- **users** - User accounts, profiles, and authentication
+- **courses** - Course catalog with metadata and pricing
+- **lessons** - Individual course modules and content  
+- **enrollments** - User course registrations and progress
+- **certificates** - Digital certificates with verification codes
 
-See `backend/ER_ASCII.txt` for detailed entity relationships and constraints.
+### Content Management
+- **blog_posts** - Educational articles and content
+- **internships** - Career opportunities and applications
+- **services** - Platform services and offerings
+- **bookmarks** - User saved courses
+
+### System Tables
+- **newsletter_subscriptions** - Email marketing
+- **campus_ambassador_applications** - Ambassador program
+- **internship_applications** - Career applications
+
+### Database Features
+- **Foreign Key Constraints** - Data integrity enforcement
+- **Automatic Timestamps** - Created/updated tracking
+- **UTF8MB4 Encoding** - Full Unicode support including emojis
+- **Indexed Columns** - Optimized query performance
+
+See `backend/ER_ASCII.txt` for detailed entity relationships and `backend/sql/db_schema.sql` for complete table definitions.
+
+---
+
+## 🎯 API Endpoints
+
+### Authentication
+- `POST /backend/auth/signup_process.php` - User registration
+- `POST /backend/auth/login_process.php` - User login
+- `GET /backend/auth/logout.php` - User logout
+- `POST /backend/auth/forgot_password.php` - Password reset request
+- `POST /backend/auth/reset_password.php` - Password reset completion
+
+### Course Management
+- `GET /frontend/courses.php` - Course catalog with filtering
+- `POST /backend/enroll_course.php` - Course enrollment
+- `GET /backend/course_progress.php` - Progress tracking
+
+### Admin Panel
+- `GET /backend/admin/dashboard.php` - Admin dashboard
+- `GET /backend/admin/users.php` - User management
+- `POST /backend/admin/course_management.php` - Course administration
 
 ---
 
 ## 🔒 Security Features
 
-- **Authentication**: Secure session-based authentication
-- **Password Security**: Hashed passwords with salt
-- **SQL Injection Prevention**: PDO prepared statements
-- **XSS Protection**: Input sanitization and output escaping
-- **CSRF Protection**: Token-based form protection
+### Authentication & Authorization
+- **Session Management**: Secure PHP sessions with regeneration
+- **Password Security**: Argon2 hashing with automatic salt generation
+- **Role-based Access**: User/Instructor/Admin permission levels
+- **Secure Logout**: Complete session cleanup
+
+### Data Protection
+- **SQL Injection Prevention**: PDO prepared statements exclusively
+- **XSS Protection**: HTML entity encoding and CSP headers
+- **CSRF Protection**: Token validation on forms
+- **Input Validation**: Server-side data sanitization
+- **Output Encoding**: Context-aware encoding
+
+### Infrastructure Security
 - **Rate Limiting**: Brute force attack prevention
-- **Secure Password Reset**: Time-limited token system
-- **Role-based Authorization**: Protected admin areas
+- **Secure Headers**: Security header implementation
+- **Database Security**: Non-root database user
+- **File Upload Security**: Type validation and secure storage
 
 ---
 
@@ -250,29 +407,108 @@ Detailed documentation is available for each component:
 
 We welcome contributions from the community! This project is part of **GirlScript Summer of Code 2025 (GSSoC'25)**.
 
-### How to Contribute
-
+### Getting Started
 1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+2. **Clone** your fork locally
+3. **Create** a new branch for your feature/fix
+4. **Set up** the development environment following the installation guide
 
-### Contribution Guidelines
+### Development Workflow
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/Creators-Space-GroupProject.git
+cd Creators-Space-GroupProject
 
-- Follow the existing code style and structure
-- Write clear commit messages
-- Add documentation for new features
-- Test your changes thoroughly
-- Ensure security best practices
+# Install dependencies and setup database
+./setup.bat  # Windows
+./setup.sh   # Linux/Mac
+
+# Create feature branch
+git checkout -b feature/your-feature-name
+
+# Make your changes and test
+php -S localhost:8000
+
+# Commit and push
+git add .
+git commit -m "feat: add your feature description"
+git push origin feature/your-feature-name
+```
+
+### Code Standards
+- **PHP**: Follow PSR-12 coding standards
+- **JavaScript**: Use ES6+ with consistent formatting
+- **CSS**: Use BEM methodology for class naming
+- **Database**: Follow SQL naming conventions (snake_case)
+- **Comments**: Document complex logic and API endpoints
+
+### Testing Guidelines
+- Test all new features thoroughly
+- Verify mobile responsiveness on multiple devices
+- Check cross-browser compatibility
+- Validate form submissions and error handling
+- Test with different user roles (User/Instructor/Admin)
+
+### Pull Request Process
+1. **Update** documentation for any new features
+2. **Add** screenshots for UI changes
+3. **Test** on multiple browsers/devices
+4. **Link** to related issues
+5. **Request** review from maintainers
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
-## 🐛 Issue Tracking
+## 🐛 Issue Tracking & Bug Reports
 
-Found a bug or have a feature request? Please check our [Issue Tracker](https://github.com/PamudaUposath/Creators-Space-GroupProject/issues).
+Found a bug or have a feature request? We use GitHub Issues for tracking.
+
+### Reporting Bugs
+When reporting bugs, please include:
+- **Browser/Device** information
+- **Steps to reproduce** the issue
+- **Expected vs actual** behavior
+- **Screenshots** if applicable
+- **Console errors** if any
+
+### Feature Requests
+- Use the feature request template
+- Describe the use case clearly
+- Explain the expected behavior
+- Consider implementation complexity
+
+**Issue Tracker**: [GitHub Issues](https://github.com/PamudaUposath/Creators-Space-GroupProject/issues)
+
+---
+
+## 📊 Project Insights
+
+### Technical Stack Rationale
+- **PHP**: Server-side processing with excellent MySQL integration
+- **Vanilla JavaScript**: Fast performance without framework overhead
+- **CSS Grid/Flexbox**: Modern responsive layouts
+- **MySQL**: Reliable data persistence with ACID compliance
+
+### Architecture Decisions
+- **Separation of Concerns**: Clear frontend/backend boundaries
+- **Database-Driven Content**: Dynamic data with easy administration
+- **Mobile-First Design**: Responsive from the ground up
+- **Security by Design**: Multi-layer security implementation
+
+### Performance Optimizations
+- **Lazy Loading**: Images load as needed
+- **Database Indexing**: Optimized query performance
+- **CSS/JS Minification**: Reduced file sizes
+- **Image Optimization**: WebP format support
+
+### Scalability Considerations
+- **Modular Structure**: Easy to extend with new features
+- **API-Ready**: Backend can support REST API implementation
+- **Database Design**: Normalized structure supports growth
+- **Cache-Friendly**: Static assets with proper headers
+
+---
 
 ### Reporting Bugs
 - Use the bug report template
