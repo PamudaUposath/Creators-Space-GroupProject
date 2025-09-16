@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Simulate verification process
             setTimeout(() => {
-                verifyyCertificate(certificateId);
+                verifyCertificate(certificateId);
                 
                 // Reset button
                 submitBtn.innerHTML = originalText;
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function verifyyCertificate(certificateId) {
+    function verifyCertificate(certificateId) {
         // Mock verification logic
         // In a real application, this would make an API call to verify the certificate
         
