@@ -605,34 +605,6 @@ body.dark-mode .empty-state {body.dark-mode .empty-state {
 }}
 }
 
-/* .bookmark-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-.courses-hero {
-  text-align: center;
-  padding: 2rem 0;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  margin-bottom: 3rem;
-}
-
-.courses-hero h1 {
-  font-size: 2.5rem;
-  color: #ffffff;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
 .courses-hero p {
   font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.8);
