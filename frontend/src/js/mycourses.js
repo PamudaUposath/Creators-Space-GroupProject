@@ -69,7 +69,24 @@ function removeCourse(index) {
         enrolledCourses.splice(index, 1);
         localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
         
-        alert('Course removed successfully!');
+        showToast('Course removed successfully!');
         loadEnrolledCourses();
     }
+}
+
+
+// Simple toast notification
+function showToast(message) {
+    let toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    toast.innerText = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+        });
+    }, 2000);
 }
