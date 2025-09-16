@@ -416,12 +416,17 @@ class CourseSearch {
             ${categoryFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Category: ${categoryFilter}</span>` : ''}
             ${priceFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Price: ${priceFilter}</span>` : ''}
           </div>
-          <button onclick="courseSearch.clearAllFilters()" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer; font-weight: 600;">
+          <button id="clearAllFiltersBtn" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer; font-weight: 600;">
             Clear All Filters
           </button>
         </div>
       `;
       coursesGrid.appendChild(message);
+      // Add event listener to the "Clear All Filters" button
+      const clearBtn = message.querySelector('#clearAllFiltersBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => this.clearAllFilters());
+      }
     } else if (searchTerm || levelFilter || categoryFilter || priceFilter) {
       // Show results count message
       const message = document.createElement('div');
