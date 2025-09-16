@@ -1,4 +1,7 @@
 <?php
+// Include database connection
+require_once __DIR__ . '/../backend/config/db_connect.php';
+
 // Set page-specific variables
 $pageTitle = "Courses";
 $pageDescription = "Explore our comprehensive courses in web development, programming, and technology.";
@@ -19,40 +22,88 @@ if ($isLoggedIn) {
     ];
 }
 
-// In a real implementation, you would fetch courses from the database
-// For now, we'll use static data similar to the original
-$courses = [
-    [
-        'id' => 1,
-        'title' => 'Full Stack Web Development',
-        'description' => 'Learn complete web development from frontend to backend with modern technologies',
-        'image' => './assets/images/full-stack-web-developer.png',
-        'price' => 99.99,
-        'duration' => '12 weeks',
-        'level' => 'Intermediate',
-        'instructor' => 'John Instructor'
-    ],
-    [
-        'id' => 2,
-        'title' => 'UI/UX Design Fundamentals',
-        'description' => 'Master the fundamentals of user interface and user experience design',
-        'image' => './assets/images/blogpage/uiux.jpeg',
-        'price' => 79.99,
-        'duration' => '8 weeks',
-        'level' => 'Beginner',
-        'instructor' => 'Design Expert'
-    ],
-    [
-        'id' => 3,
-        'title' => 'JavaScript in 30 Days',
-        'description' => 'Master JavaScript programming in 30 days with practical projects',
-        'image' => './assets/images/blogpage/jsin30days.png',
-        'price' => 49.99,
-        'duration' => '4 weeks',
-        'level' => 'Beginner',
-        'instructor' => 'JS Master'
-    ]
-];
+// Function to fetch courses from database
+function getCourseCategories($title, $description) {
+    $categories = [];
+    $content = strtolower($title . ' ' . $description);
+    
+    // Map course content to categories
+    if (preg_match('/web\s+development|full\s+stack|frontend|backend|html|css|javascript|react|angular|vue/', $content)) {
+        $categories[] = 'web-development';
+    }
+    if (preg_match('/ui\/ux|design|user\s+interface|user\s+experience|figma|photoshop/', $content)) {
+        $categories[] = 'design';
+    }
+    if (preg_match('/python|java|javascript|programming|coding/', $content)) {
+        $categories[] = 'programming';
+    }
+    if (preg_match('/data\s+science|machine\s+learning|analytics|data\s+analysis/', $content)) {
+        $categories[] = 'data-science';
+    }
+    if (preg_match('/mobile|ios|android|react\s+native|flutter/', $content)) {
+        $categories[] = 'mobile';
+    }
+    if (preg_match('/devops|docker|kubernetes|aws|cloud/', $content)) {
+        $categories[] = 'devops';
+    }
+    
+    return empty($categories) ? ['other'] : $categories;
+}
+
+function fetchCoursesFromDatabase($pdo) {
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                c.id,
+                c.title,
+                c.description,
+                c.price,
+                c.duration,
+                c.level,
+                c.image_url,
+                CONCAT(u.first_name, ' ', u.last_name) as instructor_name
+            FROM courses c
+            LEFT JOIN users u ON c.instructor_id = u.id
+            WHERE c.is_active = 1
+            ORDER BY c.created_at DESC
+        ");
+        
+        $stmt->execute();
+        $dbCourses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $courses = [];
+        foreach ($dbCourses as $course) {
+            // Get categories for this course
+            $categories = getCourseCategories($course['title'], $course['description']);
+            
+            $courses[] = [
+                'id' => $course['id'],
+                'title' => $course['title'],
+                'description' => $course['description'],
+                'image' => $course['image_url'] ?: './assets/images/full-stack-web-developer.png', // Default image
+                'price' => (float)$course['price'],
+                'duration' => $course['duration'],
+                'level' => ucfirst($course['level']),
+                'instructor' => $course['instructor_name'] ?: 'Unknown Instructor',
+                'category' => $categories[0] // Use first category for primary classification
+            ];
+        }
+        
+        return $courses;
+        
+    } catch (PDOException $e) {
+        error_log("Error fetching courses: " . $e->getMessage());
+        return []; // Return empty array on error
+    }
+}
+
+// Fetch courses from database
+$courses = fetchCoursesFromDatabase($pdo);
+
+// If no courses found in database, add a fallback message
+if (empty($courses)) {
+    error_log("No courses found in database");
+}
 
 // Include header
 include './includes/header.php';
@@ -114,52 +165,67 @@ include './includes/header.php';
         <!-- Courses Grid -->
         <section class="section">
             <div id="coursesGrid" class="offerings-grid">
-                <?php foreach ($courses as $course): ?>
-                    <div class="card course-card" data-level="<?php echo strtolower($course['level']); ?>">
-                        <div style="position: relative;">
-                            <img src="<?php echo htmlspecialchars($course['image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 1rem;">
-                            <?php if ($isLoggedIn): ?>
-                                <button onclick="toggleBookmark(<?php echo $course['id']; ?>)" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                                    <i class="far fa-bookmark"></i>
-                                </button>
-                            <?php endif; ?>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <span class="modern-gradient-text" style="font-weight: 600; font-size: 0.9rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.1); border-radius: 15px;"><?php echo $course['level']; ?></span>
-                            <span style="color: #7f8c8d; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
-                        </div>
-                        <h3 style="color: #2c3e50; margin: 0.5rem 0; font-size: 1.3rem;"><?php echo htmlspecialchars($course['title']); ?></h3>
-                        <p style="color: #34495e; line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars($course['description']); ?></p>
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
-                            <i class="fas fa-user"></i>
-                            <span><?php echo htmlspecialchars($course['instructor']); ?></span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                            <div style="font-size: 1.2rem; font-weight: 700;">
-                                <?php if ($course['price'] > 0): ?>
-                                    <span class="modern-gradient-text">$<?php echo number_format($course['price'], 2); ?></span>
-                                <?php else: ?>
-                                    <span style="color: #27ae60;">Free</span>
-                                <?php endif; ?>
-                            </div>
-                            <div>
+                <?php if (!empty($courses)): ?>
+                    <?php foreach ($courses as $course): ?>
+                        <div class="card course-card" 
+                             data-level="<?php echo strtolower($course['level']); ?>"
+                             data-category="<?php echo htmlspecialchars($course['category']); ?>"
+                             data-price="<?php echo $course['price'] > 0 ? 'paid' : 'free'; ?>"
+                             data-price-value="<?php echo $course['price']; ?>">
+                            <div style="position: relative;">
+                                <img src="<?php echo htmlspecialchars($course['image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 1rem;">
                                 <?php if ($isLoggedIn): ?>
-                                    <button class="btn login" onclick="enrollCourse(<?php echo $course['id']; ?>)" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">
-                                        Enroll Now
+                                    <button onclick="toggleBookmark(<?php echo $course['id']; ?>)" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                        <i class="far fa-bookmark"></i>
                                     </button>
-                                <?php else: ?>
-                                    <a href="login.php" class="btn login" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">Login to Enroll</a>
                                 <?php endif; ?>
                             </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span class="modern-gradient-text" style="font-weight: 600; font-size: 0.9rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.1); border-radius: 15px;"><?php echo $course['level']; ?></span>
+                                <span style="color: #7f8c8d; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
+                            </div>
+                            <h3 style="color: #2c3e50; margin: 0.5rem 0; font-size: 1.3rem;"><?php echo htmlspecialchars($course['title']); ?></h3>
+                            <p style="color: #34495e; line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars($course['description']); ?></p>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
+                                <i class="fas fa-user"></i>
+                                <span><?php echo htmlspecialchars($course['instructor']); ?></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                                <div style="font-size: 1.2rem; font-weight: 700;">
+                                    <?php if ($course['price'] > 0): ?>
+                                        <span class="modern-gradient-text">$<?php echo number_format($course['price'], 2); ?></span>
+                                    <?php else: ?>
+                                        <span style="color: #27ae60;">Free</span>
+                                    <?php endif; ?>
+                                </div>
+                                <div>
+                                    <?php if ($isLoggedIn): ?>
+                                        <button class="btn login" onclick="enrollCourse(<?php echo $course['id']; ?>)" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">
+                                            Enroll Now
+                                        </button>
+                                    <?php else: ?>
+                                        <a href="login.php" class="btn login" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">Login to Enroll</a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: rgba(255,255,255,0.8);">
+                        <i class="fas fa-graduation-cap" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h3 style="margin-bottom: 1rem; color: #ffffff;">No Courses Available</h3>
+                        <p style="margin-bottom: 1.5rem;">There are currently no courses available. Please check back later or contact support.</p>
+                        <a href="index.php" class="btn login">Return to Home</a>
                     </div>
-                <?php endforeach; ?>
+                <?php endif; ?>
             </div>
 
+            <?php if (!empty($courses)): ?>
             <!-- Load More Button -->
             <div style="text-align: center; margin-top: 3rem;">
                 <button id="loadMoreBtn" class="hero-btn">Load More Courses</button>
             </div>
+            <?php endif; ?>
         </section>
 
         <!-- CTA Section -->
@@ -217,36 +283,7 @@ function enrollCourse(courseId) {
     showToast("Enrollment functionality will be implemented with backend integration", "info");
 }
 
-// Search and filter functionality
-document.getElementById("courseSearch").addEventListener("input", function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    filterCourses();
-});
-
-document.getElementById("levelFilter").addEventListener("change", filterCourses);
-document.getElementById("categoryFilter").addEventListener("change", filterCourses);
-document.getElementById("priceFilter").addEventListener("change", filterCourses);
-
-function filterCourses() {
-    const searchTerm = document.getElementById("courseSearch").value.toLowerCase();
-    const levelFilter = document.getElementById("levelFilter").value;
-    const courses = document.querySelectorAll(".course-card");
-
-    courses.forEach(course => {
-        const title = course.querySelector("h3").textContent.toLowerCase();
-        const description = course.querySelector("p").textContent.toLowerCase();
-        const level = course.dataset.level;
-
-        const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
-        const matchesLevel = !levelFilter || level === levelFilter;
-
-        if (matchesSearch && matchesLevel) {
-            course.style.display = "block";
-        } else {
-            course.style.display = "none";
-        }
-    });
-}
+// Note: Search and filter functionality is handled by CourseSearch class in courses.js
 
 // Load more functionality (placeholder)
 document.getElementById("loadMoreBtn").addEventListener("click", function() {

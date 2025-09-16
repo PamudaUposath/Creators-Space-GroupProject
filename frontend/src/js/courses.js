@@ -148,10 +148,10 @@ class CourseSearch {
     
     if (query.length > 0) {
       this.showSuggestions(query);
-      this.filterCourses(query);
+      this.applyFilters();
     } else {
       this.hideSuggestions();
-      this.showAllCourses();
+      this.applyFilters(); // Apply filters even with empty search to respect dropdown filters
     }
   }
 
@@ -178,7 +178,7 @@ class CourseSearch {
 
   handleSearchClick() {
     const query = this.searchInput.value.trim();
-    this.filterCourses(query);
+    this.applyFilters();
     this.hideSuggestions();
     
     // Add visual feedback
@@ -186,9 +186,6 @@ class CourseSearch {
     setTimeout(() => {
       this.searchBtn.style.transform = '';
     }, 150);
-
-    // Show search results message
-    this.showSearchResultsMessage(query);
   }
 
   showSuggestions(query) {
@@ -207,7 +204,7 @@ class CourseSearch {
       this.suggestionsContainer.querySelectorAll('.search-suggestion-item').forEach(item => {
         item.addEventListener('click', () => {
           this.searchInput.value = item.getAttribute('data-suggestion');
-          this.filterCourses(item.getAttribute('data-suggestion'));
+          this.applyFilters();
           this.hideSuggestions();
         });
       });
@@ -362,8 +359,105 @@ class CourseSearch {
   }
 
   applyFilters() {
-    const query = this.searchInput.value.trim();
-    this.filterCourses(query);
+    const searchTerm = this.searchInput ? this.searchInput.value.toLowerCase() : '';
+    const levelFilter = document.getElementById('levelFilter')?.value || '';
+    const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+    const priceFilter = document.getElementById('priceFilter')?.value || '';
+    
+    let visibleCount = 0;
+
+    this.courses.forEach(course => {
+      // Get data attributes
+      const level = course.element.getAttribute('data-level');
+      const category = course.element.getAttribute('data-category');
+      const priceType = course.element.getAttribute('data-price');
+
+      // Check all filter conditions
+      const matchesSearch = !searchTerm || course.searchText.includes(searchTerm);
+      const matchesLevel = !levelFilter || level === levelFilter;
+      const matchesCategory = !categoryFilter || category === categoryFilter;
+      const matchesPrice = !priceFilter || priceType === priceFilter;
+
+      // Show/hide course based on all filters
+      if (matchesSearch && matchesLevel && matchesCategory && matchesPrice) {
+        course.element.style.display = 'block';
+        course.element.style.animation = 'fadeInUp 0.5s ease forwards';
+        visibleCount++;
+      } else {
+        course.element.style.display = 'none';
+      }
+    });
+    
+    // Update results display
+    this.updateFilterResults(visibleCount, searchTerm, levelFilter, categoryFilter, priceFilter);
+  }
+
+  updateFilterResults(visibleCount, searchTerm, levelFilter, categoryFilter, priceFilter) {
+    // Remove existing messages
+    const existingMessage = document.querySelector('.filter-results-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+    
+    const coursesGrid = this.coursesGrid;
+    
+    if (visibleCount === 0) {
+      // Show no results message
+      const message = document.createElement('div');
+      message.className = 'filter-results-message';
+      message.innerHTML = `
+        <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.8); grid-column: 1 / -1;">
+          <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+          <h3 style="margin-bottom: 1rem; color: #ffffff;">No courses found</h3>
+          <p style="margin-bottom: 1.5rem;">No courses match your current filters. Try adjusting your search criteria.</p>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem;">
+            ${searchTerm ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Search: "${searchTerm}"</span>` : ''}
+            ${levelFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Level: ${levelFilter}</span>` : ''}
+            ${categoryFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Category: ${categoryFilter}</span>` : ''}
+            ${priceFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Price: ${priceFilter}</span>` : ''}
+          </div>
+          <button onclick="courseSearch.clearAllFilters()" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer; font-weight: 600;">
+            Clear All Filters
+          </button>
+        </div>
+      `;
+      coursesGrid.appendChild(message);
+    } else if (searchTerm || levelFilter || categoryFilter || priceFilter) {
+      // Show results count message
+      const message = document.createElement('div');
+      message.className = 'filter-results-message';
+      message.innerHTML = `
+        <div style="text-align: center; padding: 1rem; margin-bottom: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px; backdrop-filter: blur(10px);">
+          <p style="color: rgba(255,255,255,0.9); margin: 0;">
+            Found ${visibleCount} course${visibleCount !== 1 ? 's' : ''} 
+            ${searchTerm ? `matching "${searchTerm}"` : 'with your filters'}
+          </p>
+        </div>
+      `;
+      coursesGrid.parentElement.insertBefore(message, coursesGrid);
+    }
+  }
+
+  clearAllFilters() {
+    // Clear all filter inputs
+    if (this.searchInput) this.searchInput.value = '';
+    const levelFilter = document.getElementById('levelFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const priceFilter = document.getElementById('priceFilter');
+    
+    if (levelFilter) levelFilter.value = '';
+    if (categoryFilter) categoryFilter.value = '';
+    if (priceFilter) priceFilter.value = '';
+    
+    // Clear suggestions and show all courses
+    this.hideSuggestions();
+    this.showAllCourses();
+    
+    // Remove any existing filter messages
+    const existingMessage = document.querySelector('.filter-results-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
   }
 }
 
