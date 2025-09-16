@@ -1,97 +1,50 @@
-/* My Courses Page Styles *//* My Courses Page Styles */
+/* My Courses Page Styles */
 
-body {body {
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
 
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.main-content {
+  padding: 2rem 0;
+}
 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 1rem;
+}
 
-  min-height: 100vh;  min-height: 100vh;
+.page-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
 
-  margin: 0;  margin: 0;
+.page-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
 
-  padding: 0;  padding: 0;
-
-  color: #333;  color: #333;
-
-}}
-
-
-
-.main-content {.main-content {
-
-  padding: 2rem 0;  padding: 2rem 0;
-
-}}
-
-
-
-.page-header {.page-header {
-
-  text-align: center;  text-align: center;
-
-  margin-bottom: 3rem;  margin-bottom: 3rem;
-
-  padding: 2rem 1rem;  padding: 2rem 1rem;
-
-}}
-
-
-
-.page-title {.page-title {
-
-  font-size: 3rem;  font-size: 3rem;
-
-  font-weight: 700;  font-weight: 700;
-
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-  -webkit-background-clip: text;  -webkit-background-clip: text;
-
-  -webkit-text-fill-color: transparent;  -webkit-text-fill-color: transparent;
-
-  background-clip: text;  background-clip: text;
-
-  margin-bottom: 1rem;  margin-bottom: 1rem;
-
-  color: #ffffff;  color: #ffffff;
-
-}}
-
-
-
-.page-subtitle {.page-subtitle {
-
-  font-size: 1.2rem;  font-size: 1.2rem;
-
-  color: rgba(255, 255, 255, 0.8);  color: rgba(255, 255, 255, 0.8);
-
-  max-width: 600px;  max-width: 600px;
-
-  margin: 0 auto;  margin: 0 auto;
-
-  line-height: 1.6;  line-height: 1.6;
-
-}}
-
-
-
-.courses-hero {.courses-hero {
-
-  text-align: center;  text-align: center;
-
-  padding: 2rem 0;  padding: 2rem 0;
-
-  background: rgba(255, 255, 255, 0.05);  background: rgba(255, 255, 255, 0.05);
-
-  backdrop-filter: blur(20px);  backdrop-filter: blur(20px);
-
-  margin-bottom: 3rem;  margin-bottom: 3rem;
-
-}}
-
-
-
+.courses-hero {
+  text-align: center;
+  padding: 2rem 0;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  margin-bottom: 3rem;
+}
 .courses-hero h1 {.courses-hero h1 {
 
   font-size: 2.5rem;  font-size: 2.5rem;
