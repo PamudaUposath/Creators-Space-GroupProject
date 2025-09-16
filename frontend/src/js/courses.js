@@ -315,13 +315,18 @@ class CourseSearch {
         <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
         <h3 style="margin-bottom: 1rem;">No courses found</h3>
         <p>Try adjusting your search terms or browse all courses.</p>
-        <button onclick="courseSearch.clearSearch()" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer;">
+        <button class="clear-search-btn" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer;">
           Clear Search
         </button>
       </div>
     `;
     
     this.coursesGrid.appendChild(message);
+    // Attach event listener to the Clear Search button
+    const clearBtn = message.querySelector('.clear-search-btn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => this.clearSearch());
+    }
   }
 
   hideNoResultsMessage() {
