@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Modal Demo - Before vs After</title>
+    <link rel="stylesheet" href="./src/css/modal.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .before {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        .after {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        .demo-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .demo-button:hover {
+            background: #2563eb;
+        }
+        .demo-button.danger {
+            background: #ef4444;
+        }
+        .demo-button.danger:hover {
+            background: #dc2626;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 640px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Modern Modal System Demo</h1>
+        <p>This demo shows the improvement from outdated browser dialogs to modern, accessible modal components.</p>
+
+        <div class="comparison">
+            <div class="demo-section before">
+                <h3>❌ Before: Outdated Browser Dialogs</h3>
+                <p>Old approach using <code>alert()</code> and <code>confirm()</code>:</p>
+                <ul>
+                    <li>Unstylable browser dialogs</li>
+                    <li>Poor accessibility</li>
+                    <li>Inconsistent across browsers</li>
+                    <li>Blocking execution</li>
+                    <li>No customization options</li>
+                </ul>
+                <button class="demo-button" onclick="alert('This is an old-style alert!')">Old Alert</button>
+                <button class="demo-button danger" onclick="confirm('Are you sure? (Old confirm dialog)')">Old Confirm</button>
+            </div>
+
+            <div class="demo-section after">
+                <h3>✅ After: Modern Modal Dialogs</h3>
+                <p>New approach using custom modal components:</p>
+                <ul>
+                    <li>Fully customizable styling</li>
+                    <li>WCAG compliant accessibility</li>
+                    <li>Consistent cross-browser experience</li>
+                    <li>Non-blocking, async handling</li>
+                    <li>Rich customization options</li>
+                </ul>
+                <button class="demo-button" onclick="showModernAlert()">Modern Alert</button>
+                <button class="demo-button danger" onclick="showModernConfirm()">Modern Confirm</button>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h3>🎯 Toast Notifications</h3>
+            <p>Modern toast notifications for better user feedback:</p>
+            <button class="demo-button" onclick="Modal.toast('Success message!', 'success')">Success Toast</button>
+            <button class="demo-button" onclick="Modal.toast('Information message', 'info')">Info Toast</button>
+            <button class="demo-button" onclick="Modal.toast('Warning message!', 'warning')">Warning Toast</button>
+            <button class="demo-button danger" onclick="Modal.toast('Error message!', 'error')">Error Toast</button>
+        </div>
+
+        <div class="demo-section">
+            <h3>🔧 Implementation Benefits</h3>
+            <ul>
+                <li><strong>Accessibility:</strong> ARIA labels, keyboard navigation, focus management</li>
+                <li><strong>User Experience:</strong> Smooth animations, responsive design, dark mode support</li>
+                <li><strong>Developer Experience:</strong> Simple API, TypeScript ready, highly customizable</li>
+                <li><strong>Performance:</strong> Lightweight, no external dependencies, optimized animations</li>
+                <li><strong>Maintenance:</strong> Centralized modal logic, consistent styling, easy updates</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="./src/js/modal-utility.js"></script>
+    <script>
+        function showModernAlert() {
+            Modal.alert(
+                'Modern Alert',
+                'This is a modern, accessible alert dialog with beautiful styling and smooth animations!',
+                'success'
+            );
+        }
+
+        function showModernConfirm() {
+            Modal.confirm(
+                'Modern Confirmation',
+                'This is a modern confirmation dialog. Do you want to proceed with this action?',
+                () => {
+                    Modal.toast('Action confirmed! 🎉', 'success');
+                },
+                () => {
+                    Modal.toast('Action cancelled', 'info');
+                },
+                {
+                    confirmText: 'Yes, Proceed',
+                    cancelText: 'Cancel',
+                    confirmClass: 'btn-primary'
+                }
+            );
+        }
+
+        // Demo course removal (similar to mycourses.js)
+        function demoRemoveCourse() {
+            Modal.confirm(
+                'Remove Course',
+                'Are you sure you want to remove "JavaScript Fundamentals" from your enrolled courses? This action cannot be undone.',
+                () => {
+                    Modal.toast('Course removed successfully!', 'success');
+                },
+                () => {
+                    Modal.toast('Course removal cancelled', 'info', 2000);
+                },
+                {
+                    confirmText: 'Remove Course',
+                    cancelText: 'Keep Course',
+                    confirmClass: 'btn-danger'
+                }
+            );
+        }
+    </script>
+</body>
+</html>
