@@ -93,7 +93,7 @@ include './includes/header.php';
                                 <button class="button toggle-btn" data-index="${index}">
                                     <i class="fas fa-eye"></i> View Details
                                 </button>
-                                <a href="${item.applyLink || '#'}" class="button apply-btn" target="_blank">
+                                <a href="${item.applyLink}" class="button apply-btn" target="_blank">
                                     <i class="fas fa-paper-plane"></i> Apply Now
                                 </a>
                             </div>
