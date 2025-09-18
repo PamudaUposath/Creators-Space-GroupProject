@@ -177,7 +177,37 @@ include './includes/header.php';
 
                 const matchesSearch = title.includes(searchTerm) || company.includes(searchTerm);
                 const matchesType = !selectedType || type === selectedType;
-                const matchesDuration = !selectedDuration || duration.includes(selectedDuration);
+                
+                // Enhanced duration matching logic
+                let matchesDuration = true;
+                if (selectedDuration) {
+                    const durationNumber = parseInt(duration);
+                    const durationText = duration.toLowerCase();
+                    
+                    switch(selectedDuration) {
+                        case '1-3 months':
+                            matchesDuration = (durationNumber >= 1 && durationNumber <= 3) || 
+                                            durationText.includes('1 month') || 
+                                            durationText.includes('2 month') || 
+                                            durationText.includes('3 month');
+                            break;
+                        case '3-6 months':
+                            matchesDuration = (durationNumber >= 3 && durationNumber <= 6) || 
+                                            durationText.includes('3 month') || 
+                                            durationText.includes('4 month') || 
+                                            durationText.includes('5 month') || 
+                                            durationText.includes('6 month');
+                            break;
+                        case '6+ months':
+                            matchesDuration = (durationNumber >= 6) || 
+                                            durationText.includes('6+ month') || 
+                                            durationText.includes('6 month') ||
+                                            durationText.includes('year');
+                            break;
+                        default:
+                            matchesDuration = true;
+                    }
+                }
 
                 if (matchesSearch && matchesType && matchesDuration) {
                     card.style.display = 'block';

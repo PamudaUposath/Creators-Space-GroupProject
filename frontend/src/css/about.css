@@ -183,7 +183,22 @@ body {
     font-size: 2.5em;
     text-align: center;
     margin-bottom: 30px;
-    color: #333;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+/* Section Styling */
+.section {
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+}
+
+.section .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a !important;
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
 .overview-text {
@@ -191,7 +206,8 @@ body {
     line-height: 1.8;
     text-align: center;
     margin-bottom: 40px;
-    color: #555;
+    color: #2c2c2c;
+    font-weight: 500;
 }
 
 /* Highlight Cards */
@@ -219,12 +235,13 @@ body {
 .highlight-card h3 {
     font-size: 1.3em;
     margin-bottom: 10px;
-    color: #444;
+    color: #1a1a1a;
+    font-weight: 600;
 }
 
 .highlight-card p {
     font-size: 1em;
-    color: #666;
+    color: #2c2c2c;
 }
 
 /* Dark Mode Styling */
@@ -550,6 +567,7 @@ main {
   letter-spacing: 0.5px;
   word-spacing: 5px;
   font-family: var(--font);
+  color: #1a1a1a;
 }
 .about-subtitle {
   font-size: 1.1rem;
@@ -566,11 +584,13 @@ main {
 .brief-about {
   margin-top: 1rem;
   font-size: 1.5rem;
+  color: #2c2c2c;
 }
 .brief-about span {
   font-size: 1.6rem;
   font-weight: bold;
   font-family: var(--font);
+  color: #1a1a1a;
 }
 
 /* styles for about section */
@@ -640,7 +660,7 @@ main {
   box-shadow: 0 12px 20px rgba(196, 190, 190, 0.6);
 }
 .stats-content h2 {
-  color: #2e2c2c;
+  color: #1a1a1a;
 }
 
 /* call to action */
@@ -709,12 +729,14 @@ main {
 .core-item h5 {
   font-size: 1.4rem;
   font-weight: 400;
+  color: #000000;
 }
 .core-item p {
   padding-left: 2rem;
   width: 80%;
   text-align: center;
   font-size: 1.3rem;
+  color: #000000;
 }
 
 /* backgrount animated effect on about section */
@@ -925,6 +947,61 @@ body.dark-mode .stat-item:hover {
   }
 }
 
+/* Responsive design for main content */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .offerings-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .mission-card, .vision-card, .offering-card, .card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .mission-card h2, .vision-card h2 {
+    font-size: 1.5rem;
+  }
+  
+  .offering-card h3, .card h3 {
+    font-size: 1.2rem;
+  }
+}
+
 /* CTA Section - Ready to Start Your Learning Journey */
 .section:last-of-type {
   background: rgba(255, 255, 255, 0.05);
@@ -955,6 +1032,197 @@ body.dark-mode .stat-item:hover {
 @keyframes gradientShift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+/* Main Content Area Styles for About Page */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #1a1a1a;
+}
+
+/* Page Header Styles */
+.page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 3rem 0;
+}
+
+.page-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #1a1a1a !important;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-subtitle {
+    font-size: 1.3rem;
+    color: #2c2c2c !important;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* Mission and Vision Cards */
+.mission-card, .vision-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mission-card:hover, .vision-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.mission-card h2, .vision-card h2 {
+    color: #000000 !important;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.mission-card p, .vision-card p {
+    color: #000000 !important;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+.card-icon {
+    margin-bottom: 1rem;
+}
+
+.card-icon img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Offerings Grid */
+.offerings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.offering-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.offering-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.offering-card h3 {
+    color: #000000 !important;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.offering-card p {
+    color: #000000 !important;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.offering-icon {
+    margin-bottom: 1rem;
+}
+
+.offering-icon i {
+    font-size: 2.5rem;
+    color: #000000 !important;
+}
+
+/* Team Section and General Card Styles */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+    color: #000000 !important;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.member-role {
+    color: #000000 !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.member-bio {
+    color: #000000 !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.social-links a {
+    color: #000000 !important;
+    font-size: 1.5rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #667eea !important;
+    transform: scale(1.2);
+}
+
+.card p {
+    color: #000000 !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    font-weight: 400 !important;
 }
 
 .section:last-of-type .section-title {
@@ -1145,6 +1413,89 @@ body.dark-mode .hero-btn:last-child:hover {
     padding: 0.9rem 1.5rem;
     font-size: 0.95rem;
     min-width: 160px;
+  }
+}
+
+/* Responsive design for text readability */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 2.5rem;
+    color: #1a1a1a !important;
+  }
+  
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: #2c2c2c !important;
+  }
+  
+  .section .section-title {
+    font-size: 2rem;
+    color: #1a1a1a !important;
+  }
+  
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .offerings-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .mission-card, .vision-card, .offering-card, .card {
+    padding: 1.5rem;
+  }
+  
+  .mission-card h2, .vision-card h2 {
+    color: #000000 !important;
+  }
+  
+  .offering-card h3, .card h3 {
+    color: #000000 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 2rem;
+    color: #1a1a1a !important;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+    color: #2c2c2c !important;
+  }
+  
+  .section .section-title {
+    font-size: 1.8rem;
+    color: #1a1a1a !important;
+  }
+  
+  .mission-card h2, .vision-card h2 {
+    font-size: 1.5rem;
+    color: #000000 !important;
+  }
+  
+  .offering-card h3, .card h3 {
+    font-size: 1.2rem;
+    color: #000000 !important;
+  }
+  
+  .about-title {
+    color: #1a1a1a !important;
+  }
+  
+  .brief-about {
+    color: #2c2c2c !important;
+  }
+  
+  .brief-about span {
+    color: #1a1a1a !important;
   }
 }
 
