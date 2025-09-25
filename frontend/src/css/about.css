@@ -20,7 +20,7 @@ body {
 }
 
 /* Hero Section Animation - Same as courses page */
-.main {
+.main-content {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@ body {
   overflow: hidden;
 }
 
-.main::before {
+.main-content :before {
   content: "";
   position: absolute;
   top: 0;
@@ -42,26 +42,25 @@ body {
   pointer-events: none;
 }
 
-.main h1 {
+.main-content h1 {
   font-size: 4rem;
   text-align: center;
   margin-bottom: 20px;
   background: linear-gradient(45deg, #667eea, #764ba2);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: white;
   background-clip: text;
   font-weight: 800;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 4px 20px rgba(243, 237, 237, 0.1);
   position: relative;
   z-index: 2;
   animation: slideInDown 1s ease-out;
 }
-
-.main p {
+.main-content .page-subtitle {
   font-size: 1.4rem;
-  color: #666;
+  color: #ffffff !important;
   text-align: center;
-  max-width: 600px;
+  max-width: 600px ;
   line-height: 1.6;
   position: relative;
   z-index: 2;
@@ -183,7 +182,7 @@ body {
     font-size: 2.5em;
     text-align: center;
     margin-bottom: 30px;
-    color: #1a1a1a;
+    color: #9d8c8c;
     font-weight: 700;
 }
 
@@ -196,7 +195,7 @@ body {
 .section .section-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1a1a1a !important;
+    color: #fbf8f8 !important;
     text-align: center;
     margin-bottom: 3rem;
 }
@@ -267,7 +266,7 @@ body {
 #main-body.dark h1,
 #main-body.dark h2,
 #main-body.dark h3 {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 #main-body.dark .overview-text,
