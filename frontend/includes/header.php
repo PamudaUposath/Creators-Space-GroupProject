@@ -36,6 +36,27 @@ if ($message) {
   <meta name="keywords" content="Creators-Space, coding, gwalior, technology">
   <link rel="stylesheet" href="./src/css/utils.css">
   <link rel="stylesheet" href="./src/css/style.css">
+  <?php
+  // Compute a project base URL so frontend JS can reliably build backend endpoints
+  $script_dir = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
+  $projectRoot = '';
+  if (strpos($script_dir, '/frontend') !== false) {
+      $projectRoot = substr($script_dir, 0, strpos($script_dir, '/frontend'));
+  }
+  $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+  $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+  $projectBase = rtrim($scheme . '://' . $host . $projectRoot, '/');
+  ?>
+  <script>
+    // Global base used by frontend JS to build API/backend URLs.
+    window.PROJECT_BASE = '<?php echo $projectBase; ?>';
+    // Helper to build an absolute API path under the project
+    window.apiUrl = function(path) {
+      // Ensure leading slash on path
+      if (!path.startsWith('/')) path = '/' + path;
+      return window.PROJECT_BASE + path;
+    };
+  </script>
   <link rel="stylesheet" href="./src/css/responsive.css">
   <link rel="stylesheet" href="./src/css/mobile-components.css">
   <link rel="stylesheet" href="./src/css/newsletter.css">
@@ -650,6 +671,18 @@ if ($message) {
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       color: #ffffff;
+    }
+
+    /* If the site needs card backgrounds dark but card text should remain black, force it here */
+    body.dark-mode .card,
+    body.dark-mode .card h1,
+    body.dark-mode .card h2,
+    body.dark-mode .card h3,
+    body.dark-mode .card h4,
+    body.dark-mode .card p,
+    body.dark-mode .card span,
+    body.dark-mode .card a {
+      color: #000000 !important;
     }
 
     body.dark-mode .course-card:hover,

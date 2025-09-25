@@ -273,9 +273,23 @@ include './includes/header.php';
       loginBtn.textContent = 'Logging in...';
 
       const formData = new FormData(this);
-      console.log('Attempting login with URL: ../backend/auth/login_process.php');
+      // Build a robust backend endpoint that works when the app is served
+      // from a subfolder (Apache: /Creators-Space-GroupProject/) or from
+      // project root (php -S). We derive the project root from the current
+      // path using '/frontend' as an anchor.
+      // Prefer the server-computed PROJECT_BASE helper (set in header.php).
+      let loginUrl;
+      if (window.apiUrl) {
+        loginUrl = window.apiUrl('/backend/auth/login_process.php') + '?t=' + Date.now();
+      } else {
+        const origin = window.location.origin;
+        const pathname = window.location.pathname;
+        const projectRootPrefix = pathname.includes('/frontend') ? pathname.substring(0, pathname.indexOf('/frontend')) : '';
+        loginUrl = origin + projectRootPrefix + '/backend/auth/login_process.php?t=' + Date.now();
+      }
+      console.log('Attempting login with URL:', loginUrl);
 
-      fetch('../backend/auth/login_process.php?t=' + Date.now(), {
+      fetch(loginUrl, {
         method: 'POST',
         body: formData
       })
@@ -347,8 +361,17 @@ include './includes/header.php';
       submitBtn.textContent = 'Sending...';
 
       const formData = new FormData(this);
+      let forgotUrl;
+      if (window.apiUrl) {
+        forgotUrl = window.apiUrl('/backend/auth/forgot_password.php');
+      } else {
+        const originFP = window.location.origin;
+        const pathnameFP = window.location.pathname;
+        const projectRootPrefixFP = pathnameFP.includes('/frontend') ? pathnameFP.substring(0, pathnameFP.indexOf('/frontend')) : '';
+        forgotUrl = originFP + projectRootPrefixFP + '/backend/auth/forgot_password.php';
+      }
 
-      fetch('../backend/auth/forgot_password.php', {
+      fetch(forgotUrl, {
         method: 'POST',
         body: formData
       })

@@ -256,7 +256,29 @@ C:\xampp\php\php.exe -S localhost:8000
 ### 7. Default Credentials
 **Admin Account:**
 - **Email**: `admin@creatorsspace.local`
-- **Password**: `admin123` 
+- **Password**: `AdminPass123!`
+
+> Note: The seeded admin in `backend/sql/seed_admin.sql` uses the password `AdminPass123!`. If you prefer to use `admin123` instead, see the steps below to reset the admin password in the database.
+
+### Reset the admin password to `admin123`
+
+1. Generate a password hash using PHP (run from project root or any PHP-enabled terminal):
+
+```powershell
+# Windows (PowerShell)
+C:\xampp\php\php.exe -r "echo password_hash('admin123', PASSWORD_DEFAULT) . PHP_EOL;"
+```
+
+2. Copy the output (the hashed password) and run this MySQL command to update the admin user (replace <HASH> with the copied hash):
+
+```sql
+USE creators_space;
+UPDATE users SET password_hash = '<HASH>' WHERE email = 'admin@creatorsspace.local' LIMIT 1;
+```
+
+3. Flush privileges if needed and then try logging in at the admin login page.
+
+Alternatively, if you want me to reset it for you in the repository (update seed or run a script), say so and I will prepare a small PHP script to apply the change directly.
 
 **Test User Account:**
 - **Email**: `user@example.com`
