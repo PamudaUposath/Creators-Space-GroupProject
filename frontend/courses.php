@@ -173,9 +173,11 @@ include './includes/header.php';
                              data-price="<?php echo $course['price'] > 0 ? 'paid' : 'free'; ?>"
                              data-price-value="<?php echo $course['price']; ?>">
                             <div style="position: relative;">
-                                <img src="<?php echo htmlspecialchars($course['image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 1rem;">
+                                <a href="course-detail.php?id=<?php echo $course['id']; ?>" style="display: block; text-decoration: none;">
+                                    <img src="<?php echo htmlspecialchars($course['image']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>" style="width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 1rem; transition: transform 0.3s ease;">
+                                </a>
                                 <?php if ($isLoggedIn): ?>
-                                    <button onclick="toggleBookmark(<?php echo $course['id']; ?>)" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                    <button onclick="toggleBookmark(<?php echo $course['id']; ?>)" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
                                         <i class="far fa-bookmark"></i>
                                     </button>
                                 <?php endif; ?>
@@ -184,8 +186,10 @@ include './includes/header.php';
                                 <span class="modern-gradient-text" style="font-weight: 600; font-size: 0.9rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.1); border-radius: 15px;"><?php echo $course['level']; ?></span>
                                 <span style="color: #7f8c8d; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
                             </div>
-                            <h3 style="color: #2c3e50; margin: 0.5rem 0; font-size: 1.3rem;"><?php echo htmlspecialchars($course['title']); ?></h3>
-                            <p style="color: #34495e; line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars($course['description']); ?></p>
+                            <a href="course-detail.php?id=<?php echo $course['id']; ?>" style="text-decoration: none;">
+                                <h3 style="color: #2c3e50; margin: 0.5rem 0; font-size: 1.3rem; transition: color 0.3s ease;"><?php echo htmlspecialchars($course['title']); ?></h3>
+                            </a>
+                            <p style="color: #34495e; line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars(substr($course['description'], 0, 120)); ?><?php echo strlen($course['description']) > 120 ? '...' : ''; ?></p>
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
                                 <i class="fas fa-user"></i>
                                 <span><?php echo htmlspecialchars($course['instructor']); ?></span>
@@ -198,14 +202,10 @@ include './includes/header.php';
                                         <span style="color: #27ae60;">Free</span>
                                     <?php endif; ?>
                                 </div>
-                                <div>
-                                    <?php if ($isLoggedIn): ?>
-                                        <button class="btn login" onclick="enrollCourse(<?php echo $course['id']; ?>)" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">
-                                            Enroll Now
-                                        </button>
-                                    <?php else: ?>
-                                        <a href="login.php" class="btn login" style="font-size: 0.9rem; padding: 0.6rem 1.2rem;">Login to Enroll</a>
-                                    <?php endif; ?>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <a href="course-detail.php?id=<?php echo $course['id']; ?>" class="btn login" style="font-size: 0.9rem; padding: 0.6rem 1.2rem; text-decoration: none;">
+                                        View Details
+                                    </a>
                                 </div>
                             </div>
                         </div>

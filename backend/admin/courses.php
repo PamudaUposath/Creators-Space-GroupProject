@@ -322,15 +322,11 @@ $stats = $stmt->fetch();
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
                 Creators-Space Admin
             </div>
             <div class="user-info">
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['first_name'] ?? 'Admin'); ?>!</span>
-                <a href="/backend/auth/logout.php" class="btn btn-secondary">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
+                <a href="../auth/logout.php" class="btn btn-danger">Logout</a>
             </div>
         </div>
     </header>

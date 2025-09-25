@@ -9,13 +9,41 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $user = null;
 
 if ($isLoggedIn) {
-    $user = [
-        'id' => $_SESSION['user_id'],
-        'first_name' => $_SESSION['first_name'] ?? '',
-        'last_name' => $_SESSION['last_name'] ?? '',
-        'email' => $_SESSION['email'] ?? '',
-        'role' => $_SESSION['role'] ?? 'user'
-    ];
+    // Fetch current user data from database to get latest profile image
+    try {
+        require_once __DIR__ . '/../../backend/config/db_connect.php';
+        $stmt = $pdo->prepare("
+            SELECT id, first_name, last_name, email, username, role, profile_image
+            FROM users 
+            WHERE id = ? AND is_active = 1
+        ");
+        $stmt->execute([$_SESSION['user_id']]);
+        $dbUser = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($dbUser) {
+            $user = $dbUser;
+        } else {
+            // Fallback to session data if database query fails
+            $user = [
+                'id' => $_SESSION['user_id'],
+                'first_name' => $_SESSION['first_name'] ?? '',
+                'last_name' => $_SESSION['last_name'] ?? '',
+                'email' => $_SESSION['email'] ?? '',
+                'role' => $_SESSION['role'] ?? 'user',
+                'profile_image' => null
+            ];
+        }
+    } catch (PDOException $e) {
+        // Fallback to session data if database connection fails
+        $user = [
+            'id' => $_SESSION['user_id'],
+            'first_name' => $_SESSION['first_name'] ?? '',
+            'last_name' => $_SESSION['last_name'] ?? '',
+            'email' => $_SESSION['email'] ?? '',
+            'role' => $_SESSION['role'] ?? 'user',
+            'profile_image' => null
+        ];
+    }
 }
 
 // Handle any session messages
@@ -288,6 +316,28 @@ if ($message) {
       width: 100%;
     }
 
+    /* Cart Link Styling */
+    .cart-link {
+      position: relative;
+      margin-left: 1rem;
+    }
+
+    .cart-counter {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff4757;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
     /* Enhanced Dropdown Styles */
     .dropdown {
       position: relative;
@@ -542,6 +592,28 @@ if ($message) {
     
     .navbar .btn.profile-btn:hover {
       box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+    }
+    
+    .navbar-profile-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .navbar-profile-img:hover {
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: scale(1.1);
+    }
+    
+    body.dark-mode .navbar-profile-img {
+      border-color: rgba(100, 181, 246, 0.5);
+    }
+    
+    body.dark-mode .navbar-profile-img:hover {
+      border-color: rgba(100, 181, 246, 1);
     }
     
     .navbar .btn.admin-btn:hover {
@@ -949,6 +1021,10 @@ if ($message) {
           <!-- My Courses - Only show when logged in -->
           <?php if ($isLoggedIn): ?>
             <a href="mycourses.php">My Courses</a>
+            <a href="cart.php" class="cart-link">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-counter" style="display: none;">0</span>
+            </a>
           <?php endif; ?>
           
           <!-- Dark/Light Mode Toggle -->
@@ -971,7 +1047,13 @@ if ($message) {
             <?php if ($user['role'] === 'admin'): ?>
               <a href="../backend/admin/dashboard.php" class="btn admin-btn">Admin Panel</a>
             <?php endif; ?>
-            <a href="profile.php" class="btn profile-btn" title="Profile"><i class="fas fa-user"></i></a>
+            <a href="profile.php" class="btn profile-btn" title="Profile">
+              <?php if (isset($user['profile_image']) && $user['profile_image']): ?>
+                <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile" class="navbar-profile-img" id="navbarProfileImg">
+              <?php else: ?>
+                <i class="fas fa-user"></i>
+              <?php endif; ?>
+            </a>
             <a href="../backend/auth/logout.php" class="btn logout-btn">Logout</a>
           </div>
         <?php endif; ?>
