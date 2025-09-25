@@ -386,13 +386,10 @@ try {
     <nav class="nav">
         <div class="nav-content">
             <div class="nav-links">
-                <a href="/backend/admin/dashboard.php">Dashboard</a>
-                <a href="/backend/admin/users.php" class="active">Users</a>
-                <a href="/backend/admin/courses.php">Courses</a>
-                <a href="/backend/admin/enrollments.php">Enrollments</a>
-                <a href="/backend/admin/internships.php">Internships</a>
-                <a href="/backend/admin/blog.php">Blog</a>
-                <a href="/backend/admin/settings.php">Settings</a>
+                <a href="dashboard.php">Dashboard</a>
+                <a href="users.php" class="active">Users</a>
+                <a href="courses.php">Courses</a>
+                <a href="enrollments.php">Enrollments</a>
             </div>
         </div>
     </nav>
