@@ -194,17 +194,33 @@ git clone https://github.com/PamudaUposath/Creators-Space-GroupProject.git
 cd Creators-Space-GroupProject
 ```
 
-### 2. Database Setup
-```bash
-# Create MySQL database
-mysql -u root -p
-CREATE DATABASE creators_space DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-exit
 
-# Import schema and seed data
+
+
+### 2. Database Setup (XAMPP)
+
+#### Option A: Using phpMyAdmin
+1. Start Apache and MySQL from the XAMPP Control Panel.
+2. Open phpMyAdmin (usually at http://localhost/phpmyadmin).
+3. Click "Import" and select `backend/sql/db_schema.sql` to create all tables and the database automatically.
+4. Repeat "Import" for `backend/sql/seed_admin.sql` to add the default admin user.
+
+#### Option B: Using Command Line
+1. Start Apache and MySQL from the XAMPP Control Panel.
+2. Open a terminal and run the following commands:
+
+```bash
+# Create the database
+mysql -u root -p -e "CREATE DATABASE creators_space DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# Import the schema
 mysql -u root -p creators_space < backend/sql/db_schema.sql
+
+# Seed the admin user
 mysql -u root -p creators_space < backend/sql/seed_admin.sql
 ```
+
+You can use either phpMyAdmin or the command line to set up your database. No manual table creation is needed—just import the provided SQL files.
 
 ### 3. Configure Database Connection
 Edit `backend/config/db_connect.php`:
@@ -254,11 +270,12 @@ C:\xampp\php\php.exe -S localhost:8000
 - **User Login**: `http://localhost:8000/frontend/login.php`
 
 ### 7. Default Credentials
+
 **Admin Account:**
 - **Email**: `admin@creatorsspace.local`
-- **Password**: `AdminPass123!`
+- **Password**: (see `backend/sql/seed_admin.sql` for the current default, or reset as needed)
 
-> Note: The seeded admin in `backend/sql/seed_admin.sql` uses the password `AdminPass123!`. If you prefer to use `admin123` instead, see the steps below to reset the admin password in the database.
+> Note: For security, the default admin password is set in the seed file. Change it immediately after setup for production use. See below for instructions to reset the admin password.
 
 ### Reset the admin password to `admin123`
 
