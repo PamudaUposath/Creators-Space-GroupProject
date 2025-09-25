@@ -196,7 +196,7 @@ body {
 .section .section-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1a1a1a !important;
+    color: #ffffff !important;
     text-align: center;
     margin-bottom: 3rem;
 }
@@ -206,7 +206,7 @@ body {
     line-height: 1.8;
     text-align: center;
     margin-bottom: 40px;
-    color: #2c2c2c;
+    color: #ffffff;
     font-weight: 500;
 }
 
@@ -1052,14 +1052,14 @@ body.dark-mode .stat-item:hover {
 .page-title {
     font-size: 3.5rem;
     font-weight: 800;
-    color: #1a1a1a !important;
+    color: #ffffff !important;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .page-subtitle {
     font-size: 1.3rem;
-    color: #2c2c2c !important;
+    color: #ffffff !important;
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.6;
@@ -1424,17 +1424,17 @@ body.dark-mode .hero-btn:last-child:hover {
   
   .page-title {
     font-size: 2.5rem;
-    color: #1a1a1a !important;
+    color: #ffffff !important;
   }
   
   .page-subtitle {
     font-size: 1.1rem;
-    color: #2c2c2c !important;
+    color: #ffffff !important;
   }
   
   .section .section-title {
     font-size: 2rem;
-    color: #1a1a1a !important;
+    color: #ffffff !important;
   }
   
   .content-grid {
@@ -1463,39 +1463,39 @@ body.dark-mode .hero-btn:last-child:hover {
 @media (max-width: 480px) {
   .page-title {
     font-size: 2rem;
-    color: #1a1a1a !important;
+    color: #ffffff !important;
   }
   
   .page-subtitle {
     font-size: 1rem;
-    color: #2c2c2c !important;
+    color: #ffffff !important;
   }
   
   .section .section-title {
     font-size: 1.8rem;
-    color: #1a1a1a !important;
+    color: #ffffff !important;
   }
   
   .mission-card h2, .vision-card h2 {
     font-size: 1.5rem;
-    color: #000000 !important;
+    color: #ffffff !important;
   }
   
   .offering-card h3, .card h3 {
     font-size: 1.2rem;
-    color: #000000 !important;
+    color: #ffffff !important;
   }
   
   .about-title {
-    color: #1a1a1a !important;
+    color: #ffffff !important;
   }
   
   .brief-about {
-    color: #2c2c2c !important;
+    color: #ffffff !important;
   }
   
   .brief-about span {
-    color: #1a1a1a !important;
+    color: #ffffff !important;
   }
 }
 
