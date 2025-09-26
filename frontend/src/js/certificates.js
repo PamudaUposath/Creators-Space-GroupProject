@@ -1,13 +1,15 @@
 // Certificate Verification JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    const verificationForm = document.getElementById('verificationForm');
+    const verifyBtn = document.getElementById('verifyBtn');
     const resultDiv = document.getElementById('verificationResult');
+    const certificateInput = document.getElementById('certificateId');
 
-    if (verificationForm) {
-        verificationForm.addEventListener('submit', function(e) {
+    // Handle button click
+    if (verifyBtn) {
+        verifyBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            const certificateId = document.getElementById('certificateId').value.trim();
+            const certificateId = certificateInput.value.trim();
             
             if (!certificateId) {
                 showResult('Please enter a certificate ID.', 'error');
@@ -15,42 +17,99 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Show loading state
-            const submitBtn = verificationForm.querySelector('.verify-btn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-            submitBtn.disabled = true;
+            const originalText = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            verifyBtn.disabled = true;
 
             // Simulate verification process
             setTimeout(() => {
                 verifyCertificate(certificateId);
                 
                 // Reset button
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                verifyBtn.innerHTML = originalText;
+                verifyBtn.disabled = false;
             }, 1500);
         });
     }
 
-    function verifyCertificate(certificateId) {
-        // Mock verification logic
-        // In a real application, this would make an API call to verify the certificate
-        
-        const mockValidCertificates = [
-            'CS2024-WD-001',
-            'CS2024-DS-002', 
-            'CS2024-ML-003',
-            'CS2024-UI-004',
-            'CS2024-FS-005'
-        ];
+    // Handle Enter key press in input field
+    if (certificateInput) {
+        certificateInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyBtn.click();
+            }
+        });
+    }
 
-        if (mockValidCertificates.includes(certificateId.toUpperCase())) {
-            // Valid certificate
-            const certificateData = getMockCertificateData(certificateId);
-            showResult(generateValidCertificateHTML(certificateData), 'success');
-        } else {
-            // Invalid certificate
-            showResult(generateInvalidCertificateHTML(), 'error');
-        }
+    // Debug button handler
+    const debugBtn = document.getElementById('debugBtn');
+    if (debugBtn) {
+        debugBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('=== DEBUG TEST START ===');
+            
+            // Test 1: Direct fetch to proxy
+            console.log('Test 1: Testing proxy directly');
+            fetch('verify_proxy.php?id=CERT-FSWD-2024-002')
+                .then(response => {
+                    console.log('Debug response status:', response.status);
+                    return response.text();
+                })
+                .then(text => {
+                    console.log('Debug raw response:', text);
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('Debug parsed data:', data);
+                        if (data.success && data.verified) {
+                            showResult(`<div style="color: #4CAF50; padding: 20px; text-align: center;"><h3>✅ DEBUG SUCCESS!</h3><p>Certificate found: ${data.data.student_name}</p><pre>${JSON.stringify(data, null, 2)}</pre></div>`, 'success');
+                        } else {
+                            showResult(`<div style="color: #f44336; padding: 20px; text-align: center;"><h3>❌ DEBUG: Certificate Not Found</h3><pre>${JSON.stringify(data, null, 2)}</pre></div>`, 'error');
+                        }
+                    } catch (e) {
+                        console.error('Debug parse error:', e);
+                        showResult(`<div style="color: #f44336; padding: 20px; text-align: center;"><h3>❌ DEBUG: Parse Error</h3><p>${e.message}</p><pre>${text}</pre></div>`, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Debug fetch error:', error);
+                    showResult(`<div style="color: #f44336; padding: 20px; text-align: center;"><h3>❌ DEBUG: Fetch Error</h3><p>${error.message}</p></div>`, 'error');
+                });
+        });
+    }
+
+    function verifyCertificate(certificateId) {
+        // Use the same domain with a simple path
+        const apiUrl = `verify_proxy.php?id=${encodeURIComponent(certificateId)}`;
+        console.log('Making API call to:', apiUrl);
+        
+        fetch(apiUrl)
+            .then(response => {
+                console.log('Response status:', response.status, response.statusText);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(text => {
+                console.log('Raw response:', text);
+                try {
+                    const data = JSON.parse(text);
+                    console.log('Parsed data:', data);
+                    
+                    if (data.success && data.verified) {
+                        showResult(generateValidCertificateHTML(data.data), 'success');
+                    } else {
+                        showResult(generateInvalidCertificateHTML(), 'error');
+                    }
+                } catch (parseError) {
+                    console.error('Parse error:', parseError);
+                    showResult(generateErrorHTML(), 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                showResult(generateErrorHTML(), 'error');
+            });
     }
 
     function getMockCertificateData(certificateId) {
@@ -100,41 +159,78 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="certificate-details">
                     <div class="detail-row">
                         <span class="label">Certificate ID:</span>
-                        <span class="value">${data.id}</span>
+                        <span class="value">${data.certificate_id}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Student Name:</span>
-                        <span class="value">${data.studentName}</span>
+                        <span class="value">${data.student_name}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Course:</span>
-                        <span class="value">${data.courseName}</span>
+                        <span class="value">${data.course_name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Level:</span>
+                        <span class="value">${data.level}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Category:</span>
+                        <span class="value">${data.category}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Duration:</span>
+                        <span class="value">${data.duration || 'N/A'}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Completion Date:</span>
-                        <span class="value">${formatDate(data.completionDate)}</span>
+                        <span class="value">${data.completion_date ? formatDate(data.completion_date) : 'N/A'}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Issue Date:</span>
-                        <span class="value">${formatDate(data.issueDate)}</span>
+                        <span class="value">${formatDate(data.issue_date)}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Instructor:</span>
                         <span class="value">${data.instructor}</span>
                     </div>
                     <div class="detail-row">
-                        <span class="label">Grade:</span>
-                        <span class="value grade-${data.grade.replace('+', 'plus')}">${data.grade}</span>
-                    </div>
-                    <div class="skills-section">
-                        <span class="label">Skills Covered:</span>
-                        <div class="skills-tags">
-                            ${data.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-                        </div>
+                        <span class="label">Progress:</span>
+                        <span class="value progress-bar">
+                            <div class="progress-container">
+                                <div class="progress-fill" style="width: ${data.progress}%"></div>
+                                <span class="progress-text">${data.progress}%</span>
+                            </div>
+                        </span>
                     </div>
                 </div>
                 <div class="verification-footer">
                     <p><i class="fas fa-shield-alt"></i> This certificate is authentic and issued by Creators Space</p>
+                    <p class="verified-time">Verified on ${formatDate(data.verified_at)}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    function generateErrorHTML() {
+        return `
+            <div class="verification-error">
+                <div class="error-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Verification Error</h4>
+                </div>
+                <div class="error-content">
+                    <p>Unable to verify certificate at this time. This could be due to:</p>
+                    <ul>
+                        <li>Server connection issues</li>
+                        <li>Database connectivity problems</li>
+                        <li>Temporary service unavailability</li>
+                    </ul>
+                    <p>Please try again later or contact support if the issue persists.</p>
+                </div>
+                <div class="error-footer">
+                    <a href="mailto:support@creatorsspace.com" class="contact-btn">
+                        <i class="fas fa-envelope"></i> Contact Support
+                    </a>
                 </div>
             </div>
         `;

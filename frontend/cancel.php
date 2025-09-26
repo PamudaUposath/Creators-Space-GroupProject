@@ -1,3 +1,22 @@
+<?php
+session_start();
+require_once '../backend/config/db_connect.php';
+
+// Get user info if logged in
+$user = null;
+$isLoggedIn = false;
+
+if (isset($_SESSION['user_id'])) {
+    $isLoggedIn = true;
+    try {
+        $stmt = $pdo->prepare("SELECT first_name, last_name, email FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Continue without user data
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,6 +149,14 @@
         .help-info li {
             margin: 5px 0;
         }
+        
+        .user-info {
+            background: #fff0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ff6b6b;
+        }
     </style>
 </head>
 <body>
@@ -139,6 +166,13 @@
         </div>
         
         <h1>Payment Canceled</h1>
+        
+        <?php if ($user): ?>
+            <div class="user-info">
+                <p><strong>Hello <?php echo htmlspecialchars($user['first_name']); ?>!</strong></p>
+                <p>Your payment was canceled and no charges were made.</p>
+            </div>
+        <?php endif; ?>
         
         <div class="cancel-message">
             <p>💳 Your payment has been canceled and no charges were made to your account.</p>
@@ -156,12 +190,18 @@
         </div>
         
         <div class="action-buttons">
-            <a href="cart.php" class="btn btn-warning">
-                <i class="fas fa-shopping-cart"></i> Return to Cart
-            </a>
-            <a href="checkout.php" class="btn btn-primary">
-                <i class="fas fa-credit-card"></i> Try Again
-            </a>
+            <?php if ($isLoggedIn): ?>
+                <a href="cart.php" class="btn btn-warning">
+                    <i class="fas fa-shopping-cart"></i> Return to Cart
+                </a>
+                <a href="checkout.php" class="btn btn-primary">
+                    <i class="fas fa-credit-card"></i> Try Again
+                </a>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login to Continue
+                </a>
+            <?php endif; ?>
         </div>
         
         <div class="mt-4">
@@ -185,33 +225,17 @@
     </div>
     
     <script>
-        // Optional: Auto-redirect to cart after 60 seconds
+        // Auto-redirect to cart after 60 seconds if logged in
+        <?php if ($isLoggedIn): ?>
         setTimeout(function() {
             const autoRedirect = confirm("Would you like to return to your cart to try again?");
             if (autoRedirect) {
                 window.location.href = 'cart.php';
             }
         }, 60000);
+        <?php endif; ?>
         
-        // Track cancellation for analytics (optional)
-        document.addEventListener('DOMContentLoaded', function() {
-            // You can add analytics tracking here
-            console.log('Payment canceled by user');
-            
-            // Optional: Show additional help after some time
-            setTimeout(function() {
-                const helpDiv = document.createElement('div');
-                helpDiv.innerHTML = `
-                    <div class="alert alert-info mt-3" style="border-radius: 10px;">
-                        <i class="fas fa-lightbulb"></i>
-                        <strong>Tip:</strong> Most payment issues can be resolved by trying a different payment method or checking with your bank.
-                    </div>
-                `;
-                document.querySelector('.cancel-container').appendChild(helpDiv);
-            }, 10000);
-        });
-        
-        // Add some interactive elements
+        // Add interactive elements
         document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-2px) scale(1.02)';

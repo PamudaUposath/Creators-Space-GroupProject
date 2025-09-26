@@ -215,8 +215,8 @@ $hash = strtoupper(
             <!-- PayHere Payment Form -->
             <form method="post" action="https://sandbox.payhere.lk/pay/checkout" id="payhere-form">
                 <input type="hidden" name="merchant_id" value="<?php echo $merchant_id; ?>">
-                <input type="hidden" name="return_url" value="<?php echo 'http://localhost/Creators-Space-GroupProject/frontend/success.html'; ?>">
-                <input type="hidden" name="cancel_url" value="<?php echo 'http://localhost/Creators-Space-GroupProject/frontend/cancel.html'; ?>">
+                <input type="hidden" name="return_url" value="<?php echo 'http://localhost/Creators-Space-GroupProject/frontend/success.php'; ?>">
+                <input type="hidden" name="cancel_url" value="<?php echo 'http://localhost/Creators-Space-GroupProject/frontend/cancel.php'; ?>">
                 <input type="hidden" name="notify_url" value="<?php echo 'http://localhost/Creators-Space-GroupProject/frontend/notify.php'; ?>">
                 
                 <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
