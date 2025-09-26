@@ -56,6 +56,12 @@ async function updateQuantity(cartId, change, absolute = false) {
 
         if (data.success) {
             showNotification(data.message, 'success');
+            
+            // Update cart counter in navbar
+            if (typeof window.updateCartCounter === 'function') {
+                window.updateCartCounter();
+            }
+            
             // Refresh the page to update totals
             setTimeout(() => {
                 window.location.reload();
@@ -106,6 +112,11 @@ async function removeFromCart(cartId) {
         if (data.success) {
             showNotification(data.message, 'success');
             
+            // Update cart counter in navbar
+            if (typeof window.updateCartCounter === 'function') {
+                window.updateCartCounter();
+            }
+            
             // Animate item removal
             cartItem.style.opacity = '0';
             cartItem.style.transform = 'translateX(-100%)';
@@ -141,11 +152,19 @@ async function removeFromCart(cartId) {
  * Proceed to checkout
  */
 function proceedToCheckout() {
-    // For now, show a message that checkout is not implemented
-    showNotification('Checkout functionality will be implemented soon!', 'info');
+    console.log('proceedToCheckout function called - NEW VERSION');
     
-    // In a real implementation, this would redirect to a payment processor
-    // window.location.href = 'checkout.php';
+    // Check if cart has items
+    const cartItems = document.querySelectorAll('.cart-item');
+    
+    if (cartItems.length === 0) {
+        showNotification('Your cart is empty. Add some courses first!', 'warning');
+        return;
+    }
+    
+    // Redirect to checkout page
+    console.log('Redirecting to checkout.php');
+    window.location.href = 'checkout.php';
 }
 
 /**

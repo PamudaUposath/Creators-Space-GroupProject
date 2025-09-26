@@ -155,11 +155,6 @@ try {
                                 <span>$<?php echo number_format($total, 2); ?></span>
                             </div>
                             
-                            <div class="summary-row">
-                                <span>Shipping:</span>
-                                <span class="free">Free</span>
-                            </div>
-                            
                             <hr>
                             
                             <div class="summary-row total-row">
@@ -168,9 +163,9 @@ try {
                             </div>
                             
                             <div class="checkout-actions">
-                                <button class="btn btn-primary btn-checkout" onclick="proceedToCheckout()">
+                                <a href="checkout.php" class="btn btn-primary btn-checkout">
                                     <i class="fas fa-credit-card"></i> Proceed to Checkout
-                                </button>
+                                </a>
                                 
                                 <a href="courses.php" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left"></i> Continue Shopping
@@ -185,6 +180,6 @@ try {
 
     <?php include 'includes/footer.php'; ?>
 
-    <script src="src/js/cart.js"></script>
+    <script src="src/js/cart.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

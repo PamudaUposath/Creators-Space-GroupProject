@@ -342,4 +342,120 @@ include './includes/header.php';
     </div>
 </div>
 
+<!-- JavaScript Debug Test -->
+<script>
+console.log('=== JAVASCRIPT DEBUG TEST ===');
+console.log('Page loaded successfully');
+console.log('Testing if Add to Cart button exists...');
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
+    
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    console.log('Add to Cart button found:', addToCartBtn ? 'YES' : 'NO');
+    
+    if (addToCartBtn) {
+        console.log('Button data attributes:', {
+            courseId: addToCartBtn.getAttribute('data-course-id'),
+            courseName: addToCartBtn.getAttribute('data-course-name'),
+            coursePrice: addToCartBtn.getAttribute('data-course-price')
+        });
+        
+        // Add the actual cart functionality directly
+        addToCartBtn.addEventListener('click', function() {
+            console.log('=== BUTTON CLICKED ===');
+            const courseId = this.getAttribute('data-course-id');
+            console.log('Course ID:', courseId);
+            addToCart(courseId);
+        });
+    }
+});
+
+// Add the actual addToCart function
+async function addToCart(courseId) {
+    console.log('addToCart function called with courseId:', courseId);
+    
+    if (!courseId) {
+        console.error('No course ID provided');
+        alert('Error: Course ID not found');
+        return;
+    }
+
+    // Show loading state
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    if (!addToCartBtn) {
+        console.error('Add to cart button not found');
+        return;
+    }
+    
+    const originalText = addToCartBtn.innerHTML;
+    addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    addToCartBtn.disabled = true;
+
+    try {
+        console.log('Making API request to add course to cart...');
+        const response = await fetch('../backend/api/cart.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                course_id: parseInt(courseId),
+                quantity: 1
+            })
+        });
+
+        console.log('Response received:', response.status, response.statusText);
+
+        const contentType = response.headers.get('content-type');
+        console.log('Response content-type:', contentType);
+        
+        if (!contentType || !contentType.includes('application/json')) {
+            const textResponse = await response.text();
+            console.error('Non-JSON response received:', textResponse);
+            throw new Error('Invalid response from server');
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (response.status === 401) {
+            alert('Please log in to add courses to your cart');
+            setTimeout(() => {
+                window.location.href = 'login.php';
+            }, 2000);
+            return;
+        }
+
+        if (data.success) {
+            alert('SUCCESS: ' + data.message);
+            
+            // Update cart counter in navbar
+            if (typeof window.updateCartCounter === 'function') {
+                window.updateCartCounter();
+            }
+            
+            // Optionally update button state
+            if (data.action === 'added') {
+                addToCartBtn.innerHTML = '<i class="fas fa-check"></i> Added to Cart';
+                addToCartBtn.classList.add('added');
+            }
+        } else {
+            alert('ERROR: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Network error. Please try again.');
+    } finally {
+        // Reset button state after delay
+        setTimeout(() => {
+            addToCartBtn.innerHTML = originalText;
+            addToCartBtn.disabled = false;
+            addToCartBtn.classList.remove('added');
+        }, 2000);
+    }
+}
+</script>
+
 <?php include './includes/footer.php'; ?>

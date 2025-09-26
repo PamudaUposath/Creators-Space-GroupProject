@@ -336,6 +336,11 @@ if ($message) {
       align-items: center;
       justify-content: center;
       font-weight: 600;
+      line-height: 1;
+      text-align: center;
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
     }
 
     /* Enhanced Dropdown Styles */
@@ -566,14 +571,22 @@ if ($message) {
     }
     
     .navbar .btn.logout-btn {
-      background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
       color: #ffffff !important;
-      border-color: rgba(255,255,255,0.2);
-      font-size: 0.65rem;
-      padding: 0.3rem 0.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
       text-align: center;
       min-width: auto;
       white-space: nowrap;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
     }
     
     .navbar .btn:hover {
@@ -621,9 +634,10 @@ if ($message) {
     }
     
     .navbar .btn.logout-btn:hover {
-      transform: none;
-      box-shadow: none;
-      background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+      background: linear-gradient(135deg, #ff5252 0%, #f44336 100%);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     /* Theme Toggle Button */
@@ -1043,7 +1057,6 @@ if ($message) {
           </div>
         <?php else: ?>
           <div id="userSection">
-            <span>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</span>
             <?php if ($user['role'] === 'admin'): ?>
               <a href="../backend/admin/dashboard.php" class="btn admin-btn">Admin Panel</a>
             <?php endif; ?>
@@ -1098,7 +1111,43 @@ if ($message) {
         }, 150);
       });
     });
+
+    // Cart counter functionality
+    async function updateCartCounter() {
+      try {
+        const response = await fetch('../backend/api/cart.php');
+        const data = await response.json();
+        
+        const counter = document.querySelector('.cart-counter');
+        if (counter) {
+          if (data.success && data.items && data.items.length > 0) {
+            const totalItems = data.items.reduce((sum, item) => sum + parseInt(item.quantity), 0);
+            counter.textContent = totalItems;
+            counter.style.display = 'flex';
+          } else {
+            counter.style.display = 'none';
+          }
+        }
+      } catch (error) {
+        console.log('Could not update cart counter:', error);
+      }
+    }
+
+    // Make updateCartCounter globally available
+    window.updateCartCounter = updateCartCounter;
+
+    // Update cart counter when page loads (for logged in users only)
+    <?php if ($isLoggedIn): ?>
+    document.addEventListener('DOMContentLoaded', updateCartCounter);
+    <?php endif; ?>
   </script>
+  
+  <!-- Load additional page-specific JavaScript -->
+  <?php if (isset($additionalJS) && is_array($additionalJS)): ?>
+    <?php foreach ($additionalJS as $js): ?>
+      <script src="<?php echo $js; ?>"></script>
+    <?php endforeach; ?>
+  <?php endif; ?>
   
   <!-- AI Learning Assistant -->
   <script src="./src/js/ai-agent.js"></script>
