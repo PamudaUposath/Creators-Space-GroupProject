@@ -152,11 +152,19 @@ async function removeFromCart(cartId) {
  * Proceed to checkout
  */
 function proceedToCheckout() {
-    // For now, show a message that checkout is not implemented
-    showNotification('Checkout functionality will be implemented soon!', 'info');
+    console.log('proceedToCheckout function called - NEW VERSION');
     
-    // In a real implementation, this would redirect to a payment processor
-    // window.location.href = 'checkout.php';
+    // Check if cart has items
+    const cartItems = document.querySelectorAll('.cart-item');
+    
+    if (cartItems.length === 0) {
+        showNotification('Your cart is empty. Add some courses first!', 'warning');
+        return;
+    }
+    
+    // Redirect to checkout page
+    console.log('Redirecting to checkout.php');
+    window.location.href = 'checkout.php';
 }
 
 /**
