@@ -72,7 +72,7 @@ include './includes/header.php';
                             }
                             
                             // Make API call
-                            const apiUrl = `verify_proxy.php?id=${encodeURIComponent(certificateId)}`;
+                            const apiUrl = `../backend/api/verify_certificate.php?id=${encodeURIComponent(certificateId)}`;
                             
                             fetch(apiUrl)
                                 .then(response => response.text())
