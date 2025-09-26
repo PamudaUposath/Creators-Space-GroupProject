@@ -31,7 +31,7 @@ if (empty($password)) {
 try {
     // Get user by email
     $stmt = $pdo->prepare("
-        SELECT id, first_name, last_name, email, username, password_hash, role, is_active 
+        SELECT id, first_name, last_name, email, username, password_hash, role, is_active, profile_image 
         FROM users 
         WHERE email = ? 
         LIMIT 1
@@ -56,6 +56,7 @@ try {
     $_SESSION['email'] = $user['email'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role'];
+    $_SESSION['profile_image'] = $user['profile_image'];
     $_SESSION['logged_in_at'] = time();
     
     // Regenerate session ID to prevent session fixation after setting session data

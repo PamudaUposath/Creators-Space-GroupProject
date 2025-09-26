@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { border: 1px solid #ddd; padding: 20px; margin: 20px 0; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Cart API Testing</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Check Session</h2>
+        <button onclick="checkSession()">Check Current Session</button>
+        <div id="sessionResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 2: Test Original Cart API</h2>
+        <button onclick="testOriginalAPI()">Test Get Cart</button>
+        <button onclick="addToOriginalAPI()">Test Add to Cart</button>
+        <div id="originalResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 3: Test Simple Cart API</h2>
+        <button onclick="testSimpleAPI()">Test Simple Get</button>
+        <button onclick="addToSimpleAPI()">Test Simple Add</button>
+        <div id="simpleResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 4: Navigation</h2>
+        <button onclick="window.open('simple_test.php', '_blank')">Open Simple Test</button>
+        <button onclick="window.open('cart.php', '_blank')">Open Cart Page</button>
+        <button onclick="window.open('course-detail.php?id=1', '_blank')">Open Course Detail</button>
+    </div>
+
+    <script>
+        async function checkSession() {
+            try {
+                const response = await fetch('simple_test.php');
+                const text = await response.text();
+                document.getElementById('sessionResult').innerHTML = '<pre>' + text + '</pre>';
+            } catch (error) {
+                document.getElementById('sessionResult').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        async function testOriginalAPI() {
+            try {
+                const response = await fetch('/Creators-Space-GroupProject/backend/api/cart.php', {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+                
+                const data = await response.json();
+                document.getElementById('originalResult').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('originalResult').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        async function addToOriginalAPI() {
+            try {
+                const response = await fetch('/Creators-Space-GroupProject/backend/api/cart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        course_id: 1,
+                        quantity: 1
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById('originalResult').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('originalResult').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        async function testSimpleAPI() {
+            try {
+                const response = await fetch('/Creators-Space-GroupProject/backend/api/cart_simple.php', {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+                
+                const data = await response.json();
+                document.getElementById('simpleResult').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('simpleResult').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+
+        async function addToSimpleAPI() {
+            try {
+                const response = await fetch('/Creators-Space-GroupProject/backend/api/cart_simple.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        course_id: 1,
+                        quantity: 1
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById('simpleResult').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('simpleResult').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

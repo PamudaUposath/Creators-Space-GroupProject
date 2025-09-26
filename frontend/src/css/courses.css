@@ -1238,6 +1238,14 @@ body.dark-mode .cta-description {
 }
 
 @media (max-width: 480px) {
+  .cta-title {
+    font-size: 1.8rem;
+  }
+
+  .cta-description {
+    font-size: 1rem;
+  }
+}
   .cta-container {
     padding: 2rem 1rem;
   }
