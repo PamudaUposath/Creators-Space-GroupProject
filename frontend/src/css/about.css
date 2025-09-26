@@ -1028,6 +1028,10 @@ body.dark-mode .stat-item:hover {
   z-index: -1;
   opacity: 0.3;
 }
+#hero-title {
+    color: #2C003E !important; /* or any color that matches your background */
+}
+
 
 @keyframes gradientShift {
   0%, 100% { background-position: 0% 50%; }
@@ -1238,7 +1242,7 @@ body.dark-mode .stat-item:hover {
 }
 
 .section:last-of-type p {
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #1A1A40 !important;
   font-size: 1.2rem !important;
   margin-bottom: 2rem !important;
   max-width: 600px;
