@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Cart API Direct</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .result { background: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+    <h1>Direct Cart API Test</h1>
+    
+    <button onclick="testAddCourse5()">Add Course 5 to Cart via API</button>
+    <button onclick="checkDatabase()">Check Current Cart Count</button>
+    
+    <div id="results"></div>
+
+    <script>
+    function log(message) {
+        const results = document.getElementById('results');
+        const div = document.createElement('div');
+        div.className = 'result';
+        div.innerHTML = '<strong>' + new Date().toLocaleTimeString() + ':</strong> ' + message;
+        results.appendChild(div);
+    }
+    
+    async function testAddCourse5() {
+        log('Testing Add Course 5 via Cart API...');
+        
+        try {
+            const response = await fetch('../backend/api/cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    course_id: 5,
+                    quantity: 1
+                })
+            });
+            
+            log('API Response Status: ' + response.status + ' ' + response.statusText);
+            
+            if (response.ok) {
+                const data = await response.json();
+                log('API Response: ' + JSON.stringify(data, null, 2));
+                
+                if (data.success) {
+                    log('✅ SUCCESS: Course added to cart successfully!');
+                } else {
+                    log('❌ ERROR: ' + data.message);
+                }
+            } else {
+                const errorText = await response.text();
+                log('❌ HTTP ERROR: ' + errorText);
+            }
+            
+        } catch (error) {
+            log('❌ JavaScript ERROR: ' + error.message);
+        }
+    }
+    
+    async function checkDatabase() {
+        log('Checking current cart via GET API...');
+        
+        try {
+            const response = await fetch('../backend/api/cart.php', {
+                method: 'GET',
+                credentials: 'same-origin'
+            });
+            
+            const data = await response.json();
+            log('Current Cart Count: ' + data.count);
+            log('Current Cart Items: ' + JSON.stringify(data.items.map(item => item.title), null, 2));
+            
+        } catch (error) {
+            log('❌ Error checking cart: ' + error.message);
+        }
+    }
+    </script>
+</body>
+</html>

@@ -56,6 +56,12 @@ async function updateQuantity(cartId, change, absolute = false) {
 
         if (data.success) {
             showNotification(data.message, 'success');
+            
+            // Update cart counter in navbar
+            if (typeof window.updateCartCounter === 'function') {
+                window.updateCartCounter();
+            }
+            
             // Refresh the page to update totals
             setTimeout(() => {
                 window.location.reload();
@@ -105,6 +111,11 @@ async function removeFromCart(cartId) {
 
         if (data.success) {
             showNotification(data.message, 'success');
+            
+            // Update cart counter in navbar
+            if (typeof window.updateCartCounter === 'function') {
+                window.updateCartCounter();
+            }
             
             // Animate item removal
             cartItem.style.opacity = '0';

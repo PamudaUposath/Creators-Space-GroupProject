@@ -155,11 +155,6 @@ try {
                                 <span>$<?php echo number_format($total, 2); ?></span>
                             </div>
                             
-                            <div class="summary-row">
-                                <span>Shipping:</span>
-                                <span class="free">Free</span>
-                            </div>
-                            
                             <hr>
                             
                             <div class="summary-row total-row">
