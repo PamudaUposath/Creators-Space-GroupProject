@@ -1,3 +1,28 @@
+<?php
+session_start();
+require_once '../backend/config/db_connect.php';
+
+// Get user info if logged in
+$user = null;
+$isLoggedIn = false;
+
+if (isset($_SESSION['user_id'])) {
+    $isLoggedIn = true;
+    try {
+        $stmt = $pdo->prepare("SELECT first_name, last_name, email FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Continue without user data
+    }
+}
+
+// Check if user came from a payment (optional security)
+$fromPayment = isset($_GET['order_id']) || isset($_SESSION['payment_success']);
+if (isset($_SESSION['payment_success'])) {
+    unset($_SESSION['payment_success']); // Clear the flag
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,6 +144,14 @@
             margin: 5px 0;
             color: #666;
         }
+        
+        .user-welcome {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -129,9 +162,16 @@
         
         <h1>Payment Successful!</h1>
         
+        <?php if ($user): ?>
+            <div class="user-welcome">
+                <h5>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>! 🎉</h5>
+                <p>Your payment has been processed successfully.</p>
+            </div>
+        <?php endif; ?>
+        
         <div class="success-message">
-            <p>🎉 <strong>Congratulations!</strong> Your payment has been processed successfully.</p>
-            <p>You now have access to your purchased courses and can start learning immediately!</p>
+            <p><strong>Congratulations!</strong> Your courses are now available in your account.</p>
+            <p>You can start learning immediately and access all course materials!</p>
         </div>
         
         <div class="order-info">
@@ -142,9 +182,11 @@
         </div>
         
         <div class="action-buttons">
-            <a href="mycourses.php" class="btn btn-success">
-                <i class="fas fa-graduation-cap"></i> View My Courses
-            </a>
+            <?php if ($isLoggedIn): ?>
+                <a href="mycourses.php" class="btn btn-success">
+                    <i class="fas fa-graduation-cap"></i> View My Courses
+                </a>
+            <?php endif; ?>
             <a href="courses.php" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Browse More Courses
             </a>
@@ -158,21 +200,18 @@
     </div>
     
     <script>
-        // Optional: Auto-redirect after 30 seconds
+        // Auto-redirect after 30 seconds if logged in
+        <?php if ($isLoggedIn): ?>
         setTimeout(function() {
             const autoRedirect = confirm("Would you like to view your courses now?");
             if (autoRedirect) {
                 window.location.href = 'mycourses.php';
             }
         }, 30000);
+        <?php endif; ?>
         
-        // Show success animation
+        // Confetti effect
         document.addEventListener('DOMContentLoaded', function() {
-            // Play a success sound if available (optional)
-            // You can add this if you have audio files
-            
-            // Add confetti effect (optional - requires additional library)
-            // This is a simple celebration effect
             const container = document.querySelector('.success-container');
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');

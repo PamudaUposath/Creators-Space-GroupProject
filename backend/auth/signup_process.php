@@ -4,6 +4,10 @@
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
 
+// Debug logging - remove this after testing
+error_log("Signup process started. Method: " . $_SERVER['REQUEST_METHOD']);
+error_log("POST data: " . json_encode($_POST));
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     errorResponse('Method not allowed', 405);

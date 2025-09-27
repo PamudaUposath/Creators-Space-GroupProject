@@ -109,52 +109,11 @@
     justify-content: flex-end;
 }
 
-/* Button Styles */
-.btn {
+/* Note: Base button styles moved to buttons.css - only modal-specific overrides here */
+
+.modal .btn {
     padding: 10px 20px;
-    border: none;
     border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-}
-
-.btn:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-}
-
-.btn-primary {
-    background: #3b82f6;
-    color: white;
-}
-
-.btn-primary:hover {
-    background: #2563eb;
-}
-
-.btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-    border: 1px solid #d1d5db;
-}
-
-.btn-secondary:hover {
-    background: #e5e7eb;
-}
-
-.btn-danger {
-    background: #ef4444;
-    color: white;
-}
-
-.btn-danger:hover {
-    background: #dc2626;
 }
 
 /* Notification Modal Variant */

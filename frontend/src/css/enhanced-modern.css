@@ -182,19 +182,12 @@ body::before {
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-/* Modern Button Styles */
+/* Enhanced Modern Button Overrides - Base styles from buttons.css */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.6rem 1rem;
   border-radius: 20px;
-  text-decoration: none;
-  font-weight: 600;
   font-size: 0.85rem;
   letter-spacing: 0.3px;
   border: 1px solid transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(20px);
