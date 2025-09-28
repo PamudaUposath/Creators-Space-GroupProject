@@ -73,8 +73,7 @@ try {
         LIMIT 6
     ");
     $monthlyEnrollments = $stmt->fetchAll();
-<<<<<<< HEAD
-    
+
     // Get course request statistics
     $stmt = $pdo->query("
         SELECT 
@@ -85,7 +84,7 @@ try {
         FROM course_requests
     ");
     $courseRequestStats = $stmt->fetch();
-    
+
     // Get recent pending course requests
     $stmt = $pdo->query("
         SELECT cr.*, u.first_name, u.last_name, u.email
@@ -96,9 +95,6 @@ try {
         LIMIT 5
     ");
     $pendingRequests = $stmt->fetchAll();
-    
-=======
->>>>>>> 2ab1fd2 (style: add shadow layer to grids and cards)
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
     $totalUsers = $totalCourses = $totalEnrollments = $totalInstructors = 0;
@@ -125,7 +121,6 @@ try {
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f8fafc;
-            color: #333;
             min-height: 100vh;
         }
 
@@ -203,7 +198,7 @@ try {
             background: white;
             padding: 1.5rem;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
             text-align: center;
         }
 
