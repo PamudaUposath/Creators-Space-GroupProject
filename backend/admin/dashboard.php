@@ -306,6 +306,8 @@ try {
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column;
             }
 
             .header-content {
