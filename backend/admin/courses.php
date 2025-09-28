@@ -107,7 +107,7 @@ $stats = $stmt->fetch();
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #e0e0e0ff;
             color: #333;
         }
 
