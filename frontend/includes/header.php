@@ -496,7 +496,7 @@ if ($message) {
       align-items: center;
       gap: 0.3rem;
       padding: 0.6rem 1rem;
-      border-radius: 20px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.85rem;

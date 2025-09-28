@@ -389,6 +389,7 @@ try {
                 <a href="dashboard.php">Dashboard</a>
                 <a href="users.php" class="active">Users</a>
                 <a href="courses.php">Courses</a>
+                <a href="course-requests.php">Course Requests</a>
                 <a href="enrollments.php">Enrollments</a>
             </div>
         </div>

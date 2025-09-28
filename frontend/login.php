@@ -397,6 +397,7 @@ include './includes/header.php';
 
         <div class="signup-section">
           <p>Don't have an account? <a href="signup.php">Create one now</a></p>
+          <p><small style="color: #64748b;">Students and instructors can use the same login</small></p>
         </div>
       </form>
 

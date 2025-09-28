@@ -337,6 +337,7 @@ $stats = $stmt->fetch();
                 <a href="dashboard.php">Dashboard</a>
                 <a href="users.php">Users</a>
                 <a href="courses.php" class="active">Courses</a>
+                <a href="course-requests.php">Course Requests</a>
                 <a href="enrollments.php">Enrollments</a>
             </div>
         </div>

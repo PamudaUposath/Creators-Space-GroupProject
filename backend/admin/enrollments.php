@@ -423,6 +423,7 @@ $courses = $stmt->fetchAll();
                 <a href="dashboard.php">Dashboard</a>
                 <a href="users.php">Users</a>
                 <a href="courses.php">Courses</a>
+                <a href="course-requests.php">Course Requests</a>
                 <a href="enrollments.php" class="active">Enrollments</a>
             </div>
         </div>
