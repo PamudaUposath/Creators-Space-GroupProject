@@ -13,7 +13,7 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
-    
+
     try {
         switch ($action) {
             case 'add_course':
@@ -23,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $price = $_POST['price'] ?? 0;
                 $level = $_POST['level'] ?? 'beginner';
                 $category = $_POST['category'] ?? 'general';
-                
+
                 if (empty($title)) {
                     throw new Exception('Course title is required');
                 }
-                
+
                 $stmt = $pdo->prepare("
                     INSERT INTO courses (title, description, instructor_id, price, level, category, is_active, created_at)
                     VALUES (?, ?, ?, ?, ?, ?, 1, NOW())
@@ -35,14 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$title, $description, $instructor_id, $price, $level, $category]);
                 $message = 'Course added successfully!';
                 break;
-                
+
             case 'toggle_status':
                 $course_id = $_POST['course_id'] ?? 0;
                 $stmt = $pdo->prepare("UPDATE courses SET is_active = NOT is_active WHERE id = ?");
                 $stmt->execute([$course_id]);
                 $message = 'Course status updated successfully!';
                 break;
-                
+
             case 'delete_course':
                 $course_id = $_POST['course_id'] ?? 0;
                 $stmt = $pdo->prepare("DELETE FROM courses WHERE id = ?");
@@ -92,6 +92,7 @@ $stats = $stmt->fetch();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,18 +104,21 @@ $stats = $stmt->fetch();
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f8fafc;
             color: #333;
             min-height: 100vh;
         }
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -122,28 +126,34 @@ $stats = $stmt->fetch();
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
         }
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
+
         .nav {
             background: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .nav-content {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .nav-links {
             display: flex;
             gap: 2rem;
         }
+
         .nav-links a {
             text-decoration: none;
             color: #555;
@@ -152,52 +162,61 @@ $stats = $stmt->fetch();
             border-radius: 6px;
             transition: all 0.3s;
         }
+
         .nav-links a:hover,
         .nav-links a.active {
             background: #667eea;
             color: white;
         }
+
         .main-content {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 2rem;
         }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
+
         .stat-card {
             background: white;
             padding: 1.5rem;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
             text-align: center;
         }
+
         .stat-number {
             font-size: 2rem;
             font-weight: bold;
             color: #667eea;
             margin-bottom: 0.5rem;
         }
+
         .stat-label {
             color: #666;
             font-weight: 500;
         }
+
         .section {
             background: white;
             padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             margin-bottom: 2rem;
         }
+
         .section-header {
             display: flex;
             justify-content: between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
+
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -210,68 +229,84 @@ $stats = $stmt->fetch();
             font-weight: 500;
             transition: all 0.3s;
         }
+
         .btn-primary {
             background: #667eea;
             color: white;
         }
+
         .btn-primary:hover {
             background: #5a6fd8;
         }
+
         .btn-danger {
             background: #dc3545;
             color: white;
         }
+
         .btn-danger:hover {
             background: #c82333;
         }
+
         .btn-success {
             background: #28a745;
             color: white;
         }
+
         .btn-success:hover {
             background: #218838;
         }
+
         .btn-secondary {
             background: #6c757d;
             color: white;
         }
+
         .btn-secondary:hover {
             background: #545b62;
         }
+
         .table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
         }
+
         .table th,
         .table td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #dee2e6;
         }
+
         .table th {
             background: #f8f9fa;
             font-weight: 600;
             color: #495057;
         }
+
         .table tbody tr:hover {
             background: #f8f9fa;
         }
+
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1rem;
             margin-bottom: 1rem;
         }
+
         .form-group {
             margin-bottom: 1rem;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
             color: #333;
         }
+
         .form-control {
             width: 100%;
             padding: 0.75rem;
@@ -279,46 +314,55 @@ $stats = $stmt->fetch();
             border-radius: 6px;
             font-size: 1rem;
         }
+
         .form-control:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
         }
+
         .alert {
             padding: 1rem;
             border-radius: 6px;
             margin-bottom: 1rem;
         }
+
         .alert-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+
         .alert-danger {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
         .badge {
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.875rem;
             font-weight: 500;
         }
+
         .badge-success {
             background: #28a745;
             color: white;
         }
+
         .badge-secondary {
             background: #6c757d;
             color: white;
         }
+
         .badge-warning {
             background: #ffc107;
             color: #212529;
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="header-content">
@@ -513,4 +557,5 @@ $stats = $stmt->fetch();
         </div>
     </main>
 </body>
+
 </html>

@@ -12,19 +12,19 @@ try {
     // Get total users
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'user'");
     $totalUsers = $stmt->fetch()['total'];
-    
+
     // Get total courses
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM courses");
     $totalCourses = $stmt->fetch()['total'];
-    
+
     // Get total enrollments
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM enrollments");
     $totalEnrollments = $stmt->fetch()['total'];
-    
+
     // Get total instructors
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'instructor'");
     $totalInstructors = $stmt->fetch()['total'];
-    
+
     // Get total revenue
     $stmt = $pdo->query("
         SELECT COALESCE(SUM(c.price), 0) as total_revenue
@@ -32,7 +32,7 @@ try {
         JOIN courses c ON e.course_id = c.id
     ");
     $totalRevenue = $stmt->fetch()['total_revenue'];
-    
+
     // Get recent users (last 10)
     $stmt = $pdo->query("
         SELECT first_name, last_name, email, created_at, role 
@@ -42,7 +42,7 @@ try {
         LIMIT 10
     ");
     $recentUsers = $stmt->fetchAll();
-    
+
     // Get popular courses with more details
     $stmt = $pdo->query("
         SELECT 
@@ -60,7 +60,7 @@ try {
         LIMIT 5
     ");
     $popularCourses = $stmt->fetchAll();
-    
+
     // Get monthly enrollment statistics
     $stmt = $pdo->query("
         SELECT 
@@ -73,6 +73,7 @@ try {
         LIMIT 6
     ");
     $monthlyEnrollments = $stmt->fetchAll();
+<<<<<<< HEAD
     
     // Get course request statistics
     $stmt = $pdo->query("
@@ -96,6 +97,8 @@ try {
     ");
     $pendingRequests = $stmt->fetchAll();
     
+=======
+>>>>>>> 2ab1fd2 (style: add shadow layer to grids and cards)
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
     $totalUsers = $totalCourses = $totalEnrollments = $totalInstructors = 0;
@@ -106,6 +109,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -117,18 +121,21 @@ try {
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #f8fafc;
             color: #333;
             min-height: 100vh;
         }
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -136,28 +143,34 @@ try {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
         }
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
+
         .nav {
             background: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .nav-content {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .nav-links {
             display: flex;
             gap: 2rem;
         }
+
         .nav-links a {
             text-decoration: none;
             color: #555;
@@ -166,52 +179,61 @@ try {
             border-radius: 6px;
             transition: all 0.3s;
         }
+
         .nav-links a:hover,
         .nav-links a.active {
             background: #667eea;
             color: white;
         }
+
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
+
         .stat-card {
             background: white;
             padding: 1.5rem;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
+
         .stat-number {
             font-size: 2.5rem;
             font-weight: bold;
             color: #667eea;
             margin-bottom: 0.5rem;
         }
+
         .stat-label {
             color: #666;
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 2rem;
         }
+
         .section {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
+
         .section-header {
             background: #f8f9fa;
             padding: 1rem 1.5rem;
@@ -219,12 +241,15 @@ try {
             font-weight: bold;
             color: #495057;
         }
+
         .section-content {
             padding: 1.5rem;
         }
+
         .user-list {
             list-style: none;
         }
+
         .user-item {
             display: flex;
             justify-content: space-between;
@@ -232,20 +257,25 @@ try {
             padding: 0.75rem 0;
             border-bottom: 1px solid #f0f0f0;
         }
+
         .user-item:last-child {
             border-bottom: none;
         }
+
         .user-name {
             font-weight: 500;
         }
+
         .user-email {
             color: #666;
             font-size: 0.9rem;
         }
+
         .user-date {
             color: #999;
             font-size: 0.8rem;
         }
+
         .course-item {
             display: flex;
             justify-content: space-between;
@@ -253,9 +283,11 @@ try {
             padding: 0.75rem 0;
             border-bottom: 1px solid #f0f0f0;
         }
+
         .course-item:last-child {
             border-bottom: none;
         }
+
         .enrollment-count {
             background: #667eea;
             color: white;
@@ -263,14 +295,17 @@ try {
             border-radius: 20px;
             font-size: 0.8rem;
         }
+
         .course-title {
             font-weight: 500;
             margin-bottom: 0.25rem;
         }
+
         .course-details {
             color: #666;
             font-size: 0.85rem;
         }
+
         .btn {
             background: #667eea;
             color: white;
@@ -282,28 +317,35 @@ try {
             cursor: pointer;
             transition: background 0.3s;
         }
+
         .btn:hover {
             background: #5a6fd8;
         }
+
         .btn-danger {
             background: #dc3545;
         }
+
         .btn-danger:hover {
             background: #c82333;
         }
+
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
             }
+
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
             }
+
             .nav-links {
                 flex-wrap: wrap;
                 gap: 1rem;
             }
         }
+
         @media (max-width: 1024px) {
             .content-grid {
                 grid-template-columns: 1fr 1fr;
@@ -311,6 +353,7 @@ try {
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="header-content">
@@ -339,7 +382,7 @@ try {
 
     <main class="main-content">
         <h1 style="margin-bottom: 2rem;">Dashboard Overview</h1>
-        
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number"><?php echo number_format($totalUsers); ?></div>
@@ -404,7 +447,7 @@ try {
                                     <div>
                                         <div class="course-title"><?php echo htmlspecialchars($course['title']); ?></div>
                                         <div class="course-details">
-                                            Level: <?php echo ucfirst($course['level']); ?> | 
+                                            Level: <?php echo ucfirst($course['level']); ?> |
                                             Price: $<?php echo number_format($course['price'], 2); ?> |
                                             Instructor: <?php echo htmlspecialchars($course['instructor_first_name'] . ' ' . $course['instructor_last_name']); ?>
                                         </div>
@@ -505,4 +548,5 @@ try {
         </div>
     </main>
 </body>
+
 </html>
