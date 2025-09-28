@@ -403,7 +403,7 @@ try {
                         </ul>
                     <?php endif; ?>
                     <div style="margin-top: 1rem; text-align: center;">
-                        <a href="/backend/admin/users.php" class="btn">View All Users</a>
+                        <a href="/Creators-Space-GroupProject/backend/admin/users.php" class="btn">View All Users</a>
                     </div>
                 </div>
             </div>
@@ -433,7 +433,7 @@ try {
                         </ul>
                     <?php endif; ?>
                     <div style="margin-top: 1rem; text-align: center;">
-                        <a href="/backend/admin/courses.php" class="btn">Manage Courses</a>
+                        <a href="/Creators-Space-GroupProject/backend/admin/courses.php" class="btn">Manage Courses</a>
                     </div>
                 </div>
             </div>
@@ -458,7 +458,7 @@ try {
                         </ul>
                     <?php endif; ?>
                     <div style="margin-top: 1rem; text-align: center;">
-                        <a href="/backend/admin/enrollments.php" class="btn">View All Enrollments</a>
+                        <a href="/Creators-Space-GroupProject/backend/admin/enrollments.php" class="btn">View All Enrollments</a>
                     </div>
                 </div>
             </div>
