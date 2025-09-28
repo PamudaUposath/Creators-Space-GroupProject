@@ -80,8 +80,7 @@ try {
             $redirectPath = '/Creators-Space-GroupProject/backend/admin/dashboard.php';
             break;
         case 'instructor':
-            // TODO: Create instructor dashboard page
-            $redirectPath = 'index.php'; // Temporarily redirect to main page
+            $redirectPath = 'instructor-dashboard.php';
             break;
         case 'user':
         default:

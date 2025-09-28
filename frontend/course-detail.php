@@ -314,6 +314,15 @@ include './includes/header.php';
                                 <?php else: ?>
                                 <p class="instructor-bio">Experienced instructor passionate about sharing knowledge and helping students succeed in their learning journey.</p>
                                 <?php endif; ?>
+                                
+                                <!-- Contact Instructor Button -->
+                                <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && $_SESSION['role'] === 'user'): ?>
+                                <div class="instructor-actions" style="margin-top: 1rem;">
+                                    <button class="contact-instructor-btn" onclick="contactInstructor(<?php echo $course['instructor_id']; ?>, '<?php echo htmlspecialchars(addslashes($course['instructor_name'])); ?>', <?php echo $courseId; ?>)">
+                                        <i class="fas fa-envelope"></i> Contact Instructor
+                                    </button>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -456,6 +465,45 @@ async function addToCart(courseId) {
         }, 2000);
     }
 }
+
+// Contact instructor function
+function contactInstructor(instructorId, instructorName, courseId) {
+    // Check if user is logged in
+    <?php if (!isset($_SESSION['user_id'])): ?>
+    alert('Please log in to contact the instructor.');
+    window.location.href = 'login.php';
+    return;
+    <?php endif; ?>
+    
+    // Open student messages page with pre-selected instructor
+    window.open(`student-messages.php?instructor_id=${instructorId}&instructor_name=${encodeURIComponent(instructorName)}&course_id=${courseId}`, '_blank');
+}
+</script>
+
+<style>
+.contact-instructor-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contact-instructor-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.contact-instructor-btn i {
+    font-size: 0.9rem;
+}
+</style>
 </script>
 
 <?php include './includes/footer.php'; ?>

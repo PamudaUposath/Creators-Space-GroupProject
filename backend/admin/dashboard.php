@@ -74,6 +74,28 @@ try {
     ");
     $monthlyEnrollments = $stmt->fetchAll();
     
+    // Get course request statistics
+    $stmt = $pdo->query("
+        SELECT 
+            COUNT(*) as total_requests,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_requests,
+            SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_requests,
+            SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_requests
+        FROM course_requests
+    ");
+    $courseRequestStats = $stmt->fetch();
+    
+    // Get recent pending course requests
+    $stmt = $pdo->query("
+        SELECT cr.*, u.first_name, u.last_name, u.email
+        FROM course_requests cr
+        JOIN users u ON cr.instructor_id = u.id
+        WHERE cr.status = 'pending'
+        ORDER BY cr.requested_at DESC
+        LIMIT 5
+    ");
+    $pendingRequests = $stmt->fetchAll();
+    
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
     $totalUsers = $totalCourses = $totalEnrollments = $totalInstructors = 0;
@@ -96,9 +118,10 @@ try {
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
             color: #333;
+            min-height: 100vh;
         }
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -307,7 +330,9 @@ try {
                 <a href="dashboard.php" class="active">Dashboard</a>
                 <a href="users.php">Users</a>
                 <a href="courses.php">Courses</a>
+                <a href="course-requests.php">Course Requests</a>
                 <a href="enrollments.php">Enrollments</a>
+                <a href="student-reports.php">Student Reports</a>
             </div>
         </div>
     </nav>
@@ -418,6 +443,62 @@ try {
                     <?php endif; ?>
                     <div style="margin-top: 1rem; text-align: center;">
                         <a href="/backend/admin/enrollments.php" class="btn">View All Enrollments</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    Course Requests
+                    <?php if ($courseRequestStats['pending_requests'] > 0): ?>
+                        <span style="background: #f59e0b; color: white; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.8rem; margin-left: 0.5rem;">
+                            <?php echo $courseRequestStats['pending_requests']; ?> pending
+                        </span>
+                    <?php endif; ?>
+                </div>
+                <div class="section-content">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="text-align: center; padding: 0.5rem; background: #f3f4f6; border-radius: 6px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #374151;"><?php echo $courseRequestStats['total_requests']; ?></div>
+                            <div style="font-size: 0.8rem; color: #6b7280;">Total</div>
+                        </div>
+                        <div style="text-align: center; padding: 0.5rem; background: #fef3c7; border-radius: 6px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #92400e;"><?php echo $courseRequestStats['pending_requests']; ?></div>
+                            <div style="font-size: 0.8rem; color: #92400e;">Pending</div>
+                        </div>
+                        <div style="text-align: center; padding: 0.5rem; background: #d1fae5; border-radius: 6px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #065f46;"><?php echo $courseRequestStats['approved_requests']; ?></div>
+                            <div style="font-size: 0.8rem; color: #065f46;">Approved</div>
+                        </div>
+                        <div style="text-align: center; padding: 0.5rem; background: #fee2e2; border-radius: 6px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #991b1b;"><?php echo $courseRequestStats['rejected_requests']; ?></div>
+                            <div style="font-size: 0.8rem; color: #991b1b;">Rejected</div>
+                        </div>
+                    </div>
+
+                    <?php if (empty($pendingRequests)): ?>
+                        <p>No pending course requests.</p>
+                    <?php else: ?>
+                        <ul class="user-list">
+                            <?php foreach ($pendingRequests as $request): ?>
+                                <li class="user-item">
+                                    <div>
+                                        <div class="user-name"><?php echo htmlspecialchars($request['title']); ?></div>
+                                        <div class="user-email">
+                                            by <?php echo htmlspecialchars($request['first_name'] . ' ' . $request['last_name']); ?>
+                                            | $<?php echo number_format($request['price'], 2); ?>
+                                            | <?php echo $request['level']; ?>
+                                        </div>
+                                    </div>
+                                    <div class="user-date">
+                                        <?php echo date('M d', strtotime($request['requested_at'])); ?>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="course-requests.php" class="btn">Manage Course Requests</a>
                     </div>
                 </div>
             </div>
