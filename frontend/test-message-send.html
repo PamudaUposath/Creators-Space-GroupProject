@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Message Send</title>
+</head>
+<body>
+    <h2>Test Message Send</h2>
+    <div id="result"></div>
+    
+    <script>
+        // Test sending a message between users 2 and 14 to see if it updates existing conversation
+        async function testMessageSend() {
+            try {
+                // First, let's get the current conversations
+                const getConversationsResponse = await fetch('/Creators-Space-GroupProject/backend/communication/get_conversations.php');
+                const conversationsData = await getConversationsResponse.json();
+                
+                console.log('Conversations before sending message:', conversationsData);
+                document.getElementById('result').innerHTML += '<h3>Conversations Before:</h3><pre>' + JSON.stringify(conversationsData, null, 2) + '</pre>';
+                
+                // Now send a message
+                const formData = new FormData();
+                formData.append('receiver_id', '14');
+                formData.append('message', 'Test message to verify conversation grouping works correctly');
+                
+                const sendResponse = await fetch('/Creators-Space-GroupProject/backend/communication/send_message.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const sendData = await sendResponse.json();
+                console.log('Send message response:', sendData);
+                document.getElementById('result').innerHTML += '<h3>Send Message Response:</h3><pre>' + JSON.stringify(sendData, null, 2) + '</pre>';
+                
+                // Get conversations again to see if a new one was created or existing updated
+                const getConversationsResponse2 = await fetch('/Creators-Space-GroupProject/backend/communication/get_conversations.php');
+                const conversationsData2 = await getConversationsResponse2.json();
+                
+                console.log('Conversations after sending message:', conversationsData2);
+                document.getElementById('result').innerHTML += '<h3>Conversations After:</h3><pre>' + JSON.stringify(conversationsData2, null, 2) + '</pre>';
+                
+                // Compare conversation counts
+                const beforeCount = conversationsData.conversations ? conversationsData.conversations.length : 0;
+                const afterCount = conversationsData2.conversations ? conversationsData2.conversations.length : 0;
+                
+                if (beforeCount === afterCount) {
+                    document.getElementById('result').innerHTML += '<h3 style="color: green;">✓ SUCCESS: Same number of conversations (existing conversation updated)</h3>';
+                } else {
+                    document.getElementById('result').innerHTML += '<h3 style="color: red;">✗ FAILED: Number of conversations changed (new conversation created incorrectly)</h3>';
+                }
+                
+            } catch (error) {
+                console.error('Test error:', error);
+                document.getElementById('result').innerHTML += '<h3 style="color: red;">Error: ' + error.message + '</h3>';
+            }
+        }
+        
+        // Run test on page load
+        testMessageSend();
+    </script>
+</body>
+</html>

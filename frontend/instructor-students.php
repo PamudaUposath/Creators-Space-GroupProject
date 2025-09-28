@@ -617,6 +617,21 @@ try {
             font-size: 0.85rem;
         }
 
+        .actions-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .actions-container .btn {
+            margin: 0;
+        }
+
+        .progress-status {
+            margin-right: 0.5rem;
+        }
+
         .students-table {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -795,6 +810,194 @@ try {
                 min-width: 800px;
             }
         }
+
+        /* Report Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+            /* Hide scrollbar */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+
+        .modal-content::-webkit-scrollbar {
+            display: none; /* WebKit */
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: #fca5a5;
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: #f9fafb;
+            display: flex !important;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px solid #e5e7eb;
+            position: relative;
+            z-index: 10;
+        }
+
+        .modal-footer .btn {
+            display: inline-block !important;
+            visibility: visible !important;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block !important;
+            visibility: visible !important;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #b91c1c, #dc2626);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-block !important;
+            visibility: visible !important;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design for Modal */
+        @media (max-height: 600px) {
+            .modal-content {
+                margin: 2% auto;
+                max-height: 95vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+                max-height: 90vh;
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                padding: 1rem 1.5rem !important;
+                flex-direction: row !important;
+                gap: 0.5rem;
+            }
+            
+            .modal-footer .btn {
+                flex: 1;
+                min-width: 100px;
+            }
+        }
     </style>
 </head>
 
@@ -814,6 +1017,7 @@ try {
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
+                    <a href="instructor-messages.php">Messages</a>
                     
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">
@@ -967,26 +1171,36 @@ try {
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if (!$enrollment['certificate_code'] && $enrollment['progress'] >= 80): ?>
-                                        <form method="POST" style="display: inline;">
-                                            <input type="hidden" name="action" value="issue_certificate">
-                                            <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['enrollment_id']; ?>">
-                                            <input type="hidden" name="user_id" value="<?php echo $enrollment['user_id']; ?>">
-                                            <input type="hidden" name="course_id" value="<?php echo $enrollment['course_id']; ?>">
-                                            <button type="submit" class="btn btn-success btn-small" 
-                                                    onclick="return confirm('Issue certificate for this student?');">
-                                                <i class="fas fa-certificate"></i> Issue Certificate
-                                            </button>
-                                        </form>
-                                    <?php elseif (!$enrollment['certificate_code']): ?>
-                                        <span style="color: #64748b; font-size: 0.85rem;">
-                                            Need 80%+ progress
-                                        </span>
-                                    <?php else: ?>
-                                        <span style="color: #48bb78; font-size: 0.85rem;">
-                                            <i class="fas fa-check"></i> Completed
-                                        </span>
-                                    <?php endif; ?>
+                                    <div class="actions-container">
+                                        <?php if (!$enrollment['certificate_code'] && $enrollment['progress'] >= 80): ?>
+                                            <form method="POST" style="display: inline;">
+                                                <input type="hidden" name="action" value="issue_certificate">
+                                                <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['enrollment_id']; ?>">
+                                                <input type="hidden" name="user_id" value="<?php echo $enrollment['user_id']; ?>">
+                                                <input type="hidden" name="course_id" value="<?php echo $enrollment['course_id']; ?>">
+                                                <button type="submit" class="btn btn-success btn-small" 
+                                                        onclick="return confirm('Issue certificate for this student?');">
+                                                    <i class="fas fa-certificate"></i> Issue Certificate
+                                                </button>
+                                            </form>
+                                        <?php elseif (!$enrollment['certificate_code']): ?>
+                                            <span class="progress-status" style="color: #64748b; font-size: 0.85rem;">
+                                                Need 80%+ progress
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="progress-status" style="color: #48bb78; font-size: 0.85rem;">
+                                                <i class="fas fa-check"></i> Completed
+                                            </span>
+                                        <?php endif; ?>
+                                        <button class="btn btn-primary btn-small" 
+                                                onclick="messageStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
+                                            <i class="fas fa-envelope"></i> Message
+                                        </button>
+                                        <button class="btn btn-danger btn-small" 
+                                                onclick="reportStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
+                                            <i class="fas fa-flag"></i> Report
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -994,6 +1208,59 @@ try {
                 </table>
             </div>
         <?php endif; ?>
+    </div>
+
+    <!-- Report Student Modal -->
+    <div id="reportModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-flag"></i> Report Student</h3>
+                <span class="close" onclick="closeReportModal()">&times;</span>
+            </div>
+            <form id="reportForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reportType">Report Type:</label>
+                        <select id="reportType" name="report_type" required>
+                            <option value="academic_concern">Academic Concern</option>
+                            <option value="behavior_issue">Behavior Issue</option>
+                            <option value="attendance_problem">Attendance Problem</option>
+                            <option value="inappropriate_conduct">Inappropriate Conduct</option>
+                            <option value="plagiarism">Plagiarism</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reportSeverity">Severity:</label>
+                        <select id="reportSeverity" name="severity" required>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reportSubject">Subject:</label>
+                        <input type="text" id="reportSubject" name="subject" required placeholder="Brief description of the issue" maxlength="255">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reportDescription">Detailed Description:</label>
+                        <textarea id="reportDescription" name="description" required placeholder="Please provide detailed information about the issue..." rows="5"></textarea>
+                    </div>
+                    
+                    <input type="hidden" id="reportStudentId" name="student_id">
+                    <input type="hidden" id="reportCourseId" name="course_id">
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Submit Report</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -1039,6 +1306,83 @@ try {
             setTimeout(() => {
                 themeToggleBtn.style.transform = '';
             }, 150);
+        });
+
+        // Message student function
+        function messageStudent(studentId, studentName, courseId) {
+            // Open messaging page with pre-selected student
+            window.open(`instructor-messages.php?student_id=${studentId}&student_name=${encodeURIComponent(studentName)}&course_id=${courseId}`, '_blank');
+        }
+
+        // Report student functionality
+        let currentStudentData = {};
+
+        function reportStudent(studentId, studentName, courseId) {
+            currentStudentData = { studentId, studentName, courseId };
+            
+            // Set hidden form fields
+            document.getElementById('reportStudentId').value = studentId;
+            document.getElementById('reportCourseId').value = courseId;
+            
+            // Update modal title
+            document.querySelector('#reportModal .modal-header h3').innerHTML = 
+                `<i class="fas fa-flag"></i> Report Student: ${studentName}`;
+            
+            // Show modal
+            document.getElementById('reportModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReportModal() {
+            document.getElementById('reportModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('reportForm').reset();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('reportModal');
+            if (event.target === modal) {
+                closeReportModal();
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('reportForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData);
+                
+                const response = await fetch('../backend/api/submit_student_report.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`Report submitted successfully for ${currentStudentData.studentName}. Report ID: ${result.report_id}`);
+                    closeReportModal();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                alert('An error occurred while submitting the report. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
         });
 
         // Animate progress bars

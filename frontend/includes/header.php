@@ -1035,6 +1035,9 @@ if ($message) {
           <!-- My Courses - Only show when logged in -->
           <?php if ($isLoggedIn): ?>
             <a href="mycourses.php">My Courses</a>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'user'): ?>
+              <a href="student-messages.php">Messages</a>
+            <?php endif; ?>
             <a href="cart.php" class="cart-link">
               <i class="fas fa-shopping-cart"></i>
               <span class="cart-counter" style="display: none;">0</span>

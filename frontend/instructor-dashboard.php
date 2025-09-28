@@ -30,13 +30,12 @@ try {
     $stmt->execute([$instructor_id]);
     $courses = $stmt->fetchAll();
 
-    // Get total statistics
+    // Get total statistics - Fixed revenue calculation
     $stmt = $pdo->prepare("
         SELECT 
             COUNT(DISTINCT c.id) as total_courses,
             COUNT(DISTINCT e.id) as total_students,
-            COUNT(DISTINCT cert.id) as total_certificates,
-            COALESCE(SUM(c.price * (SELECT COUNT(*) FROM enrollments WHERE course_id = c.id)), 0) as total_revenue
+            COUNT(DISTINCT cert.id) as total_certificates
         FROM courses c
         LEFT JOIN enrollments e ON c.id = e.course_id
         LEFT JOIN certificates cert ON c.id = cert.course_id
@@ -44,6 +43,18 @@ try {
     ");
     $stmt->execute([$instructor_id]);
     $stats = $stmt->fetch();
+    
+    // Calculate total revenue correctly (separate query to avoid JOIN multiplication)
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(
+            c.price * (SELECT COUNT(*) FROM enrollments WHERE course_id = c.id)
+        ), 0) as total_revenue
+        FROM courses c
+        WHERE c.instructor_id = ?
+    ");
+    $stmt->execute([$instructor_id]);
+    $revenue_result = $stmt->fetch();
+    $stats['total_revenue'] = $revenue_result['total_revenue'];
 
     // Get recent enrollments
     $stmt = $pdo->prepare("
@@ -705,6 +716,7 @@ try {
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
+                    <a href="instructor-messages.php">Messages</a>
                     
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">

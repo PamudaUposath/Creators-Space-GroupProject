@@ -118,9 +118,10 @@ try {
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
             color: #333;
+            min-height: 100vh;
         }
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -391,6 +392,7 @@ try {
                 <a href="courses.php">Courses</a>
                 <a href="course-requests.php">Course Requests</a>
                 <a href="enrollments.php">Enrollments</a>
+                <a href="student-reports.php">Student Reports</a>
             </div>
         </div>
     </nav>

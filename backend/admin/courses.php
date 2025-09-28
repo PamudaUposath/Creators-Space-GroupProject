@@ -104,9 +104,10 @@ $stats = $stmt->fetch();
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
             color: #333;
+            min-height: 100vh;
         }
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -339,6 +340,7 @@ $stats = $stmt->fetch();
                 <a href="courses.php" class="active">Courses</a>
                 <a href="course-requests.php">Course Requests</a>
                 <a href="enrollments.php">Enrollments</a>
+                <a href="student-reports.php">Student Reports</a>
             </div>
         </div>
     </nav>

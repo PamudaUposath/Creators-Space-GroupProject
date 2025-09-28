@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Message Test</title>
+    <script>
+        // Simulate logging in as Admin (for testing)
+        fetch('/Creators-Space-GroupProject/frontend/quick-login.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'user_id=1'
+        }).then(() => {
+            console.log('Logged in as Admin User');
+            testMessages();
+        });
+    </script>
+</head>
+<body>
+    <h2>Minimal Message Loading Test</h2>
+    <div id="status">Initializing...</div>
+    <div id="result"></div>
+
+    <script>
+        async function testMessages() {
+            const status = document.getElementById('status');
+            const result = document.getElementById('result');
+            
+            try {
+                status.innerHTML = 'Step 1: Getting conversations...';
+                
+                const convResponse = await fetch('/Creators-Space-GroupProject/backend/communication/get_conversations.php');
+                const convData = await convResponse.json();
+                
+                console.log('Conversations response:', convData);
+                
+                if (convData.success && convData.data.conversations.length > 0) {
+                    status.innerHTML = 'Step 2: Found conversations, testing message loading...';
+                    
+                    const conv = convData.data.conversations[0];
+                    const otherUserId = conv.other_user.id;
+                    
+                    result.innerHTML += `<p>Testing with conversation: ${conv.other_user.name} (ID: ${otherUserId})</p>`;
+                    
+                    const msgResponse = await fetch(`/Creators-Space-GroupProject/backend/communication/get_messages.php?other_user_id=${otherUserId}`);
+                    const msgData = await msgResponse.json();
+                    
+                    console.log('Messages response:', msgData);
+                    
+                    if (msgData.success) {
+                        status.innerHTML = `Step 3: SUCCESS! Found ${msgData.data.messages.length} messages`;
+                        
+                        result.innerHTML += `<h3>Messages (${msgData.data.messages.length} found):</h3>`;
+                        
+                        if (msgData.data.messages.length === 0) {
+                            result.innerHTML += '<p style="color: red;">❌ No messages returned by API</p>';
+                        } else {
+                            msgData.data.messages.forEach((msg, i) => {
+                                result.innerHTML += `
+                                    <div style="border: 1px solid #ccc; margin: 10px 0; padding: 10px;">
+                                        <h4>Message ${i + 1}</h4>
+                                        <strong>From:</strong> ${msg.sender.name} (ID: ${msg.sender.id})<br>
+                                        <strong>Is from me:</strong> ${msg.is_from_me ? 'Yes' : 'No'}<br>
+                                        <strong>Content:</strong> ${msg.message}<br>
+                                        <strong>Created:</strong> ${msg.created_at}
+                                    </div>
+                                `;
+                            });
+                        }
+                    } else {
+                        status.innerHTML = 'Step 3: FAILED - Messages API error';
+                        result.innerHTML += `<p style="color: red;">Messages API error: ${msgData.message}</p>`;
+                    }
+                } else {
+                    status.innerHTML = 'Step 2: FAILED - No conversations found';
+                    result.innerHTML += '<p style="color: red;">No conversations found</p>';
+                    result.innerHTML += `<pre>${JSON.stringify(convData, null, 2)}</pre>`;
+                }
+                
+            } catch (error) {
+                status.innerHTML = 'ERROR occurred during testing';
+                result.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error('Test error:', error);
+            }
+        }
+        
+        // Don't auto-run, let the login complete first
+    </script>
+</body>
+</html>

@@ -968,6 +968,7 @@ try {
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
+                    <a href="instructor-messages.php">Messages</a>
                     
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">

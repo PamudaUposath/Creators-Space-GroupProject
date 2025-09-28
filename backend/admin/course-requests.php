@@ -163,58 +163,100 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #f8fafc;
             color: #333;
-            line-height: 1.6;
+            min-height: 100vh;
         }
-
-        .container {
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+        .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            margin: -2rem -2rem 2rem -2rem;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2d3748;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #64748b;
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #667eea;
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
         }
 
         .stats-grid {
@@ -566,21 +608,33 @@ try {
 </head>
 
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="header-content">
-                <h1 class="page-title">
-                    <i class="fas fa-clipboard-list"></i> Course Requests
-                </h1>
-                <nav class="nav-links">
-                    <a href="dashboard.php">Dashboard</a>
-                    <a href="users.php">Users</a>
-                    <a href="courses.php">Courses</a>
-                    <a href="course-requests.php" class="active">Course Requests</a>
-                    <a href="enrollments.php">Enrollments</a>
-                </nav>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                Creators-Space Admin
             </div>
-        </header>
+            <div class="user-info">
+                <span>Welcome, <?php echo htmlspecialchars($_SESSION['first_name']); ?>!</span>
+                <a href="../auth/logout.php" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-links">
+                <a href="dashboard.php">Dashboard</a>
+                <a href="users.php">Users</a>
+                <a href="courses.php">Courses</a>
+                <a href="course-requests.php" class="active">Course Requests</a>
+                <a href="enrollments.php">Enrollments</a>
+                <a href="student-reports.php">Student Reports</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 style="margin-bottom: 2rem;">Course Requests Management</h1>
 
         <!-- Statistics -->
         <div class="stats-grid">
@@ -736,7 +790,7 @@ try {
                 </div>
             <?php endif; ?>
         </div>
-    </div>
+        </main>
 
     <script>
         // Auto-hide messages

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Message API</title>
+</head>
+<body>
+    <h2>Debug: Message API Test</h2>
+    <div id="result"></div>
+    <div id="debug-info"></div>
+
+    <script>
+        async function testMessageAPI() {
+            const result = document.getElementById('result');
+            const debugInfo = document.getElementById('debug-info');
+            
+            result.innerHTML = '<p>Testing message API calls...</p>';
+
+            try {
+                // Test 1: Get conversations API
+                console.log('=== Testing get_conversations.php ===');
+                debugInfo.innerHTML += '<h3>1. Testing Conversations API</h3>';
+                
+                const conversationsResponse = await fetch('/Creators-Space-GroupProject/backend/communication/get_conversations.php');
+                console.log('Conversations Response Status:', conversationsResponse.status);
+                debugInfo.innerHTML += `<p>Response Status: ${conversationsResponse.status}</p>`;
+                
+                if (!conversationsResponse.ok) {
+                    throw new Error(`HTTP ${conversationsResponse.status}: ${conversationsResponse.statusText}`);
+                }
+                
+                const conversationsData = await conversationsResponse.json();
+                console.log('Conversations Data:', conversationsData);
+                debugInfo.innerHTML += `<pre>Conversations Response: ${JSON.stringify(conversationsData, null, 2)}</pre>`;
+
+                if (conversationsData.success && conversationsData.data && conversationsData.data.conversations.length > 0) {
+                    // Test 2: Try to get messages for first conversation
+                    const firstConv = conversationsData.data.conversations[0];
+                    const otherUserId = firstConv.other_user.id;
+                    const courseId = firstConv.course ? firstConv.course.id : null;
+                    
+                    debugInfo.innerHTML += `<h3>2. Testing Messages API</h3>`;
+                    debugInfo.innerHTML += `<p>Testing with Other User ID: ${otherUserId}</p>`;
+                    debugInfo.innerHTML += `<p>Course ID: ${courseId || 'NULL (general conversation)'}</p>`;
+                    
+                    let messagesUrl = `/Creators-Space-GroupProject/backend/communication/get_messages.php?other_user_id=${otherUserId}`;
+                    if (courseId) messagesUrl += `&course_id=${courseId}`;
+                    
+                    debugInfo.innerHTML += `<p>Messages URL: ${messagesUrl}</p>`;
+                    
+                    const messagesResponse = await fetch(messagesUrl);
+                    console.log('Messages Response Status:', messagesResponse.status);
+                    debugInfo.innerHTML += `<p>Messages Response Status: ${messagesResponse.status}</p>`;
+                    
+                    if (!messagesResponse.ok) {
+                        throw new Error(`HTTP ${messagesResponse.status}: ${messagesResponse.statusText}`);
+                    }
+                    
+                    const messagesData = await messagesResponse.json();
+                    console.log('Messages Data:', messagesData);
+                    debugInfo.innerHTML += `<pre>Messages Response: ${JSON.stringify(messagesData, null, 2)}</pre>`;
+                    
+                    if (messagesData.success) {
+                        result.innerHTML += `<h3 style="color: green;">✅ SUCCESS: Found ${messagesData.data.messages.length} messages</h3>`;
+                        
+                        if (messagesData.data.messages.length > 0) {
+                            result.innerHTML += '<h3>Messages Preview:</h3>';
+                            messagesData.data.messages.forEach((msg, index) => {
+                                result.innerHTML += `<div style="border: 1px solid #ccc; margin: 5px; padding: 10px;">
+                                    <strong>Message ${index + 1}:</strong><br>
+                                    From: ${msg.sender.name} (ID: ${msg.sender.id})<br>
+                                    Content: ${msg.message}<br>
+                                    Is from me: ${msg.is_from_me ? 'Yes' : 'No'}<br>
+                                    Created: ${msg.created_at}
+                                </div>`;
+                            });
+                        }
+                    } else {
+                        result.innerHTML += `<h3 style="color: red;">❌ FAILED: ${messagesData.message}</h3>`;
+                    }
+                } else {
+                    result.innerHTML += '<h3 style="color: orange;">⚠️ No conversations found</h3>';
+                }
+
+            } catch (error) {
+                console.error('Test error:', error);
+                result.innerHTML += `<h3 style="color: red;">❌ ERROR: ${error.message}</h3>`;
+                debugInfo.innerHTML += `<pre style="color: red;">Error: ${error.stack}</pre>`;
+            }
+        }
+
+        // Run test on page load
+        testMessageAPI();
+    </script>
+</body>
+</html>
