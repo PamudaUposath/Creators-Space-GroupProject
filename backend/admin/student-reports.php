@@ -18,29 +18,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $report_id = intval($_POST['report_id']);
                 $status = $_POST['status'];
                 $admin_notes = trim($_POST['admin_notes'] ?? '');
-                
+
                 $stmt = $pdo->prepare("
                     UPDATE student_reports 
                     SET status = ?, admin_notes = ?, reviewed_by = ?, reviewed_at = NOW() 
                     WHERE id = ?
                 ");
                 $stmt->execute([$status, $admin_notes, $_SESSION['user_id'], $report_id]);
-                
+
                 $message = "Report status updated successfully!";
                 $message_type = "success";
                 break;
-                
+
             case 'add_resolution':
                 $report_id = intval($_POST['report_id']);
                 $resolution_action = trim($_POST['resolution_action']);
-                
+
                 $stmt = $pdo->prepare("
                     UPDATE student_reports 
                     SET resolution_action = ?, status = 'resolved', reviewed_by = ?, reviewed_at = NOW() 
                     WHERE id = ?
                 ");
                 $stmt->execute([$resolution_action, $_SESSION['user_id'], $report_id]);
-                
+
                 $message = "Resolution added and report marked as resolved!";
                 $message_type = "success";
                 break;
@@ -100,7 +100,7 @@ try {
     ");
     $stmt->execute($params);
     $reports = $stmt->fetchAll();
-    
+
     // Get summary statistics
     $stmt = $pdo->query("
         SELECT 
@@ -114,7 +114,6 @@ try {
         FROM student_reports
     ");
     $stats = $stmt->fetch();
-    
 } catch (PDOException $e) {
     error_log("Error fetching reports: " . $e->getMessage());
     $reports = [];
@@ -124,6 +123,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -131,7 +131,7 @@ try {
     <link rel="shortcut icon" href="../../frontend/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -141,7 +141,7 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f8fafc;
+            background: #d7d8d8ff;
             min-height: 100vh;
             color: #333;
             margin: 0;
@@ -153,7 +153,7 @@ try {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .header-content {
@@ -180,7 +180,7 @@ try {
         .nav {
             background: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .nav-content {
@@ -226,15 +226,29 @@ try {
             background: white;
             padding: 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-left: 4px solid;
         }
 
-        .stat-card.total { border-left-color: #3b82f6; }
-        .stat-card.pending { border-left-color: #f59e0b; }
-        .stat-card.under-review { border-left-color: #8b5cf6; }
-        .stat-card.resolved { border-left-color: #10b981; }
-        .stat-card.urgent { border-left-color: #ef4444; }
+        .stat-card.total {
+            border-left-color: #3b82f6;
+        }
+
+        .stat-card.pending {
+            border-left-color: #f59e0b;
+        }
+
+        .stat-card.under-review {
+            border-left-color: #8b5cf6;
+        }
+
+        .stat-card.resolved {
+            border-left-color: #10b981;
+        }
+
+        .stat-card.urgent {
+            border-left-color: #ef4444;
+        }
 
         .stat-number {
             font-size: 2rem;
@@ -252,7 +266,7 @@ try {
             background: white;
             padding: 1.5rem;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
         }
 
@@ -285,7 +299,7 @@ try {
         .reports-section {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
@@ -339,10 +353,25 @@ try {
             letter-spacing: 0.05em;
         }
 
-        .severity-low { background: #dcfce7; color: #166534; }
-        .severity-medium { background: #fef3c7; color: #92400e; }
-        .severity-high { background: #fee2e2; color: #dc2626; }
-        .severity-urgent { background: #fecaca; color: #991b1b; }
+        .severity-low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .severity-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .severity-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .severity-urgent {
+            background: #fecaca;
+            color: #991b1b;
+        }
 
         .status-badge {
             padding: 0.25rem 0.75rem;
@@ -351,10 +380,25 @@ try {
             font-weight: 600;
         }
 
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-under_review { background: #e0e7ff; color: #3730a3; }
-        .status-resolved { background: #dcfce7; color: #166534; }
-        .status-dismissed { background: #f3f4f6; color: #374151; }
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-under_review {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-dismissed {
+            background: #f3f4f6;
+            color: #374151;
+        }
 
         .type-badge {
             padding: 0.25rem 0.5rem;
@@ -514,19 +558,19 @@ try {
             .main-content {
                 padding: 1rem;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .filter-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .reports-table {
                 font-size: 0.9rem;
             }
-            
+
             .table th,
             .table td {
                 padding: 0.5rem;
@@ -534,6 +578,7 @@ try {
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="header-content">
@@ -644,7 +689,7 @@ try {
                     </span>
                 </h2>
             </div>
-            
+
             <div class="reports-table">
                 <?php if (empty($reports)): ?>
                     <div style="padding: 3rem; text-align: center; color: #64748b;">
@@ -774,7 +819,7 @@ try {
             <form method="POST" id="updateForm">
                 <input type="hidden" name="action" value="update_status">
                 <input type="hidden" name="report_id" id="updateReportId">
-                
+
                 <div class="form-group">
                     <label for="status">Status:</label>
                     <select name="status" id="updateStatus" required>
@@ -784,12 +829,12 @@ try {
                         <option value="dismissed">Dismissed</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="admin_notes">Admin Notes:</label>
                     <textarea name="admin_notes" id="adminNotes" rows="3" placeholder="Add your notes about this report..."></textarea>
                 </div>
-                
+
                 <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                     <button type="button" onclick="closeModal('updateModal')" class="btn btn-secondary">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update Status</button>
@@ -805,7 +850,7 @@ try {
         function viewReport(reportId) {
             const report = allReports.find(r => r.id == reportId);
             if (!report) return;
-            
+
             const details = `
                 <h3><i class="fas fa-flag"></i> Report Details</h3>
                 <div style="margin: 1.5rem 0;">
@@ -857,7 +902,7 @@ try {
                     ` : ''}
                 </div>
             `;
-            
+
             document.getElementById('reportDetails').innerHTML = details;
             document.getElementById('viewModal').style.display = 'block';
         }
@@ -865,7 +910,7 @@ try {
         function updateStatus(reportId) {
             const report = allReports.find(r => r.id == reportId);
             if (!report) return;
-            
+
             document.getElementById('updateReportId').value = reportId;
             document.getElementById('updateStatus').value = report.status;
             document.getElementById('adminNotes').value = report.admin_notes || '';
@@ -896,4 +941,5 @@ try {
         }, 5000);
     </script>
 </body>
+
 </html>

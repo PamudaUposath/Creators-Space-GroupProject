@@ -156,7 +156,7 @@ $courses = $stmt->fetchAll();
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #d7d8d8ff;
             color: #333;
             min-height: 100vh;
         }
