@@ -240,6 +240,17 @@ include './includes/header.php';
       font-size: 0.95rem;
     }
 
+    .success-message {
+      background: rgba(220, 252, 231, 0.8);
+      color: #166534;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      border: 1px solid #bbf7d0;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
     .signup-section {
       text-align: center;
       margin-top: 2rem;
@@ -323,28 +334,139 @@ include './includes/header.php';
       }
     }
 
-    /* Message styles */
-    .error-message {
-      background: rgba(254, 226, 226, 0.8);
-      color: #dc2626;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #fecaca;
-      font-weight: 500;
-      font-size: 0.95rem;
+    /* Dark Mode Styles */
+    .dark-mode body {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     }
 
-    .success-message {
-      background: rgba(220, 252, 231, 0.8);
-      color: #166534;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #bbf7d0;
-      font-weight: 500;
-      font-size: 0.95rem;
+    .dark-mode .container {
+      background: rgba(40, 40, 40, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     }
+
+    .dark-mode .back-link {
+      color: #a3bffa;
+    }
+
+    .dark-mode .back-link:hover {
+      color: #c7d2fe;
+    }
+
+    .dark-mode h2 {
+      color: #f9fafb;
+    }
+
+    .dark-mode .subtitle {
+      color: #a3bffa;
+    }
+
+    .dark-mode label {
+      color: #d1d5db;
+    }
+
+    .dark-mode input[type="email"],
+    .dark-mode input[type="password"] {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: #4b5563;
+      color: #f9fafb;
+    }
+
+    .dark-mode input[type="email"]:focus,
+    .dark-mode input[type="password"]:focus {
+      outline: none;
+      border-color: #60a5fa;
+      background: rgba(0, 0, 0, 0); /* Fully transparent to show container background */
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2); /* Softer blue shadow */
+      color: #f9fafb; /* Ensure text remains white */
+    }
+
+    .dark-mode input[type="email"]::placeholder,
+    .dark-mode input[type="password"]::placeholder {
+      color: #9ca3af;
+    }
+
+    .dark-mode .toggle-password {
+      color: #d1d5db;
+    }
+
+    .dark-mode .toggle-password:hover {
+      color: #e5e7eb;
+    }
+
+    .dark-mode .checkbox-group label {
+      color: #d1d5db;
+    }
+
+    .dark-mode .forgot-password {
+      color: #60a5fa;
+    }
+
+    .dark-mode .forgot-password:hover {
+      color: #93c5fd;
+    }
+
+    .dark-mode .btn {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    }
+
+    .dark-mode .btn:hover {
+      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+    }
+
+    .dark-mode .btn:disabled {
+      background: #4b5563;
+    }
+
+    .dark-mode .error-message {
+      background: rgba(127, 29, 29, 0.8);
+      border-color: #991b1b;
+      color: #f87171;
+    }
+
+    .dark-mode .success-message {
+      background: rgba(22, 101, 52, 0.8);
+      border-color: #166534;
+      color: #34d399;
+    }
+
+    .dark-mode .signup-section {
+      border-top-color: #4b5563;
+    }
+
+    .dark-mode .signup-section p {
+      color: #a3bffa;
+    }
+
+    .dark-mode .signup-section a {
+      color: #60a5fa;
+    }
+
+    .dark-mode .signup-section a:hover {
+      color: #93c5fd;
+    }
+
+    .dark-mode .forgot-password-section {
+      border-top-color: #4b5563;
+    }
+
+    .dark-mode .forgot-form h3 {
+      color: #f9fafb;
+    }
+
+    .dark-mode .forgot-form p {
+      color: #a3bffa;
+    }
+
+    .dark-mode .back-to-login {
+      color: #a3bffa;
+    }
+
+    .dark-mode .back-to-login:hover {
+      color: #c7d2fe;
+    }
+
     /*
     .back-btn {
     background: linear-gradient(to right, #667eea, #764ba2); 
@@ -359,11 +481,11 @@ include './includes/header.php';
     }
 
     .back-btn:hover {
-    opacity: 0.9; /* subtle hover effect like Sign In */
+    opacity: 0.9; 
     }
     */
+</style>
 
-  </style>
 </head>
 
 <body>

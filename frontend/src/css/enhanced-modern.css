@@ -341,7 +341,6 @@ body {
 .modern-gradient-text {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
@@ -380,12 +379,12 @@ body {
 }
 
 .card h3, .card h4, .card h5, .offering-card h3, .mission-card h2, .vision-card h2 {
-  color: #ffffff !important;
+  color: #000000 !important;
   text-shadow: none !important;
 }
 
 .card p, .card span, .offering-card p, .mission-card p, .vision-card p {
-  color: #ffffff !important;
+  color: #000000 !important;
   text-shadow: none !important;
 }
 

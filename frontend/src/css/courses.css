@@ -354,7 +354,6 @@ body {
   0% {
     transform: translateY(-50%) rotate(0deg);
   }
-
   100% {
     transform: translateY(-50%) rotate(360deg);
   }
@@ -408,7 +407,6 @@ body.dark-mode .filter-select:hover {
 }
 
 /* NavBar */
-
 .navbar {
   display: flex;
   align-items: center;
@@ -427,7 +425,6 @@ body.dark-mode .filter-select:hover {
 .navbar a {
   color: black;
   text-decoration: none;
-  /* margin: 10px; */
   transition: color 0.3s;
   display: flex;
 }
@@ -575,8 +572,11 @@ body.dark-mode .filter-select:hover {
 
 .card:hover {
   transform: translateY(-15px) scale(1.02);
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 25px 80px rgb(120, 6, 206);
   border-color: #667eea;
+  filter: brightness(0.8); /* Dim the existing background color by 10% */
+  background-color: #667eea; /* Fade to purple */
+  transition: background-color 0.4s ease; /* Smooth fade effect */
 }
 
 .card-content {
@@ -648,12 +648,10 @@ body.dark-mode .filter-select:hover {
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     transform: scale(1);
   }
-
   50% {
     transform: scale(1.05);
   }
@@ -714,10 +712,8 @@ body.dark-mode .filter-select:hover {
 .button {
   display: inline-block;
   padding: 8px 18px;
-  /* smaller padding */
   margin: 8px;
   font-size: 18px;
-  /* smaller font size */
   font-weight: bold;
   text-transform: uppercase;
   color: #fff;
@@ -775,8 +771,7 @@ body.dark-mode .filter-select:hover {
   display: none;
 }
 
-
-/* Dark Mode Switch Styles  */
+/* Dark Mode Switch Styles */
 .toggle-switch {
   position: relative;
   width: 60px;
@@ -811,7 +806,6 @@ body.dark-mode .filter-select:hover {
   width: 100%;
   height: 100%;
   border-radius: 25px;
-  -webkit-transition: 0.3s;
   transition: 0.3s;
 }
 
@@ -827,19 +821,14 @@ body.dark-mode .filter-select:hover {
   width: 20px;
   height: 20px;
   border-radius: 100%;
-  -webkit-box-shadow: inset 12px -4px 0px 0px var(--light);
   box-shadow: inset 12px -4px 0px 0px var(--light);
   background-color: var(--dark);
-  -webkit-transition: 0.3s;
   transition: 0.3s;
 }
 
 .checkbox:checked~.slider::before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
   transform: translateX(26px);
   background-color: var(--dark);
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
@@ -893,9 +882,28 @@ body.dark .card {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* Prevent card hover from affecting button background */
 body.dark .card:hover {
-  border-color: #667eea;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+  transform: translateY(-15px) scale(1.02) !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4) !important;
+  border-color: #667eea !important;
+  /* Explicitly avoid background change */
+  background: inherit !important; /* Keeps the card's original dark background */
+  filter: none !important; /* Removes brightness filter */
+}
+
+body.dark .card:hover .btn.login {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+  transition: all 0.3s ease !important; /* Ensure smooth transition */
+}
+
+body.dark .card:hover .btn.login:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
 }
 
 body.dark .card-content h3 {
@@ -929,7 +937,6 @@ body.dark .footer {
     opacity: 0;
     transform: translate3d(0, -100%, 0);
   }
-
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -941,7 +948,6 @@ body.dark .footer {
     opacity: 0;
     transform: translate3d(0, 100%, 0);
   }
-
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -1245,7 +1251,7 @@ body.dark-mode .cta-description {
   .cta-description {
     font-size: 1rem;
   }
-}
+
   .cta-container {
     padding: 2rem 1rem;
   }
