@@ -496,7 +496,7 @@ if ($message) {
       align-items: center;
       gap: 0.3rem;
       padding: 0.6rem 1rem;
-      border-radius: 20px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
       font-size: 0.85rem;
@@ -1035,6 +1035,9 @@ if ($message) {
           <!-- My Courses - Only show when logged in -->
           <?php if ($isLoggedIn): ?>
             <a href="mycourses.php">My Courses</a>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'user'): ?>
+              <a href="student-messages.php">Messages</a>
+            <?php endif; ?>
             <a href="cart.php" class="cart-link">
               <i class="fas fa-shopping-cart"></i>
               <span class="cart-counter" style="display: none;">0</span>

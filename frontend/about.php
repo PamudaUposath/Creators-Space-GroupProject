@@ -190,7 +190,7 @@ include './includes/header.php';
         <section class="section">
             <div style="text-align: center; padding: 2rem;">
                 <h2 class="section-title">Ready to Start Your Learning Journey?</h2>
-                <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 2rem;">Join thousands of students who have transformed their careers with Creators-Space</p>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">Join thousands of students who have transformed their careers with Creators-Space</p>
                 <div class="hero-actions">
                     <?php if (!$isLoggedIn): ?>
                         <a href="signup.php" class="hero-btn">Get Started Free</a>
