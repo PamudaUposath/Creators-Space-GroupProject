@@ -123,12 +123,6 @@ class MobileNavigation {
         this.navToggle?.classList.remove('active');
         this.navToggle?.setAttribute('aria-expanded', 'false');
         
-        // Close any open dropdowns
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            dropdown.classList.remove('active');
-        });
-        
         // Restore body scrolling
         document.body.style.overflow = '';
         

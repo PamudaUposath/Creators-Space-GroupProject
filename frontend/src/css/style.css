@@ -1,6 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=SF+Pro+Display:300,400,500,700&display=swap");
-@import url("./buttons.css");
-@import url("./navbar.css");
 
 * {
   margin: 0;
@@ -14,35 +12,65 @@ body {
   width: 100vw !important;
 }
 
-/* Note: Navbar styles moved to navbar.css for better organization */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 85px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
 
-/* User section styling for logged-in users */
-#userSection {
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 2rem;
+  height: 100%;
+  width: 100%;
+}
+
+.navbar h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.navbar h1 a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
 }
 
-/* Dropdown Menu Styles */
-.dropdown {
+.navbar a {
+  color: black;
+  text-decoration: none;
+  margin: 10px 2px;
+  transition: color 0.3s;
+  display: flex;
   position: relative;
-  display: inline-block;
 }
 
-.dropdown-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  padding: 8px 12px;
+.navbar .nav-links a {
   color: #2c3e50;
+  display: inline-block;
   text-decoration: none;
   font-weight: 500;
+  padding: 8px 12px;
   transition: all 0.3s ease;
-  position: relative;
 }
 
-.dropdown-toggle::after {
+.navbar .nav-links a:nth-child(-n + 9)::after {
   content: "";
   position: absolute;
   left: 0;
@@ -53,71 +81,77 @@ body {
   transition: width 0.3s ease;
 }
 
-.dropdown-toggle:hover::after {
+.navbar .nav-links a:nth-child(-n + 9):hover::after {
   width: 100%;
 }
 
-.dropdown-toggle i {
-  font-size: 12px;
-  transition: transform 0.3s ease;
-}
-
-.dropdown:hover .dropdown-toggle i,
-.dropdown.active .dropdown-toggle i {
-  transform: rotate(180deg);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: white;
-  min-width: 180px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-  z-index: 1000;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.dropdown:hover .dropdown-menu,
-.dropdown.active .dropdown-menu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 12px 16px;
-  color: #2c3e50;
-  text-decoration: none;
+.navbar .btn.login {
+  border: 1px solid black;
+  display: inline-block;
+  box-sizing: border-box;
+  outline: none;
+  background-color: transparent;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
   font-weight: 500;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.dropdown-menu a:last-child {
-  border-bottom: none;
+.navbar .btn.login:hover {
+  background-color: black;
+  color: white;
 }
 
-.dropdown-menu a:hover {
-  background-color: #f8f9fa;
-  color: #3498db;
-  padding-left: 20px;
+.navbar .btn.signup {
+  border: 1px solid black;
+  display: inline-block;
+  box-sizing: border-box;
+  outline: none;
+  background-color: black;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-weight: 500;
+  color: white;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.dropdown-menu a:first-child {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+.navbar .btn.signup:hover {
+  background-color: white;
+  color: black;
 }
 
-.dropdown-menu a:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+.navbar .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+}
+
+/* Right side container for nav-links and auth buttons */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Authentication section styling */
+#authSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* User section styling for logged-in users */
+#userSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* #navbar-x-logo {} */
@@ -765,31 +799,6 @@ body.dark .navbar .nav-links a::after {
 body.dark .navbar .nav-links a:hover::after,
 body.dark .navbar .nav-links a.active::after {
   width: 100%;
-}
-
-/* Dark mode dropdown styles */
-body.dark .dropdown-toggle {
-  color: #fff;
-}
-
-body.dark .dropdown-toggle::after {
-  background-color: rgba(255, 255, 255, 0.889);
-}
-
-body.dark .dropdown-menu {
-  background: #333;
-  border: 1px solid #555;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-body.dark .dropdown-menu a {
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-body.dark .dropdown-menu a:hover {
-  background-color: #444;
-  color: #3498db;
 }
 
 /* Dark mode for main section */

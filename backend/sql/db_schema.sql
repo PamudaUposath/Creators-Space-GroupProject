@@ -16,17 +16,8 @@ CREATE TABLE users (
     reset_expires DATETIME DEFAULT NULL,
     profile_image VARCHAR(500) DEFAULT NULL,
     skills TEXT DEFAULT NULL,
-    bio TEXT DEFAULT NULL,
-    phone VARCHAR(20) DEFAULT NULL,
-    date_of_birth DATE DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    -- Indexes for performance
-    INDEX idx_users_email (email),
-    INDEX idx_users_username (username),
-    INDEX idx_users_role (role),
-    INDEX idx_users_active (is_active)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Courses table
@@ -40,25 +31,10 @@ CREATE TABLE courses (
     price DECIMAL(10,2) DEFAULT 0.00,
     duration VARCHAR(100),
     level ENUM('beginner','intermediate','advanced') DEFAULT 'beginner',
-    category VARCHAR(100) DEFAULT 'general',
-    prerequisites TEXT DEFAULT NULL,
-    learning_objectives TEXT DEFAULT NULL,
     is_active TINYINT(1) DEFAULT 1,
-    featured TINYINT(1) DEFAULT 0,
-    total_lessons INT DEFAULT 0,
-    total_duration_minutes INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (instructor_id) REFERENCES users(id) ON DELETE SET NULL,
-    
-    -- Indexes for performance
-    INDEX idx_courses_instructor (instructor_id),
-    INDEX idx_courses_level (level),
-    INDEX idx_courses_category (category),
-    INDEX idx_courses_active (is_active),
-    INDEX idx_courses_featured (featured),
-    INDEX idx_courses_price (price)
+    FOREIGN KEY (instructor_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Lessons table
@@ -66,25 +42,13 @@ CREATE TABLE lessons (
     id INT AUTO_INCREMENT PRIMARY KEY,
     course_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255),
     content TEXT,
     video_url VARCHAR(500),
-    attachments JSON DEFAULT NULL,
     position INT DEFAULT 0,
     duration VARCHAR(50),
-    duration_minutes INT DEFAULT 0,
     is_free TINYINT(1) DEFAULT 0,
-    is_published TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    
-    -- Indexes for performance
-    INDEX idx_lessons_course (course_id),
-    INDEX idx_lessons_position (position),
-    INDEX idx_lessons_free (is_free),
-    INDEX idx_lessons_published (is_published)
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
 -- Enrollments table
@@ -94,21 +58,10 @@ CREATE TABLE enrollments (
     course_id INT NOT NULL,
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     completed_at TIMESTAMP NULL,
-    last_accessed TIMESTAMP NULL,
     progress DECIMAL(5,2) DEFAULT 0.00,
-    current_lesson_id INT DEFAULT NULL,
-    status ENUM('active','completed','paused','cancelled') DEFAULT 'active',
-    
     UNIQUE(user_id, course_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    FOREIGN KEY (current_lesson_id) REFERENCES lessons(id) ON DELETE SET NULL,
-    
-    -- Indexes for performance
-    INDEX idx_enrollments_user (user_id),
-    INDEX idx_enrollments_course (course_id),
-    INDEX idx_enrollments_status (status),
-    INDEX idx_enrollments_progress (progress)
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
 -- Certificates table
@@ -118,14 +71,8 @@ CREATE TABLE certificates (
     course_id INT NOT NULL,
     certificate_code VARCHAR(100) UNIQUE,
     issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    
-    -- Indexes for performance
-    INDEX idx_certificates_user (user_id),
-    INDEX idx_certificates_course (course_id),
-    INDEX idx_certificates_code (certificate_code)
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
 -- Bookmarks table (for bookmarked courses)
@@ -134,14 +81,9 @@ CREATE TABLE bookmarks (
     user_id INT NOT NULL,
     course_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
     UNIQUE(user_id, course_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    
-    -- Indexes for performance
-    INDEX idx_bookmarks_user (user_id),
-    INDEX idx_bookmarks_course (course_id)
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
 -- Internships table
@@ -156,14 +98,7 @@ CREATE TABLE internships (
     is_remote TINYINT(1) DEFAULT 0,
     application_deadline DATE,
     is_active TINYINT(1) DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    -- Indexes for performance
-    INDEX idx_internships_company (company),
-    INDEX idx_internships_location (location),
-    INDEX idx_internships_remote (is_remote),
-    INDEX idx_internships_active (is_active),
-    INDEX idx_internships_deadline (application_deadline)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Internship applications table
@@ -173,15 +108,9 @@ CREATE TABLE internship_applications (
     internship_id INT NOT NULL,
     status ENUM('pending','accepted','rejected') DEFAULT 'pending',
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
     UNIQUE(user_id, internship_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (internship_id) REFERENCES internships(id) ON DELETE CASCADE,
-    
-    -- Indexes for performance
-    INDEX idx_internship_apps_user (user_id),
-    INDEX idx_internship_apps_internship (internship_id),
-    INDEX idx_internship_apps_status (status)
+    FOREIGN KEY (internship_id) REFERENCES internships(id) ON DELETE CASCADE
 );
 
 -- Services table
@@ -191,10 +120,7 @@ CREATE TABLE services (
     description TEXT,
     icon VARCHAR(255),
     is_active TINYINT(1) DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    -- Indexes for performance
-    INDEX idx_services_active (is_active)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Blog posts table
@@ -210,14 +136,7 @@ CREATE TABLE blog_posts (
     published_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL,
-    
-    -- Indexes for performance
-    INDEX idx_blog_posts_author (author_id),
-    INDEX idx_blog_posts_slug (slug),
-    INDEX idx_blog_posts_published (is_published),
-    INDEX idx_blog_posts_published_at (published_at)
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Newsletter subscriptions table
@@ -225,11 +144,7 @@ CREATE TABLE newsletter_subscriptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     is_active TINYINT(1) DEFAULT 1,
-    subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    -- Indexes for performance
-    INDEX idx_newsletter_email (email),
-    INDEX idx_newsletter_active (is_active)
+    subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Campus ambassador applications table
@@ -241,11 +156,5 @@ CREATE TABLE campus_ambassador_applications (
     motivation TEXT,
     status ENUM('pending','accepted','rejected') DEFAULT 'pending',
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    
-    -- Indexes for performance
-    INDEX idx_campus_apps_user (user_id),
-    INDEX idx_campus_apps_status (status),
-    INDEX idx_campus_apps_college (college_name)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

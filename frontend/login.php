@@ -23,20 +23,16 @@ include './includes/header.php';
 ?>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      background: white;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
     }
 
     .main-content {
@@ -48,237 +44,126 @@ include './includes/header.php';
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 2.5rem;
-      border-radius: 20px;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
       width: 100%;
-      max-width: 420px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      font-size: 14px;
-      color: #64748b;
-      text-decoration: none;
+      max-width: 400px;
+      box-shadow: 0 8px 150px rgba(0, 0, 0, 0.15);
+      border: 1px solid #ccc;
       font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .back-link:hover {
-      color: #334155;
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 0.5rem;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1e293b;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
-      font-weight: 400;
+      margin-bottom: 1rem;
     }
 
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       position: relative;
     }
 
     label {
       display: block;
-      margin-bottom: 0.5rem;
-      color: #374151;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .input-wrapper {
-      position: relative;
+      margin-bottom: 5px;
     }
 
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 0.875rem 1rem;
-      padding-right: 3rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.8);
-      font-size: 1rem;
-      font-weight: 400;
-      transition: all 0.2s ease;
-      color: #1f2937;
-    }
-
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      outline: none;
-      border-color: #667eea;
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-    }
-
-    input[type="email"]::placeholder,
-    input[type="password"]::placeholder {
-      color: #9ca3af;
+      padding: 10px;
+      padding-right: 40px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
     .toggle-password {
       position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
+      right: 10px;
+      top: 38px;
       cursor: pointer;
-      color: #6b7280;
-      font-size: 1.1rem;
-      transition: color 0.2s ease;
-    }
-
-    .toggle-password:hover {
-      color: #374151;
+      color: #555;
     }
 
     .inline-feedback {
       font-size: 0.85rem;
-      color: #dc2626;
-      margin-top: 0.5rem;
-      font-weight: 500;
+      color: red;
+      margin-top: 5px;
     }
 
     .checkbox-group {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-      width: 1.1rem;
-      height: 1.1rem;
-      accent-color: #667eea;
-      cursor: pointer;
-    }
-
-    .checkbox-group label {
-      color: #374151;
-      font-weight: 400;
-      cursor: pointer;
-      margin-bottom: 0;
+      gap: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
 
     .forgot-password {
       display: block;
       text-align: right;
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: black;
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
     }
 
-    .forgot-password:hover {
-      color: #5b21b6;
+    .signup-page {
+      display: block;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: black;
+      text-decoration: none;
     }
 
     .btn {
       width: 100%;
-      padding: 0.875rem;
+      padding: 10px;
       border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 6px;
+      background-color: #0d0d0d;
       color: white;
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     }
 
     .btn:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
+      background-color: #999;
     }
 
     .spinner {
       display: none;
-      width: 28px;
-      height: 28px;
-      margin: 1rem auto 0;
-      border: 3px solid rgba(102, 126, 234, 0.3);
-      border-top: 3px solid #667eea;
+      width: 24px;
+      height: 24px;
+      margin: 0 auto;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid black;
       border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-top: 1rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .error-message {
-      background: rgba(254, 226, 226, 0.8);
-      color: #dc2626;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #fecaca;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .success-message {
-      background: rgba(220, 252, 231, 0.8);
-      color: #166534;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #bbf7d0;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .signup-section {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    .signup-section p {
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-bottom: 0;
-    }
-
-    .signup-section a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
-
-    .signup-section a:hover {
-      color: #5b21b6;
+      background: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #f5c6cb;
     }
 
     .forgot-password-section {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
     }
 
     .forgot-form {
@@ -288,278 +173,76 @@ include './includes/header.php';
     .forgot-form.active {
       display: block;
     }
-
-    .forgot-form h3 {
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .forgot-form p {
-      font-size: 0.95rem;
-      color: #64748b;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-
-    .back-to-login {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.95rem;
-      color: #64748b;
-      text-decoration: none;
-      margin-top: 1rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .back-to-login:hover {
-      color: #374151;
-    }
-
-    @media (max-width: 640px) {
-      .main-content {
-        padding: 1rem;
-      }
-      
-      .container {
-        padding: 2rem 1.5rem;
-        border-radius: 16px;
-      }
-      
-      h2 {
-        font-size: 1.75rem;
-      }
-    }
-
-    /* Dark Mode Styles */
-    .dark-mode body {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    }
-
-    .dark-mode .container {
-      background: rgba(40, 40, 40, 0.95);
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .dark-mode .back-link {
-      color: #a3bffa;
-    }
-
-    .dark-mode .back-link:hover {
-      color: #c7d2fe;
-    }
-
-    .dark-mode h2 {
-      color: #f9fafb;
-    }
-
-    .dark-mode .subtitle {
-      color: #a3bffa;
-    }
-
-    .dark-mode label {
-      color: #d1d5db;
-    }
-
-    .dark-mode input[type="email"],
-    .dark-mode input[type="password"] {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: #4b5563;
-      color: #f9fafb;
-    }
-
-    .dark-mode input[type="email"]:focus,
-    .dark-mode input[type="password"]:focus {
-      outline: none;
-      border-color: #60a5fa;
-      background: rgba(0, 0, 0, 0); /* Fully transparent to show container background */
-      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2); /* Softer blue shadow */
-      color: #f9fafb; /* Ensure text remains white */
-    }
-
-    .dark-mode input[type="email"]::placeholder,
-    .dark-mode input[type="password"]::placeholder {
-      color: #9ca3af;
-    }
-
-    .dark-mode .toggle-password {
-      color: #d1d5db;
-    }
-
-    .dark-mode .toggle-password:hover {
-      color: #e5e7eb;
-    }
-
-    .dark-mode .checkbox-group label {
-      color: #d1d5db;
-    }
-
-    .dark-mode .forgot-password {
-      color: #60a5fa;
-    }
-
-    .dark-mode .forgot-password:hover {
-      color: #93c5fd;
-    }
-
-    .dark-mode .btn {
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-    }
-
-    .dark-mode .btn:hover {
-      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
-    }
-
-    .dark-mode .btn:disabled {
-      background: #4b5563;
-    }
-
-    .dark-mode .error-message {
-      background: rgba(127, 29, 29, 0.8);
-      border-color: #991b1b;
-      color: #f87171;
-    }
-
-    .dark-mode .success-message {
-      background: rgba(22, 101, 52, 0.8);
-      border-color: #166534;
-      color: #34d399;
-    }
-
-    .dark-mode .signup-section {
-      border-top-color: #4b5563;
-    }
-
-    .dark-mode .signup-section p {
-      color: #a3bffa;
-    }
-
-    .dark-mode .signup-section a {
-      color: #60a5fa;
-    }
-
-    .dark-mode .signup-section a:hover {
-      color: #93c5fd;
-    }
-
-    .dark-mode .forgot-password-section {
-      border-top-color: #4b5563;
-    }
-
-    .dark-mode .forgot-form h3 {
-      color: #f9fafb;
-    }
-
-    .dark-mode .forgot-form p {
-      color: #a3bffa;
-    }
-
-    .dark-mode .back-to-login {
-      color: #a3bffa;
-    }
-
-    .dark-mode .back-to-login:hover {
-      color: #c7d2fe;
-    }
-</style>
+  </style>
 </head>
 
 <body>
   <div class="main-content">
     <div class="container">
-      <a href="index.php" class="back-link">
-        ← Back to Homepage
-      </a>
+      <a href="index.php"
+      style="display: inline-block; margin-bottom: 10px; font-size: 14px; color: #555; text-decoration: none;">
+      ← Back to Homepage
+    </a>
     
-      <h2>Welcome Back</h2>
-      <p class="subtitle">Sign in to your account to continue</p>
+    <h2>Login</h2>
 
-      <?php if ($error): ?>
-        <div class="error-message">
-          <?php echo htmlspecialchars($error); ?>
-        </div>
-      <?php endif; ?>
-
-      <!-- Message Container for inline feedback -->
-      <div id="message-container"></div>
-
-      <!-- Login Form -->
-      <form id="login-form" method="POST">
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <div class="input-wrapper">
-            <input type="email" id="email" name="email" placeholder="Enter your email" required />
-          </div>
-          <div id="emailFeedback" class="inline-feedback"></div>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="input-wrapper">
-            <input type="password" id="password" name="password" placeholder="Enter your password" required />
-            <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
-          </div>
-        </div>
-
-        <div class="checkbox-group">
-          <input type="checkbox" id="remember" name="remember_me">
-          <label for="remember">Remember me for 30 days</label>
-        </div>
-
-        <button type="submit" class="btn" id="loginBtn">Sign In</button>
-        <div class="spinner" id="spinner"></div>
-
-        <a href="#" class="forgot-password" onclick="toggleForgotPassword()">Forgot your password?</a>
-
-        <div class="signup-section">
-          <p>Don't have an account? <a href="signup.php">Create one now</a></p>
-          <p><small style="color: #64748b;">Students and instructors can use the same login</small></p>
-        </div>
-      </form>
-
-      <!-- Forgot Password Form -->
-      <div class="forgot-password-section">
-        <div id="forgot-form" class="forgot-form">
-          <h3>Reset Password</h3>
-          <p>
-            Enter your email address and we'll send you a secure link to reset your password.
-          </p>
-          <form id="forgot-password-form" method="POST" action="../backend/auth/forgot_password.php">
-            <div class="form-group">
-              <label for="reset-email">Email Address</label>
-              <div class="input-wrapper">
-                <input type="email" id="reset-email" name="email" placeholder="Enter your email" required />
-              </div>
-            </div>
-            <button type="submit" class="btn">Send Reset Link</button>
-            <div class="spinner" id="forgot-spinner"></div>
-          </form>
-          <a href="#" onclick="toggleForgotPassword()" class="back-to-login">← Back to Login</a>
-        </div>
+    <?php if ($error): ?>
+      <div class="error-message">
+        <?php echo htmlspecialchars($error); ?>
       </div>
+    <?php endif; ?>
+
+    <!-- Login Form -->
+    <form id="login-form" method="POST">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" name="email" required />
+        <div id="emailFeedback" class="inline-feedback"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" name="password" required />
+        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="remember" name="remember_me" style="width:auto;">
+        <label for="remember" style="display:inline;">Remember me</label>
+      </div>
+
+      <button type="submit" class="btn" id="loginBtn">Login</button>
+      <div class="spinner" id="spinner"></div>
+
+      <a href="#" class="forgot-password" onclick="toggleForgotPassword()">Forgot Password?</a>
+
+      <div class="signup-page">
+        <p>Don't have an account? <a href="signup.php">Sign Up</a></p>
+      </div>
+    </form>
+
+    <!-- Forgot Password Form -->
+    <div class="forgot-password-section">
+      <div id="forgot-form" class="forgot-form">
+        <h3>Reset Password</h3>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+          Enter your email address and we'll send you a link to reset your password.
+        </p>
+        <form id="forgot-password-form" method="POST" action="../backend/auth/forgot_password.php">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" required />
+          </div>
+          <button type="submit" class="btn">Send Reset Link</button>
+          <div class="spinner" id="forgot-spinner"></div>
+        </form>
+        <a href="#" onclick="toggleForgotPassword()" style="font-size: 0.9rem; color: #666;">← Back to Login</a>
+      </div>
+    </div>
   </div>
   </div> <!-- Close main-content -->
 
   <script>
-    // Message display function
-    function showMessage(message, type = 'error') {
-      const container = document.getElementById('message-container');
-      const className = type === 'success' ? 'success-message' : 'error-message';
-      container.innerHTML = `<div class="${className}">${message}</div>`;
-      
-      // Auto-hide after 10 seconds for success messages (longer to let user read)
-      if (type === 'success') {
-        setTimeout(() => {
-          container.innerHTML = '';
-        }, 10000);
-      }
-    }
-
     function togglePassword(id) {
       const input = document.getElementById(id);
       input.type = input.type === "password" ? "text" : "password";
@@ -590,23 +273,9 @@ include './includes/header.php';
       loginBtn.textContent = 'Logging in...';
 
       const formData = new FormData(this);
-      // Build a robust backend endpoint that works when the app is served
-      // from a subfolder (Apache: /Creators-Space-GroupProject/) or from
-      // project root (php -S). We derive the project root from the current
-      // path using '/frontend' as an anchor.
-      // Prefer the server-computed PROJECT_BASE helper (set in header.php).
-      let loginUrl;
-      if (window.apiUrl) {
-        loginUrl = window.apiUrl('/backend/auth/login_process.php') + '?t=' + Date.now();
-      } else {
-        const origin = window.location.origin;
-        const pathname = window.location.pathname;
-        const projectRootPrefix = pathname.includes('/frontend') ? pathname.substring(0, pathname.indexOf('/frontend')) : '';
-        loginUrl = origin + projectRootPrefix + '/backend/auth/login_process.php?t=' + Date.now();
-      }
-      console.log('Attempting login with URL:', loginUrl);
+      console.log('Attempting login with URL: ../backend/auth/login_process.php');
 
-      fetch(loginUrl, {
+      fetch('../backend/auth/login_process.php?t=' + Date.now(), {
         method: 'POST',
         body: formData
       })
@@ -622,7 +291,13 @@ include './includes/header.php';
         if (data.success) {
           console.log('Login successful!');
           
-          showMessage('Login successful! Redirecting...', 'success');
+          // Try to show toast, but don't let it break the redirect
+          try {
+            showToast('Login successful! Redirecting...', 'success');
+          } catch (e) {
+            console.log('Toast error:', e);
+            alert('Login successful! Redirecting...');
+          }
           
           // Get redirect path from response or default to index.php
           let redirectPath = data.data.redirect || 'index.php';
@@ -635,7 +310,12 @@ include './includes/header.php';
           }, 1500); // Slightly longer delay
         } else {
           console.log('Login failed:', data.message);
-          showMessage(data.message || 'Login failed', 'error');
+          try {
+            showToast(data.message || 'Login failed', 'error');
+          } catch (e) {
+            console.log('Toast error:', e);
+            alert(data.message || 'Login failed');
+          }
         }
       })
       .catch(error => {
@@ -646,7 +326,12 @@ include './includes/header.php';
         loginBtn.disabled = false;
         loginBtn.textContent = 'Login';
         
-        showMessage('An error occurred. Please try again.', 'error');
+        try {
+          showToast('An error occurred. Please try again.', 'error');
+        } catch (e) {
+          console.log('Toast error:', e);
+          alert('An error occurred. Please try again.');
+        }
       });
     });
 
@@ -662,28 +347,19 @@ include './includes/header.php';
       submitBtn.textContent = 'Sending...';
 
       const formData = new FormData(this);
-      let forgotUrl;
-      if (window.apiUrl) {
-        forgotUrl = window.apiUrl('/backend/auth/forgot_password.php');
-      } else {
-        const originFP = window.location.origin;
-        const pathnameFP = window.location.pathname;
-        const projectRootPrefixFP = pathnameFP.includes('/frontend') ? pathnameFP.substring(0, pathnameFP.indexOf('/frontend')) : '';
-        forgotUrl = originFP + projectRootPrefixFP + '/backend/auth/forgot_password.php';
-      }
 
-      fetch(forgotUrl, {
+      fetch('../backend/auth/forgot_password.php', {
         method: 'POST',
         body: formData
       })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          showMessage('Password reset link sent to your email!', 'success');
+          showToast('Password reset link sent to your email!', 'success');
           toggleForgotPassword(); // Go back to login form
           this.reset(); // Clear the form
         } else {
-          showMessage(data.message, 'error');
+          showToast(data.message, 'error');
         }
         spinner.style.display = 'none';
         submitBtn.disabled = false;
@@ -691,7 +367,7 @@ include './includes/header.php';
       })
       .catch(error => {
         console.error('Error:', error);
-        showMessage('An error occurred. Please try again.', 'error');
+        showToast('An error occurred. Please try again.', 'error');
         spinner.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Reset Link';
@@ -709,5 +385,7 @@ include './includes/header.php';
     console.log('Login page JavaScript loaded successfully');
   </script>
 
-</body>
-</html>
+<?php
+// Include footer
+include './includes/footer.php';
+?>

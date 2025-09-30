@@ -44,7 +44,6 @@
   <script src="./src/js/navbar.js"></script>
   <script src="./src/js/utils.js"></script>
   <script src="./src/js/mobile-responsive.js"></script>
-  <script src="./src/js/go-to-top.js"></script>
   
   <!-- Toast Notification JavaScript -->
   <script>
@@ -127,83 +126,6 @@
       isLoggedIn: <?php echo $isLoggedIn ? 'true' : 'false'; ?>,
       user: <?php echo $isLoggedIn ? json_encode($user) : 'null'; ?>
     };
-
-    // Enhanced Navbar Scroll Effect
-    document.addEventListener('DOMContentLoaded', function() {
-      const navbar = document.querySelector('.navbar');
-      let lastScrollTop = 0;
-      
-      function handleScroll() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-        
-        lastScrollTop = scrollTop;
-      }
-      
-      // Add scroll event listener with throttling
-      let scrollTimeout;
-      window.addEventListener('scroll', function() {
-        if (!scrollTimeout) {
-          scrollTimeout = setTimeout(function() {
-            handleScroll();
-            scrollTimeout = null;
-          }, 10);
-        }
-      });
-      
-      // Initial call
-      handleScroll();
-
-      // Dynamic background particles effect
-      function createParticle() {
-        const particle = document.createElement('div');
-        particle.style.position = 'fixed';
-        particle.style.width = Math.random() * 4 + 2 + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.background = 'rgba(255, 255, 255, 0.1)';
-        particle.style.borderRadius = '50%';
-        particle.style.left = Math.random() * window.innerWidth + 'px';
-        particle.style.top = window.innerHeight + 'px';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '-1';
-        
-        document.body.appendChild(particle);
-        
-        const duration = Math.random() * 3000 + 2000;
-        particle.animate([
-          { transform: 'translateY(0px)', opacity: 0 },
-          { transform: 'translateY(-' + (window.innerHeight + 100) + 'px)', opacity: 1 }
-        ], {
-          duration: duration,
-          easing: 'linear'
-        }).onfinish = () => particle.remove();
-      }
-
-      // Create particles periodically (only if body has gradient background)
-      const bodyStyle = window.getComputedStyle(document.body);
-      if (bodyStyle.background.includes('gradient')) {
-        setInterval(createParticle, 300);
-      }
-
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }
-        });
-      });
-    });
   </script>
 
 </body>

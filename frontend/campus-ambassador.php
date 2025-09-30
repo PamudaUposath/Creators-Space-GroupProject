@@ -2,14 +2,32 @@
 session_start();
 include './includes/header.php';
 ?>
+    <!-- Dark Mode Toggle -->
+    <div class="toggle-switch">
+        <label class="switch-label">
+            <input onclick="toggleDarkMode()" type="checkbox" class="checkbox">
+            <span class="slider"></span>
+        </label>
+    </div>
 
-    <!-- Main Content Container -->
-    <div class="main-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-title">Campus Ambassador Program</h1>
-            <p class="page-subtitle">Join the Creators-Space Campus Ambassador Program and become a bridge between innovation and education at your institution. As an ambassador, you'll lead initiatives, inspire peers, and shape the future of tech learning in your community.</p>
-        </div>
+    <!-- Hero Section with Animation -->
+    <div class="main">
+        <h1>Campus Ambassador Program</h1>
+        <p>
+            Join the Creators-Space Campus Ambassador Program and become a bridge between innovation and education at
+            your institution. As an ambassador, you'll lead initiatives, inspire peers, and shape the future of tech
+            learning in your community.
+        </p>
+    </div>
+
+    <main class="margin-top-3 padding-inline-lg">
+        <!-- Benefits Grid Section -->
+        <section class="campus-ambassador-section">
+            <div class="content-container">
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📚</div>
+                        <h3>Leadership Development</h3>
                         <p>Develop essential leadership skills through real-world experience and mentorship</p>
                     </div>
                     <div class="benefit-card">
@@ -80,6 +98,19 @@ include './includes/header.php';
             <p>&copy; 2024 Creators-Space. All rights reserved.</p>
         </div>
     </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        // Load saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.checkbox').checked = true;
+        }
+    </script>
 
 <?php
 // Include footer

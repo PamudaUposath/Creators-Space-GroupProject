@@ -1,23 +1,11 @@
 <?php
 // backend/auth/signup_process.php
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Log the request method and data
-error_log("Signup request received. Method: " . $_SERVER['REQUEST_METHOD']);
-error_log("POST data: " . print_r($_POST, true));
-
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
 
-// Set proper headers
-header('Content-Type: application/json');
-
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    error_log("Invalid request method: " . $_SERVER['REQUEST_METHOD']);
     errorResponse('Method not allowed', 405);
 }
 
