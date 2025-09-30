@@ -74,6 +74,11 @@
   color: #27ae60;
   font-weight: bold;
 }
+.services-grid .card,
+.services-grid .card * {
+    color: #000 ;
+}
+
 
 /* Dark mode styles */
 body.dark .service-card {

@@ -345,12 +345,34 @@ include './includes/header.php';
       font-weight: 500;
       font-size: 0.95rem;
     }
+    /*
+    .back-btn {
+    background: linear-gradient(to right, #667eea, #764ba2); 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.3s ease;
+    }
+
+    .back-btn:hover {
+    opacity: 0.9; /* subtle hover effect like Sign In */
+    }
+    */
+
   </style>
 </head>
 
 <body>
   <div class="main-content">
     <div class="container">
+      <!--<a href="index.php">
+    <button type="button" class="back-btn"> Home </button>
+    </a>-->
+
       <a href="index.php" class="back-link">
         ← Back to Homepage
       </a>
