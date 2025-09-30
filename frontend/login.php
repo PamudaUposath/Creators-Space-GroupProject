@@ -347,7 +347,7 @@ include './includes/header.php';
     }
     /*
     .back-btn {
-    background: linear-gradient(to right, #667eea, #764ba2); /* same as Sign In */
+    background: linear-gradient(to right, #667eea, #764ba2); 
     color: white;
     padding: 10px 20px;
     border: none;
@@ -360,7 +360,8 @@ include './includes/header.php';
 
     .back-btn:hover {
     opacity: 0.9; /* subtle hover effect like Sign In */
-    }*/
+    }
+    */
 
   </style>
 </head>
