@@ -522,20 +522,11 @@ include './includes/header.php';
       signupBtn.textContent = 'Creating Account...';
 
       const formData = new FormData(this);
-      
-      // Debug: Log what we're sending
-      console.log('Form data being sent:');
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
 
-      // Use simple relative path
-      const signupUrl = '../backend/auth/signup_process.php';
-      console.log('Submitting to:', signupUrl);
-
-      fetch(signupUrl, {
+      fetch('/backend/auth/signup_process.php', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'same-origin'  // This ensures cookies/session are sent
       })
       .then(response => {
         console.log('Response status:', response.status, response.statusText);

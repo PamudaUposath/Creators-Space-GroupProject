@@ -187,9 +187,9 @@ include './includes/header.php';
                                 <span style="color: #7f8c8d; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
                             </div>
                             <a href="course-detail.php?id=<?php echo $course['id']; ?>" style="text-decoration: none;">
-                                <h3 style="color: #2c3e50; margin: 0.5rem 0; font-size: 1.3rem; transition: color 0.3s ease;"><?php echo htmlspecialchars($course['title']); ?></h3>
+                                <h3 class="card-title" style="margin: 0.5rem 0; font-size: 1.3rem; transition: color 0.3s ease;"><?php echo htmlspecialchars($course['title']); ?></h3>
                             </a>
-                            <p style="color: #34495e; line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars(substr($course['description'], 0, 120)); ?><?php echo strlen($course['description']) > 120 ? '...' : ''; ?></p>
+                            <p class="card-description" style="line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars(substr($course['description'], 0, 120)); ?><?php echo strlen($course['description']) > 120 ? '...' : ''; ?></p>
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
                                 <i class="fas fa-user"></i>
                                 <span><?php echo htmlspecialchars($course['instructor']); ?></span>

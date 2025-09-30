@@ -17,11 +17,15 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $DB_USER, $DB_PASS, $options);
+    error_log("Database connection successful");
 } catch (PDOException $e) {
+    // Log detailed error information
+    error_log("Database connection failed: " . $e->getMessage());
+    error_log("DSN: " . $dsn);
+    error_log("Error Code: " . $e->getCode());
     // In production, do not echo details. Log them instead.
     http_response_code(500);
-    echo "Database connection failed.";
-    error_log($e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
     exit;
 }
 

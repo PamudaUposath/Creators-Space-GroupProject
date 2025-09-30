@@ -276,25 +276,55 @@ if ($message) {
     .navbar .nav-links {
       display: flex !important;
       align-items: center;
-      gap: 2rem !important;
+      gap: 1rem !important;
       list-style: none;
       margin: 0;
       padding: 0;
     }
     
-    .navbar .nav-links a {
+    /*.navbar .nav-links a {
       position: relative;
       color: #ffffff !important;
       text-decoration: none;
-      padding: 0.5rem 0;
+      padding: 0.5rem 0; 
       font-weight: 500;
       font-size: 0.95rem;
       letter-spacing: 0.3px;
       transition: all 0.3s ease;
       border-bottom: 2px solid transparent;
       text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-      margin: 10px 2px;
+      margin: 10px 2px; 
+    }*/
+
+    .navbar .nav-links a {
+      padding: 10px 15px; /* Biscuit-like size */
+      border-radius: 25px; /* Oval shape */
+      background-color: rgba(255, 255, 255, 0.15); /* Light background */
+      margin: 10px 8px; /* Spacing */
+      display: inline-block; /* Ensure proper shaping */
+      position: relative; /* For pseudo-element */
+      color: #ffffff; /* Text color */
+      text-decoration: none; /* Remove default underline */
+      transition: all 0.3s ease; /* Smooth transition */
     }
+
+    .navbar .nav-links a::before {
+      content: '';
+      position: absolute;
+      top: -2px; /* Adjust to fit around the link */
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 27px; /* Slightly larger than link to cover edges */
+      background: linear-gradient(90deg, #667eea, #764ba2); /* Same gradient */
+      z-index: -1; /* Behind the text */
+      opacity: 0; /* Hidden by default */
+      transition: opacity 0.3s ease; /* Smooth fade */
+    }
+    
+    .navbar .nav-links a:hover::before {
+      opacity: 1; /* Show gradient outline on hover */
+    }  
     
     .navbar .nav-links a::after {
       content: '';
@@ -310,6 +340,7 @@ if ($message) {
     .navbar .nav-links a:hover {
       color: #ffffff !important;
       text-shadow: 0 0 8px rgba(255,255,255,0.6);
+      transform: scale(1.05); /* Enlargement on hover */
     }
     
     .navbar .nav-links a:hover::after {
@@ -350,20 +381,15 @@ if ($message) {
     }
 
     .dropdown-toggle {
-      display: flex !important;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      padding: 0.5rem 0;
-      color: #ffffff !important;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      letter-spacing: 0.3px;
-      transition: all 0.3s ease;
-      position: relative;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-      margin: 10px 2px;
+      padding: 12px 25px; /* Biscuit-like size */
+      border-radius: 25px; /* Oval shape */
+      background-color: rgba(255, 255, 255, 0.15); /* Light background */
+      margin: 10px 8px; /* Spacing */
+      display: inline-block; /* Ensure proper shaping */
+      position: relative; /* For pseudo-element */
+      color: #ffffff; /* Text color */
+      text-decoration: none; /* Remove default underline */
+      transition: all 0.3s ease; /* Smooth transition */
     }
 
     .dropdown-toggle::after {
@@ -375,6 +401,33 @@ if ($message) {
       height: 2px;
       background: linear-gradient(90deg, #667eea, #764ba2);
       transition: width 0.3s ease;
+    }
+
+    .dropdown-toggle:hover {
+      transform: scale(1.05); /* Enlargement on hover */
+    }
+  
+    .dropdown-toggle::before {
+      content: '';
+      position: absolute;
+      top: -2px; /* Adjust to fit around the link */
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 27px; /* Slightly larger than link to cover edges */
+      background: linear-gradient(90deg, #667eea, #764ba2); /* Same gradient */
+      z-index: -1; /* Behind the text */
+      opacity: 0; /* Hidden by default */
+      transition: opacity 0.3s ease; /* Smooth fade */
+    }    
+
+    .dropdown-toggle:hover::before {
+      opacity: 1; /* Show gradient outline on hover */
+    }
+
+    .navbar .nav-links a::after,
+    .dropdown-toggle::after {
+      display: none; /* Disable the original underline */
     }
 
     .dropdown-toggle:hover::after {
