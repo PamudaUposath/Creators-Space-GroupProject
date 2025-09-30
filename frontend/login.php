@@ -345,6 +345,7 @@ include './includes/header.php';
       font-weight: 500;
       font-size: 0.95rem;
     }
+    /*
     .back-btn {
     background: linear-gradient(to right, #667eea, #764ba2); /* same as Sign In */
     color: white;
@@ -359,7 +360,7 @@ include './includes/header.php';
 
     .back-btn:hover {
     opacity: 0.9; /* subtle hover effect like Sign In */
-    }
+    }*/
 
   </style>
 </head>
@@ -367,13 +368,13 @@ include './includes/header.php';
 <body>
   <div class="main-content">
     <div class="container">
-      <a href="index.php">
+      <!--<a href="index.php">
     <button type="button" class="back-btn"> Home </button>
-    </a>
+    </a>-->
 
-      <!--<a href="index.php" class="back-link">
+      <a href="index.php" class="back-link">
         ← Back to Homepage
-      </a>-->
+      </a>
     
       <h2>Welcome Back</h2>
       <p class="subtitle">Sign in to your account to continue</p>
