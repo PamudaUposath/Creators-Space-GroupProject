@@ -11,7 +11,7 @@ requireAdmin();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $userId = (int)($_POST['user_id'] ?? 0);
-    
+
     if ($userId > 0) {
         try {
             switch ($action) {
@@ -20,29 +20,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt->execute([$userId]);
                     $_SESSION['message'] = 'User status updated successfully.';
                     break;
-                    
+
                 case 'delete':
                     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ? AND role != 'admin'");
                     $stmt->execute([$userId]);
                     $_SESSION['message'] = 'User deleted successfully.';
                     break;
-                    
+
                 case 'make_instructor':
                     $stmt = $pdo->prepare("UPDATE users SET role = 'instructor' WHERE id = ? AND role = 'user'");
                     $stmt->execute([$userId]);
                     $_SESSION['message'] = 'User promoted to instructor.';
                     break;
             }
-            
+
             // Log admin action
             logActivity($_SESSION['user_id'], 'admin_user_action', "Action: $action on user ID: $userId");
-            
         } catch (PDOException $e) {
             error_log("User management error: " . $e->getMessage());
             $_SESSION['error'] = 'Action failed. Please try again.';
         }
     }
-    
+
     header('Location: /backend/admin/users.php');
     exit;
 }
@@ -82,7 +81,7 @@ try {
     $stmt->execute($params);
     $totalUsers = $stmt->fetch()['total'];
     $totalPages = ceil($totalUsers / $limit);
-    
+
     // Get users
     $query = "
         SELECT id, first_name, last_name, email, username, role, is_active, created_at,
@@ -95,7 +94,6 @@ try {
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     $users = $stmt->fetchAll();
-    
 } catch (PDOException $e) {
     error_log("Users fetch error: " . $e->getMessage());
     $users = [];
@@ -106,6 +104,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -117,17 +116,21 @@ try {
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
             color: #333;
+            min-height: 100vh;
         }
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -135,28 +138,34 @@ try {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
         }
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
+
         .nav {
             background: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .nav-content {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .nav-links {
             display: flex;
             gap: 2rem;
         }
+
         .nav-links a {
             text-decoration: none;
             color: #555;
@@ -165,42 +174,51 @@ try {
             border-radius: 6px;
             transition: all 0.3s;
         }
+
         .nav-links a:hover,
         .nav-links a.active {
             background: #667eea;
             color: white;
         }
+
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
+
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
         }
+
         .search-section {
             background: white;
             padding: 1.5rem;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
             margin-bottom: 2rem;
         }
+
         .search-form {
             display: flex;
             gap: 1rem;
             align-items: end;
         }
+
         .form-group {
             flex: 1;
+            text-align: center;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
+
         .form-group input,
         .form-group select {
             width: 100%;
@@ -208,26 +226,32 @@ try {
             border: 1px solid #ddd;
             border-radius: 6px;
         }
+
         .users-table {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             overflow: hidden;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #dee2e6;
         }
+
         th {
             background: #f8f9fa;
             font-weight: 600;
             color: #495057;
         }
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -239,59 +263,72 @@ try {
             color: white;
             font-weight: bold;
         }
+
         .user-info-cell {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
+
         .user-details {
             display: flex;
             flex-direction: column;
         }
+
         .user-name {
             font-weight: 500;
             margin-bottom: 0.25rem;
         }
+
         .user-email {
             color: #666;
             font-size: 0.9rem;
         }
+
         .status-badge {
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
         }
+
         .status-active {
             background: #d4edda;
             color: #155724;
         }
+
         .status-inactive {
             background: #f8d7da;
             color: #721c24;
         }
+
         .role-badge {
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 500;
         }
+
         .role-admin {
             background: #d4edda;
             color: #155724;
         }
+
         .role-instructor {
             background: #fff3cd;
             color: #856404;
         }
+
         .role-user {
             background: #e2e3e5;
             color: #495057;
         }
+
         .action-buttons {
             display: flex;
             gap: 0.5rem;
         }
+
         .btn {
             background: #667eea;
             color: white;
@@ -304,32 +341,40 @@ try {
             transition: background 0.3s;
             font-size: 0.8rem;
         }
+
         .btn:hover {
             background: #5a6fd8;
         }
+
         .btn-sm {
             padding: 0.25rem 0.5rem;
             font-size: 0.7rem;
         }
+
         .btn-danger {
             background: #dc3545;
         }
+
         .btn-danger:hover {
             background: #c82333;
         }
+
         .btn-warning {
             background: #ffc107;
             color: #000;
         }
+
         .btn-success {
             background: #28a745;
         }
+
         .pagination {
             display: flex;
             justify-content: center;
             gap: 0.5rem;
             margin-top: 2rem;
         }
+
         .pagination a,
         .pagination span {
             padding: 0.5rem 1rem;
@@ -338,38 +383,51 @@ try {
             text-decoration: none;
             color: #667eea;
         }
+
         .pagination .current {
             background: #667eea;
             color: white;
         }
+
         .alert {
             padding: 1rem;
             border-radius: 6px;
             margin-bottom: 1rem;
         }
+
         .alert-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+
         .alert-error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
         @media (max-width: 768px) {
             .search-form {
                 flex-direction: column;
+                align-items: center;
             }
+
             .users-table {
                 overflow-x: auto;
             }
+
             table {
                 min-width: 800px;
+            }
+
+            .form-group label {
+                text-align: center;
             }
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="header-content">
@@ -386,13 +444,12 @@ try {
     <nav class="nav">
         <div class="nav-content">
             <div class="nav-links">
-                <a href="/backend/admin/dashboard.php">Dashboard</a>
-                <a href="/backend/admin/users.php" class="active">Users</a>
-                <a href="/backend/admin/courses.php">Courses</a>
-                <a href="/backend/admin/enrollments.php">Enrollments</a>
-                <a href="/backend/admin/internships.php">Internships</a>
-                <a href="/backend/admin/blog.php">Blog</a>
-                <a href="/backend/admin/settings.php">Settings</a>
+                <a href="dashboard.php">Dashboard</a>
+                <a href="users.php" class="active">Users</a>
+                <a href="courses.php">Courses</a>
+                <a href="course-requests.php">Course Requests</a>
+                <a href="enrollments.php">Enrollments</a>
+                <a href="student-reports.php">Student Reports</a>
             </div>
         </div>
     </nav>
@@ -407,13 +464,15 @@ try {
 
         <?php if (isset($_SESSION['message'])): ?>
             <div class="alert alert-success">
-                <?php echo htmlspecialchars($_SESSION['message']); unset($_SESSION['message']); ?>
+                <?php echo htmlspecialchars($_SESSION['message']);
+                unset($_SESSION['message']); ?>
             </div>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-error">
-                <?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <?php echo htmlspecialchars($_SESSION['error']);
+                unset($_SESSION['error']); ?>
             </div>
         <?php endif; ?>
 
@@ -421,9 +480,9 @@ try {
             <form method="GET" class="search-form">
                 <div class="form-group">
                     <label for="search">Search Users</label>
-                    <input type="text" id="search" name="search" 
-                           value="<?php echo htmlspecialchars($search); ?>" 
-                           placeholder="Search by name or email...">
+                    <input type="text" id="search" name="search"
+                        value="<?php echo htmlspecialchars($search); ?>"
+                        placeholder="Search by name or email...">
                 </div>
                 <div class="form-group">
                     <label for="role">Role Filter</label>
@@ -492,27 +551,27 @@ try {
                                                 <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
                                                 <input type="hidden" name="action" value="toggle_status">
                                                 <button type="submit" class="btn btn-sm btn-warning"
-                                                        onclick="return confirm('Toggle user status?')">
+                                                    onclick="return confirm('Toggle user status?')">
                                                     <?php echo $user['is_active'] ? 'Deactivate' : 'Activate'; ?>
                                                 </button>
                                             </form>
-                                            
+
                                             <?php if ($user['role'] === 'user'): ?>
                                                 <form method="POST" style="display: inline;">
                                                     <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
                                                     <input type="hidden" name="action" value="make_instructor">
                                                     <button type="submit" class="btn btn-sm btn-success"
-                                                            onclick="return confirm('Promote to instructor?')">
+                                                        onclick="return confirm('Promote to instructor?')">
                                                         Promote
                                                     </button>
                                                 </form>
                                             <?php endif; ?>
-                                            
+
                                             <form method="POST" style="display: inline;">
                                                 <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
                                                 <input type="hidden" name="action" value="delete">
                                                 <button type="submit" class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Delete this user? This action cannot be undone.')">
+                                                    onclick="return confirm('Delete this user? This action cannot be undone.')">
                                                     Delete
                                                 </button>
                                             </form>
@@ -556,4 +615,5 @@ try {
         });
     </script>
 </body>
+
 </html>
