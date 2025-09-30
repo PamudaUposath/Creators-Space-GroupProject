@@ -29,16 +29,16 @@ if (file_exists($servicesJsonPath)) {
             <div class="offerings-grid services-grid" id="services-list">
                 <?php if (!empty($services)): ?>
                     <?php foreach ($services as $item): ?>
-                        <div class="card" style="background:#fff; color:#000; box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+                        <div class="service-card" style="color:#222; box-shadow:0 4px 16px rgba(0,0,0,0.08);">
                             <div class="card-content">
                                 <?php if (!empty($item['icon'])): ?>
                                     <div style="text-align:center; margin-bottom:0.8rem;"><img src="<?php echo htmlspecialchars($item['icon']); ?>" alt="<?php echo htmlspecialchars($item['title']); ?>" style="width:64px; height:64px; object-fit:contain;" /></div>
                                 <?php endif; ?>
-                                <h3 style="color:#000; font-weight:700; margin-bottom:0.5rem;"><?php echo htmlspecialchars($item['title']); ?></h3>
+                                <h3 style="color:#222; font-weight:700; margin-bottom:0.5rem;"><?php echo htmlspecialchars($item['title']); ?></h3>
                                 <p class="service-description" style="color:#222; font-size:1.08rem; margin-bottom:0.7rem;"><?php echo htmlspecialchars($item['description']); ?></p>
                                 <?php if (!empty($item['features']) && is_array($item['features'])): ?>
                                     <div class="features" style="margin-top:0.8rem;">
-                                        <h4 style="margin-bottom:0.4rem; color:#000; font-weight:600;">What's Included</h4>
+                                        <h4 style="margin-bottom:0.4rem; color:#222; font-weight:600;">What's Included</h4>
                                         <ul style="margin:0; padding-left:1.1rem;">
                                             <?php foreach ($item['features'] as $feature): ?>
                                                 <li style="color:#222; font-weight:500; margin-bottom:0.2rem;"><?php echo htmlspecialchars($feature); ?></li>
@@ -48,7 +48,7 @@ if (file_exists($servicesJsonPath)) {
                                 <?php endif; ?>
                                 <?php if (!empty($item['ctaText'])): ?>
                                     <div style="margin-top:1rem; display:flex; gap:0.6rem;">
-                                        <span class="hero-btn" style="background:#fff; color:#000; font-weight:600; border:1px solid #ddd; cursor:default;"><?php echo htmlspecialchars($item['ctaText']); ?></span>
+                                        <span class="hero-btn" style="background: #6A5ACD; color:#000; font-weight:600; border:1px solid #ddd; cursor:default;"><?php echo htmlspecialchars($item['ctaText']); ?></span>
                                     </div>
                                 <?php endif; ?>
                             </div>
