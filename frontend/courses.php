@@ -184,10 +184,11 @@ include './includes/header.php';
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                                 <span class="modern-gradient-text" style="font-weight: 600; font-size: 0.9rem; padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.1); border-radius: 15px;"><?php echo $course['level']; ?></span>
-                                <span style="color: #7f8c8d; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
+                                <span style="color: #ffffff; font-size: 0.9rem;"><?php echo $course['duration']; ?></span>
                             </div>
                             <a href="course-detail.php?id=<?php echo $course['id']; ?>" style="text-decoration: none;">
-                                <h3 class="card-title" style="margin: 0.5rem 0; font-size: 1.3rem; transition: color 0.3s ease;"><?php echo htmlspecialchars($course['title']); ?></h3>
+      <h3 class="card-title" style="margin: 0.5rem 0; font-size: 1.3rem; transition: color 0.3s ease; color: white;">   <?php echo htmlspecialchars($course['title']); ?></h3>
+
                             </a>
                             <p class="card-description" style="line-height: 1.6; margin-bottom: 1rem;"><?php echo htmlspecialchars(substr($course['description'], 0, 120)); ?><?php echo strlen($course['description']) > 120 ? '...' : ''; ?></p>
                             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #7f8c8d; font-size: 0.9rem;">
