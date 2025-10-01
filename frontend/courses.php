@@ -49,7 +49,8 @@ function getCourseCategories($title, $description) {
     
     return empty($categories) ? ['other'] : $categories;
 }
-
+// ! in Database you need to add as => ./assets/images/courses/full-stack-web-developer.png
+// ! Otherwise you can use weburl => https://img.itch.zone/aW1hZ2UyL2phbS8zODY2NjcvMTU3MzY4MTcucG5n/original/tAnW%2BJ.png
 function fetchCoursesFromDatabase($pdo) {
     try {
         $stmt = $pdo->prepare("
@@ -60,7 +61,7 @@ function fetchCoursesFromDatabase($pdo) {
                 c.price,
                 c.duration,
                 c.level,
-                c.image_url,
+                c.image_url, 
                 CONCAT(u.first_name, ' ', u.last_name) as instructor_name
             FROM courses c
             LEFT JOIN users u ON c.instructor_id = u.id
