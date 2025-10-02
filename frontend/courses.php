@@ -81,11 +81,11 @@ function fetchCoursesFromDatabase($pdo) {
                 'id' => $course['id'],
                 'title' => $course['title'],
                 'description' => $course['description'],
-                'image' => $course['image_url'] ?: './assets/images/full-stack-web-developer.png', // Default image
+                'image' => $course['image_url'] ?: "https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/full-stack-web-developer.png", // Default image
                 'price' => (float)$course['price'],
                 'duration' => $course['duration'],
                 'level' => ucfirst($course['level']),
-                'instructor' => $course['instructor_name'] ?: 'Unknown Instructor',
+                'instructor' => $course['instructor_name'] ?: 'Raj Kumar',
                 'category' => $categories[0] // Use first category for primary classification
             ];
         }
