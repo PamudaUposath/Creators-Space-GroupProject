@@ -4,7 +4,7 @@
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
 
-$token = $_GET['token'] ?? '';
+$token = urldecode($_GET['token'] ?? '');
 $error = '';
 $success = '';
 
@@ -25,14 +25,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Password must contain at least one lowercase letter, one uppercase letter, and one number.';
     } else {
         try {
+            // Verify database connection
+            if (!isset($pdo) || !$pdo) {
+                throw new Exception('Database connection not available');
+            }
+            
             // Verify token and check expiration
             $stmt = $pdo->prepare("
-                SELECT id, first_name, email 
+                SELECT id, first_name, email, reset_expires 
                 FROM users 
-                WHERE reset_token = ? AND reset_expires > NOW() AND is_active = 1
+                WHERE reset_token = ? AND is_active = 1
             ");
             $stmt->execute([$token]);
             $user = $stmt->fetch();
+            
+            // Check if user exists and token hasn't expired
+            if ($user && strtotime($user['reset_expires']) > time()) {
+                // Token is valid
+            } else {
+                $user = false; // Treat as invalid
+            }
 
             if (!$user) {
                 $error = 'Invalid or expired reset token.';
@@ -44,7 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     SET password_hash = ?, reset_token = NULL, reset_expires = NULL 
                     WHERE id = ?
                 ");
-                $stmt->execute([$passwordHash, $user['id']]);
+                $result = $stmt->execute([$passwordHash, $user['id']]);
+                
+                if (!$result) {
+                    throw new Exception('Failed to update password in database');
+                }
 
                 // Log activity
                 logActivity($user['id'], 'password_reset_completed', "Password reset completed for: " . $user['email']);
@@ -55,7 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $token = '';
             }
         } catch (PDOException $e) {
-            error_log("Reset password error: " . $e->getMessage());
+            error_log("Reset password database error: " . $e->getMessage());
+            $error = 'Database error occurred. Please try again later.';
+        } catch (Exception $e) {
+            error_log("Reset password general error: " . $e->getMessage());
             $error = 'Unable to reset password. Please try again.';
         }
     }
@@ -64,17 +83,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // If token is provided in URL, verify it's valid
 if (!empty($token) && empty($error)) {
     try {
+        // Verify database connection
+        if (!isset($pdo) || !$pdo) {
+            throw new Exception('Database connection not available');
+        }
+        
         $stmt = $pdo->prepare("
-            SELECT id FROM users 
-            WHERE reset_token = ? AND reset_expires > NOW() AND is_active = 1
+            SELECT id, reset_expires FROM users 
+            WHERE reset_token = ? AND is_active = 1
         ");
         $stmt->execute([$token]);
-        if (!$stmt->fetch()) {
-            $error = 'Invalid or expired reset token.';
+        $tokenUser = $stmt->fetch();
+        
+        if (!$tokenUser) {
+            $error = 'Invalid reset token.';
+            $token = '';
+        } elseif (strtotime($tokenUser['reset_expires']) <= time()) {
+            $error = 'Reset token has expired. Please request a new password reset.';
             $token = '';
         }
     } catch (PDOException $e) {
-        error_log("Token verification error: " . $e->getMessage());
+        error_log("Token verification database error: " . $e->getMessage());
+        $error = 'Database error occurred while verifying token.';
+        $token = '';
+    } catch (Exception $e) {
+        error_log("Token verification general error: " . $e->getMessage());
         $error = 'Unable to verify reset token.';
         $token = '';
     }
@@ -185,7 +218,17 @@ if (!empty($token) && empty($error)) {
         <?php if ($success): ?>
             <div class="success"><?php echo htmlspecialchars($success); ?></div>
             <div class="back-link">
-                <a href="/frontend/login.php">← Back to Login</a>
+                <?php
+                // Build correct path to login page
+                $currentScript = $_SERVER['SCRIPT_NAME'] ?? '';
+                if (strpos($currentScript, '/backend/auth/') !== false) {
+                    $projectRoot = substr($currentScript, 0, strpos($currentScript, '/backend/auth/'));
+                    $loginPath = $projectRoot . '/frontend/login.php';
+                } else {
+                    $loginPath = '/Creators-Space-GroupProject/frontend/login.php'; // fallback
+                }
+                ?>
+                <a href="<?php echo $loginPath; ?>">← Back to Login</a>
             </div>
         <?php elseif (!empty($token)): ?>
             <form method="POST">
@@ -208,13 +251,33 @@ if (!empty($token) && empty($error)) {
         <?php else: ?>
             <p>Invalid or expired reset link. Please request a new password reset.</p>
             <div class="back-link">
-                <a href="/frontend/login.php">← Back to Login</a>
+                <?php
+                // Build correct path to login page  
+                $currentScript = $_SERVER['SCRIPT_NAME'] ?? '';
+                if (strpos($currentScript, '/backend/auth/') !== false) {
+                    $projectRoot = substr($currentScript, 0, strpos($currentScript, '/backend/auth/'));
+                    $loginPath = $projectRoot . '/frontend/login.php';
+                } else {
+                    $loginPath = '/Creators-Space-GroupProject/frontend/login.php'; // fallback
+                }
+                ?>
+                <a href="<?php echo $loginPath; ?>">← Back to Login</a>
             </div>
         <?php endif; ?>
         
         <?php if (!$success && !empty($token)): ?>
             <div class="back-link">
-                <a href="/frontend/login.php">← Back to Login</a>
+                <?php
+                // Build correct path to login page
+                $currentScript = $_SERVER['SCRIPT_NAME'] ?? '';
+                if (strpos($currentScript, '/backend/auth/') !== false) {
+                    $projectRoot = substr($currentScript, 0, strpos($currentScript, '/backend/auth/'));
+                    $loginPath = $projectRoot . '/frontend/login.php';
+                } else {
+                    $loginPath = '/Creators-Space-GroupProject/frontend/login.php'; // fallback
+                }
+                ?>
+                <a href="<?php echo $loginPath; ?>">← Back to Login</a>
             </div>
         <?php endif; ?>
     </div>

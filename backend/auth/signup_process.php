@@ -48,17 +48,17 @@ if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/', $password)) {
 }
 
 try {
-    // Check if email already exists
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+    // Check if email already exists (excluding removed users)
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND (remove IS NULL OR remove = 0)");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         errorResponse('Email already registered');
     }
     
-    // Check if username already exists (if provided)
+    // Check if username already exists (if provided, excluding removed users)
     $username = sanitizeInput($_POST['username'] ?? '');
     if (!empty($username)) {
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? AND (remove IS NULL OR remove = 0)");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
             errorResponse('Username already taken');

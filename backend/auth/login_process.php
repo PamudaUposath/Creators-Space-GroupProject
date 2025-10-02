@@ -29,11 +29,11 @@ if (empty($password)) {
 }
 
 try {
-    // Get user by email
+    // Get user by email (excluding removed users)
     $stmt = $pdo->prepare("
         SELECT id, first_name, last_name, email, username, password_hash, role, is_active, profile_image 
         FROM users 
-        WHERE email = ? 
+        WHERE email = ? AND (remove IS NULL OR remove = 0)
         LIMIT 1
     ");
     $stmt->execute([$email]);

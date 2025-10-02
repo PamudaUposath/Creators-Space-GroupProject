@@ -18,17 +18,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $last_name = trim($_POST['last_name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $username = trim($_POST['username'] ?? '');
+        
+        // Validate required fields
+        if (empty($first_name) || empty($last_name) || empty($email) || empty($username)) {
+            $_SESSION['error'] = 'All fields are required.';
+            header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
+            exit;
+        }
+        
+        // Validate email format
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error'] = 'Please enter a valid email address.';
+            header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
+            exit;
+        }
 
         // Generate temp password
         $temp_password = substr(bin2hex(random_bytes(4)), 0, 8);
         $password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
 
-        // Check if email or username exists
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ? OR username = ?");
-        $stmt->execute([$email, $username]);
-        $exists = $stmt->fetchColumn();
-        if ($exists) {
-            $_SESSION['error'] = 'Email or username already exists.';
+        // Check if email exists (excluding removed users)
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ? AND (remove IS NULL OR remove = 0)");
+        $stmt->execute([$email]);
+        $email_exists = $stmt->fetchColumn();
+        if ($email_exists) {
+            $_SESSION['error'] = 'Cannot create a instructor, email is already exist.';
+            header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
+            exit;
+        }
+        
+        // Check if username exists (excluding removed users)
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? AND (remove IS NULL OR remove = 0)");
+        $stmt->execute([$username]);
+        $username_exists = $stmt->fetchColumn();
+        if ($username_exists) {
+            $_SESSION['error'] = 'Cannot create a instructor, username is already exist.';
             header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
             exit;
         }
@@ -39,11 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_id = $pdo->lastInsertId();
 
         // Send email using PHPMailer
-        if (sendInstructorWelcomeEmail($email, $first_name, $username, $temp_password)) {
-            $_SESSION['message'] = 'Instructor added and email sent successfully.';
-        } else {
-            $_SESSION['message'] = 'Instructor added, but email could not be sent. Please check email configuration.';
+        try {
+            if (sendInstructorWelcomeEmail($email, $first_name, $last_name, $username, $temp_password)) {
+                $_SESSION['message'] = 'Instructor added and email sent successfully.';
+            } else {
+                $_SESSION['message'] = 'Instructor added, but email could not be sent. Please check email configuration.';
+            }
+        } catch (Exception $e) {
+            error_log('Email sending error: ' . $e->getMessage());
+            $_SESSION['message'] = 'Instructor added, but there was an error sending the welcome email.';
         }
+        
         logActivity($_SESSION['user_id'], 'admin_user_action', "Added instructor: $new_id");
         header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
         exit;
@@ -53,21 +83,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             switch ($action) {
                 case 'toggle_status':
-                    $stmt = $pdo->prepare("UPDATE users SET is_active = !is_active WHERE id = ? AND role != 'admin'");
+                    $stmt = $pdo->prepare("UPDATE users SET is_active = !is_active WHERE id = ? AND role != 'admin' AND (remove IS NULL OR remove = 0)");
                     $stmt->execute([$userId]);
                     $_SESSION['message'] = 'User status updated successfully.';
                     break;
 
                 case 'delete':
-                    $stmt = $pdo->prepare("UPDATE users SET is_active = 0 WHERE id = ? AND role != 'admin'");
+                    $stmt = $pdo->prepare("UPDATE users SET remove = 1 WHERE id = ? AND role != 'admin' AND (remove IS NULL OR remove = 0)");
                     $stmt->execute([$userId]);
                     $_SESSION['message'] = 'User deleted successfully.';
                     break;
 
                 case 'make_instructor':
-                    $stmt = $pdo->prepare("UPDATE users SET role = 'instructor' WHERE id = ? AND role = 'user'");
+                    // First, get user details before promoting
+                    $stmt = $pdo->prepare("SELECT first_name, last_name, email FROM users WHERE id = ? AND role = 'user' AND (remove IS NULL OR remove = 0)");
                     $stmt->execute([$userId]);
-                    $_SESSION['message'] = 'User promoted to instructor.';
+                    $userToPromote = $stmt->fetch();
+                    
+                    if ($userToPromote) {
+                        // Update user role to instructor
+                        $stmt = $pdo->prepare("UPDATE users SET role = 'instructor' WHERE id = ? AND role = 'user' AND (remove IS NULL OR remove = 0)");
+                        $result = $stmt->execute([$userId]);
+                        
+                        if ($result && $stmt->rowCount() > 0) {
+                            // Send promotion email
+                            try {
+                                if (sendInstructorPromotionEmail($userToPromote['email'], $userToPromote['first_name'], $userToPromote['last_name'])) {
+                                    $_SESSION['message'] = 'User promoted to instructor and notification email sent successfully.';
+                                } else {
+                                    $_SESSION['message'] = 'User promoted to instructor, but email notification could not be sent. Please check email configuration.';
+                                }
+                            } catch (Exception $e) {
+                                error_log('Promotion email sending error: ' . $e->getMessage());
+                                $_SESSION['message'] = 'User promoted to instructor, but there was an error sending the notification email.';
+                            }
+                        } else {
+                            $_SESSION['error'] = 'Failed to promote user. User may not exist or is not eligible for promotion.';
+                        }
+                    } else {
+                        $_SESSION['error'] = 'User not found or not eligible for promotion.';
+                    }
                     break;
             }
 
@@ -96,6 +151,9 @@ $roleFilter = $_GET['role'] ?? '';
 $whereConditions = [];
 $params = [];
 
+// Always exclude removed users
+$whereConditions[] = "(remove IS NULL OR remove = 0)";
+
 if (!empty($search)) {
     $whereConditions[] = "(first_name LIKE ? OR last_name LIKE ? OR email LIKE ?)";
     $searchTerm = "%$search%";
@@ -109,7 +167,7 @@ if (!empty($roleFilter)) {
     $params[] = $roleFilter;
 }
 
-$whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
+$whereClause = 'WHERE ' . implode(' AND ', $whereConditions);
 
 try {
     // Get total count
@@ -146,7 +204,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users Management - Creators-Space Admin</title>
-    <link rel="shortcut icon" href="/frontend/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/svg+xml" href="assets/admin-favicon.svg">
+    <link rel="shortcut icon" href="assets/admin-favicon.svg" type="image/svg+xml">
     <style>
         * {
             margin: 0;
