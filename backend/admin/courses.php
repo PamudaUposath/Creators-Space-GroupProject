@@ -61,6 +61,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute([$course_id]);
                 $message = 'Course deleted successfully!';
                 break;
+
+            case 'edit_course':
+                $course_id = $_POST['course_id'] ?? 0;
+                $title = $_POST['title'] ?? '';
+                $slug = $_POST['slug'] ?? '';
+                $description = $_POST['description'] ?? '';
+                $instructor_id = $_POST['instructor_id'] ?? null;
+                $image_url = $_POST['image_url'] ?? '';
+                $price = $_POST['price'] ?? 0;
+                $duration = $_POST['duration'] ?? '';
+                $level = $_POST['level'] ?? 'beginner';
+                $category = $_POST['category'] ?? 'general';
+                $prerequisites = $_POST['prerequisites'] ?? '';
+                $learning_objectives = $_POST['learning_objectives'] ?? '';
+                $featured = isset($_POST['featured']) ? 1 : 0;
+                $total_lessons = $_POST['total_lessons'] ?? 0;
+                $total_duration_minutes = $_POST['total_duration_minutes'] ?? 0;
+                $video_url = $_POST['video_url'] ?? '';
+
+                if (empty($title)) {
+                    throw new Exception('Course title is required');
+                }
+
+                $stmt = $pdo->prepare("
+                    UPDATE courses SET 
+                        title = ?, slug = ?, description = ?, instructor_id = ?, image_url = ?, 
+                        price = ?, duration = ?, level = ?, category = ?, prerequisites = ?, 
+                        learning_objectives = ?, featured = ?, total_lessons = ?, 
+                        total_duration_minutes = ?, video_url = ?, updated_at = NOW()
+                    WHERE id = ?
+                ");
+                $stmt->execute([
+                    $title, $slug, $description, $instructor_id, $image_url, $price, $duration, 
+                    $level, $category, $prerequisites, $learning_objectives, $featured, 
+                    $total_lessons, $total_duration_minutes, $video_url, $course_id
+                ]);
+                $message = 'Course updated successfully!';
+                break;
         }
     } catch (Exception $e) {
         $error = $e->getMessage();
@@ -374,6 +412,72 @@ $stats = $stmt->fetch();
             background: #ffc107;
             color: #212529;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 2rem;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
     </style>
 </head>
 
@@ -588,6 +692,9 @@ $stats = $stmt->fetch();
                                     <?php endif; ?>
                                 </td>
                                 <td>
+                                    <button type="button" class="btn btn-primary" style="margin-right: 5px;" onclick="openEditModal(<?php echo htmlspecialchars(json_encode($course)); ?>)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                     <form method="POST" style="display: inline;">
                                         <input type="hidden" name="action" value="toggle_status">
                                         <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
@@ -610,6 +717,153 @@ $stats = $stmt->fetch();
             </div>
         </div>
     </main>
+
+    <!-- Edit Course Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Course</h2>
+                <button class="close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editCourseForm" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="edit_course">
+                    <input type="hidden" name="course_id" id="edit_course_id">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit_title">Course Title *</label>
+                            <input type="text" id="edit_title" name="title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_slug">Slug</label>
+                            <input type="text" id="edit_slug" name="slug" class="form-control" placeholder="course-title-slug">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_instructor_id">Instructor *</label>
+                            <select id="edit_instructor_id" name="instructor_id" class="form-control" required>
+                                <option value="">Select Instructor</option>
+                                <?php foreach ($instructors as $instructor): ?>
+                                    <option value="<?php echo $instructor['id']; ?>">
+                                        <?php echo htmlspecialchars($instructor['name'] . ' (' . $instructor['email'] . ')'); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_image_url">Image URL *</label>
+                            <input type="url" id="edit_image_url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_video_url">Tutorial Video URL *</label>
+                            <input type="url" id="edit_video_url" name="video_url" class="form-control" placeholder="https://youtube.com/..." required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_description">Description *</label>
+                        <textarea id="edit_description" name="description" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_duration">Duration *</label>
+                        <input type="text" id="edit_duration" name="duration" class="form-control" placeholder="e.g., 5 weeks" required>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit_price">Price ($) *</label>
+                            <input type="number" id="edit_price" name="price" class="form-control" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_level">Level *</label>
+                            <select id="edit_level" name="level" class="form-control" required>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_category">Category *</label>
+                            <input type="text" id="edit_category" name="category" class="form-control" placeholder="e.g., Web Development" required>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit_prerequisites">Prerequisites</label>
+                            <textarea id="edit_prerequisites" name="prerequisites" class="form-control" rows="2" placeholder="List prerequisites"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_learning_objectives">Learning Objectives</label>
+                            <textarea id="edit_learning_objectives" name="learning_objectives" class="form-control" rows="2" placeholder="List learning objectives"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="edit_featured">Featured</label>
+                            <input type="checkbox" id="edit_featured" name="featured" value="1"> Mark as featured
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_total_lessons">Total Lessons</label>
+                            <input type="number" id="edit_total_lessons" name="total_lessons" class="form-control" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_total_duration_minutes">Total Duration (minutes)</label>
+                            <input type="number" id="edit_total_duration_minutes" name="total_duration_minutes" class="form-control" min="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Update Course
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(course) {
+            // Populate form fields with course data
+            document.getElementById('edit_course_id').value = course.id;
+            document.getElementById('edit_title').value = course.title || '';
+            document.getElementById('edit_slug').value = course.slug || '';
+            document.getElementById('edit_instructor_id').value = course.instructor_id || '';
+            document.getElementById('edit_image_url').value = course.image_url || '';
+            document.getElementById('edit_video_url').value = course.video_url || '';
+            document.getElementById('edit_description').value = course.description || '';
+            document.getElementById('edit_duration').value = course.duration || '';
+            document.getElementById('edit_price').value = course.price || '0';
+            document.getElementById('edit_level').value = course.level || 'beginner';
+            document.getElementById('edit_category').value = course.category || '';
+            document.getElementById('edit_prerequisites').value = course.prerequisites || '';
+            document.getElementById('edit_learning_objectives').value = course.learning_objectives || '';
+            document.getElementById('edit_featured').checked = course.featured == 1;
+            document.getElementById('edit_total_lessons').value = course.total_lessons || '0';
+            document.getElementById('edit_total_duration_minutes').value = course.total_duration_minutes || '0';
+            
+            // Show modal
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+    </script>
 </body>
 
 </html>
