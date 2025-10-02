@@ -11,7 +11,7 @@ return [
     
     // SMTP Credentials (Update these with your actual credentials)
     'smtp_username' => 'fluxfighters48@gmail.com', // Change to your Gmail address
-    'smtp_password' => 'geiy yfta ndir ylrg', // Change to your Gmail app password
+    'smtp_password' => '', // Change to your Gmail app password
     
     // Default sender
     'from_email' => 'noreply@creators-space.com',
