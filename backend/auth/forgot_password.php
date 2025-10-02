@@ -3,6 +3,7 @@
 
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
+require_once __DIR__ . '/../lib/email_helper.php';
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -44,16 +45,10 @@ try {
         $stmt->execute([$resetToken, $resetExpires, $user['id']]);
 
         // Create reset link
-        $resetLink = "http://" . $_SERVER['HTTP_HOST'] . "/backend/auth/reset_password.php?token=" . $resetToken;
+        $resetLink = "http://" . $_SERVER['HTTP_HOST'] . "/Creators-Space-GroupProject/backend/auth/reset_password.php?token=" . $resetToken;
 
-        // Send email
-        $subject = "Password Reset - Creators-Space";
-        $message = getPasswordResetEmailContent($resetLink, $user['first_name']);
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-        $headers .= "From: noreply@creatorsspace.local\r\n";
-
-        sendEmail($user['email'], $subject, $message, $headers);
+        // Send password reset email using PHPMailer
+        sendPasswordResetEmail($user['email'], $user['first_name'], $resetLink);
 
         // Log activity
         logActivity($user['id'], 'password_reset_requested', "Password reset requested for: " . $email);

@@ -3,6 +3,7 @@
 
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
+require_once __DIR__ . '/../lib/email_helper.php';
 
 // Require admin authentication
 requireAdmin();
@@ -11,6 +12,42 @@ requireAdmin();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $userId = (int)($_POST['user_id'] ?? 0);
+
+    if ($action === 'add_instructor') {
+        $first_name = trim($_POST['first_name'] ?? '');
+        $last_name = trim($_POST['last_name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $username = trim($_POST['username'] ?? '');
+
+        // Generate temp password
+        $temp_password = substr(bin2hex(random_bytes(4)), 0, 8);
+        $password_hash = password_hash($temp_password, PASSWORD_DEFAULT);
+
+        // Check if email or username exists
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ? OR username = ?");
+        $stmt->execute([$email, $username]);
+        $exists = $stmt->fetchColumn();
+        if ($exists) {
+            $_SESSION['error'] = 'Email or username already exists.';
+            header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
+            exit;
+        }
+
+        // Insert instructor
+        $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, username, password_hash, role, is_active, created_at) VALUES (?, ?, ?, ?, ?, 'instructor', 1, NOW())");
+        $stmt->execute([$first_name, $last_name, $email, $username, $password_hash]);
+        $new_id = $pdo->lastInsertId();
+
+        // Send email using PHPMailer
+        if (sendInstructorWelcomeEmail($email, $first_name, $username, $temp_password)) {
+            $_SESSION['message'] = 'Instructor added and email sent successfully.';
+        } else {
+            $_SESSION['message'] = 'Instructor added, but email could not be sent. Please check email configuration.';
+        }
+        logActivity($_SESSION['user_id'], 'admin_user_action', "Added instructor: $new_id");
+        header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
+        exit;
+    }
 
     if ($userId > 0) {
         try {
@@ -22,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     break;
 
                 case 'delete':
-                    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ? AND role != 'admin'");
+                    $stmt = $pdo->prepare("UPDATE users SET is_active = 0 WHERE id = ? AND role != 'admin'");
                     $stmt->execute([$userId]);
                     $_SESSION['message'] = 'User deleted successfully.';
                     break;
@@ -42,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header('Location: /backend/admin/users.php');
+    header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
     exit;
 }
 
@@ -457,8 +494,39 @@ try {
     <main class="main-content">
         <div class="page-header">
             <h1>Users Management</h1>
-            <div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
                 <span>Total: <?php echo number_format($totalUsers); ?> users</span>
+                <button type="button" class="btn btn-success" onclick="document.getElementById('addInstructorModal').style.display='block'">
+                    Add an Instructor
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Instructor Modal -->
+        <div id="addInstructorModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+            <div style="background:white; padding:2rem; border-radius:10px; max-width:400px; margin:5vh auto; position:relative;">
+                <h2 style="margin-bottom:1rem;">Add Instructor</h2>
+                <form method="POST" id="addInstructorForm">
+                    <input type="hidden" name="action" value="add_instructor">
+                    <div style="margin-bottom:1rem;">
+                        <label for="first_name">First Name *</label><br>
+                        <input type="text" name="first_name" id="first_name" required style="width:100%; padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label for="last_name">Last Name *</label><br>
+                        <input type="text" name="last_name" id="last_name" required style="width:100%; padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label for="email">Email *</label><br>
+                        <input type="email" name="email" id="email" required style="width:100%; padding:0.5rem;">
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label for="username">Username *</label><br>
+                        <input type="text" name="username" id="username" required style="width:100%; padding:0.5rem;">
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width:100%;">Add Instructor</button>
+                </form>
+                <button type="button" class="btn btn-danger" style="position:absolute; top:10px; right:10px;" onclick="document.getElementById('addInstructorModal').style.display='none'">&times;</button>
             </div>
         </div>
 
@@ -613,6 +681,14 @@ try {
         document.getElementById('role').addEventListener('change', function() {
             this.form.submit();
         });
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            var modal = document.getElementById('addInstructorModal');
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 

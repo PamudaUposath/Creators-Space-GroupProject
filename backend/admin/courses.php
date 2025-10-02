@@ -18,21 +18,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         switch ($action) {
             case 'add_course':
                 $title = $_POST['title'] ?? '';
+                $slug = $_POST['slug'] ?? '';
                 $description = $_POST['description'] ?? '';
                 $instructor_id = $_POST['instructor_id'] ?? null;
+                $image_url = $_POST['image_url'] ?? '';
                 $price = $_POST['price'] ?? 0;
+                $duration = $_POST['duration'] ?? '';
                 $level = $_POST['level'] ?? 'beginner';
                 $category = $_POST['category'] ?? 'general';
+                $prerequisites = $_POST['prerequisites'] ?? '';
+                $learning_objectives = $_POST['learning_objectives'] ?? '';
+                $featured = isset($_POST['featured']) ? 1 : 0;
+                $total_lessons = $_POST['total_lessons'] ?? 0;
+                $total_duration_minutes = $_POST['total_duration_minutes'] ?? 0;
+                $video_url = $_POST['video_url'] ?? '';
 
                 if (empty($title)) {
                     throw new Exception('Course title is required');
                 }
 
                 $stmt = $pdo->prepare("
-                    INSERT INTO courses (title, description, instructor_id, price, level, category, is_active, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, 1, NOW())
+                    INSERT INTO courses (title, slug, description, instructor_id, image_url, price, duration, level, category, prerequisites, learning_objectives, is_active, featured, total_lessons, total_duration_minutes, video_url, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, NOW())
                 ");
-                $stmt->execute([$title, $description, $instructor_id, $price, $level, $category]);
+                $stmt->execute([
+                    $title, $slug, $description, $instructor_id, $image_url, $price, $duration, $level, $category,
+                    $prerequisites, $learning_objectives, $featured, $total_lessons, $total_duration_minutes, $video_url
+                ]);
                 $message = 'Course added successfully!';
                 break;
 
@@ -45,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             case 'delete_course':
                 $course_id = $_POST['course_id'] ?? 0;
-                $stmt = $pdo->prepare("DELETE FROM courses WHERE id = ?");
+                $stmt = $pdo->prepare("UPDATE courses SET is_active = 0 WHERE id = ?");
                 $stmt->execute([$course_id]);
                 $message = 'Course deleted successfully!';
                 break;
@@ -437,8 +449,12 @@ $stats = $stmt->fetch();
                         <input type="text" id="title" name="title" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="instructor_id">Instructor</label>
-                        <select id="instructor_id" name="instructor_id" class="form-control">
+                        <label for="slug">Slug</label>
+                        <input type="text" id="slug" name="slug" class="form-control" placeholder="course-title-slug">
+                    </div>
+                    <div class="form-group">
+                        <label for="instructor_id">Instructor *</label>
+                        <select id="instructor_id" name="instructor_id" class="form-control" required>
                             <option value="">Select Instructor</option>
                             <?php foreach ($instructors as $instructor): ?>
                                 <option value="<?php echo $instructor['id']; ?>">
@@ -447,27 +463,63 @@ $stats = $stmt->fetch();
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="image_url">Image URL *</label>
+                        <input type="url" id="image_url" name="image_url" class="form-control" placeholder="https://example.com/image.jpg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="video_url">Tutorial Video URL *</label>
+                        <input type="url" id="video_url" name="video_url" class="form-control" placeholder="https://youtube.com/..." required>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea id="description" name="description" class="form-control" rows="3"></textarea>
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration *</label>
+                    <input type="text" id="duration" name="duration" class="form-control" placeholder="e.g., 5 weeks" required>
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="price">Price ($)</label>
-                        <input type="number" id="price" name="price" class="form-control" min="0" step="0.01" value="0">
+                        <label for="price">Price ($) *</label>
+                        <input type="number" id="price" name="price" class="form-control" min="0" step="0.01" value="0" required>
                     </div>
                     <div class="form-group">
-                        <label for="level">Level</label>
-                        <select id="level" name="level" class="form-control">
+                        <label for="level">Level *</label>
+                        <select id="level" name="level" class="form-control" required>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="category">Category</label>
-                        <input type="text" id="category" name="category" class="form-control" placeholder="e.g., Web Development">
+                        <label for="category">Category *</label>
+                        <input type="text" id="category" name="category" class="form-control" placeholder="e.g., Web Development" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="prerequisites">Prerequisites</label>
+                        <textarea id="prerequisites" name="prerequisites" class="form-control" rows="2" placeholder="List prerequisites"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="learning_objectives">Learning Objectives</label>
+                        <textarea id="learning_objectives" name="learning_objectives" class="form-control" rows="2" placeholder="List learning objectives"></textarea>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="featured">Featured</label>
+                        <input type="checkbox" id="featured" name="featured" value="1"> Mark as featured
+                    </div>
+                    <div class="form-group">
+                        <label for="total_lessons">Total Lessons</label>
+                        <input type="number" id="total_lessons" name="total_lessons" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="total_duration_minutes">Total Duration (minutes)</label>
+                        <input type="number" id="total_duration_minutes" name="total_duration_minutes" class="form-control" min="0" value="0">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">

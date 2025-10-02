@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 02, 2025 at 03:13 AM
+-- Generation Time: Oct 02, 2025 at 08:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -219,6 +219,13 @@ CREATE TABLE `cart` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `course_id`, `quantity`, `added_at`, `updated_at`) VALUES
+(12, 26, 54, 1, '2025-10-02 16:16:58', '2025-10-02 16:16:58');
+
 -- --------------------------------------------------------
 
 --
@@ -326,28 +333,31 @@ CREATE TABLE `courses` (
   `total_lessons` int(11) DEFAULT 0,
   `total_duration_minutes` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `video_url` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `title`, `slug`, `description`, `instructor_id`, `image_url`, `price`, `duration`, `level`, `category`, `prerequisites`, `learning_objectives`, `is_active`, `featured`, `total_lessons`, `total_duration_minutes`, `created_at`, `updated_at`) VALUES
-(1, 'Full Stack Web Development', 'full-stack-web-development', 'Learn complete web development from frontend to backend', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/Full-Stack-Web-Development-Course-in-Kolkata.webp', 99.99, '12 weeks', 'intermediate', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-25 08:11:01', '2025-10-02 01:07:28'),
-(2, 'UI/UX Design Fundamentals', 'ui-ux-design-fundamentals', 'Master the fundamentals of user interface and user experience design', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/uiux.jpeg', 79.99, '8 weeks', 'beginner', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-25 08:11:01', '2025-10-02 01:11:02'),
-(3, 'JavaScript in 30 Days', 'javascript-30-days', 'Master JavaScript programming in 30 days with practical projects', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/jsin30days.png', 49.99, '4 weeks', 'beginner', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-25 08:11:01', '2025-10-02 01:09:49'),
-(4, 'Java Programming Masterclass', 'java-programming-masterclass', 'Complete Java programming course from basics to advanced concepts. Learn OOP, data structures, algorithms, Spring Framework, and enterprise application development.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/java.png', 249.99, '16 weeks', 'intermediate', 'Programming', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:09:38'),
-(5, 'C++ Game Development', 'cpp-game-development', 'Learn C++ programming through game development. Build 2D and 3D games using modern C++ techniques, game engines, and graphics programming.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/gamedev.png', 199.99, '12 weeks', 'advanced', 'Programming', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:09:03'),
-(8, 'Vue.js Complete Guide', 'vuejs-complete-guide', 'Master Vue.js framework with Composition API, Vuex, Vue Router, and modern development practices. Build scalable single-page applications.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/Vuejs.jpg', 159.99, '8 weeks', 'intermediate', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:11:37'),
-(9, 'Angular Enterprise Development', 'angular-enterprise-development', 'Build large-scale enterprise applications with Angular. Advanced patterns, testing, performance optimization, and deployment strategies.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/angular.png', 279.99, '16 weeks', 'advanced', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:08:02'),
-(10, 'Next.js Full-Stack Development', 'nextjs-fullstack-development', 'Build production-ready applications with Next.js. Server-side rendering, API routes, authentication, and deployment to Vercel.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/nextjs.webp', 199.99, '10 weeks', 'intermediate', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:10:07'),
-(11, 'GraphQL API Development', 'graphql-api-development', 'Master GraphQL for modern API development. Schema design, resolvers, subscriptions, and integration with popular databases and frameworks.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/graphql.jpg', 189.99, '8 weeks', 'advanced', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:09:20'),
-(26, 'Blockchain Development with Solidity', 'blockchain-development-solidity', 'Build decentralized applications (DApps) and smart contracts using Solidity and Ethereum. Web3 development and cryptocurrency integration.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/blockchain.png', 349.99, '18 weeks', 'advanced', 'Blockchain', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 01:08:21'),
-(54, 'Design of algorithms', 'design-of-algorithms', 'Students can get basic idea about how algorithms works', 15, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/designOfAlgorithm.jpg', 25.00, '4 weeks', 'beginner', 'Problem solving', NULL, NULL, 1, 0, 0, 0, '2025-09-28 05:20:06', '2025-10-02 01:08:46'),
-(55, 'Python for Beginners', 'python for beginners', 'Learn Python programming from scratch', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/Pythonforbeginners.jpg', 199.99, '8 weeks', 'beginner', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-15 05:32:29', '2025-10-02 01:10:20'),
-(56, 'React.js Masterclass', 'react.js masterclass', 'Advanced React.js concepts and best practices', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/reactjs.jpg', 249.99, '10 weeks', 'advanced', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-23 05:32:29', '2025-10-02 01:10:46'),
-(57, 'Data Science with Python', 'data science with python', 'Learn data analysis and machine learning', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/datasciencewithpython.jpg', 349.99, '16 weeks', 'intermediate', 'general', NULL, NULL, 1, 0, 0, 0, '2025-08-12 05:32:29', '2025-10-02 01:08:32');
+INSERT INTO `courses` (`id`, `title`, `slug`, `description`, `instructor_id`, `image_url`, `price`, `duration`, `level`, `category`, `prerequisites`, `learning_objectives`, `is_active`, `featured`, `total_lessons`, `total_duration_minutes`, `created_at`, `updated_at`, `video_url`) VALUES
+(1, 'Full Stack Web Development', 'full-stack-web-development', 'Learn complete web development from frontend to backend', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/Full-Stack-Web-Development-Course-in-Kolkata.webp', 99.99, '12 weeks', 'intermediate', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-25 08:11:01', '2025-10-02 18:36:52', ''),
+(2, 'UI/UX Design Fundamentals', 'ui-ux-design-fundamentals', 'Master the fundamentals of user interface and user experience design', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/uiux.jpeg', 79.99, '8 weeks', 'beginner', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-25 08:11:01', '2025-10-02 18:37:04', ''),
+(3, 'JavaScript in 30 Days', 'javascript-30-days', 'Master JavaScript programming in 30 days with practical projects', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/jsin30days.png', 49.99, '4 weeks', 'beginner', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-25 08:11:01', '2025-10-02 18:37:20', 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/videos/js_tutorial.mp4'),
+(4, 'Java Programming Masterclass', 'java-programming-masterclass', 'Complete Java programming course from basics to advanced concepts. Learn OOP, data structures, algorithms, Spring Framework, and enterprise application development.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/java.png', 249.99, '16 weeks', 'intermediate', 'Programming', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:37:31', ''),
+(5, 'C++ Game Development', 'cpp-game-development', 'Learn C++ programming through game development. Build 2D and 3D games using modern C++ techniques, game engines, and graphics programming.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/gamedev.png', 199.99, '12 weeks', 'advanced', 'Programming', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:38:17', ''),
+(8, 'Vue.js Complete Guide', 'vuejs-complete-guide', 'Master Vue.js framework with Composition API, Vuex, Vue Router, and modern development practices. Build scalable single-page applications.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/Vuejs.jpg', 159.99, '8 weeks', 'intermediate', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:38:25', ''),
+(9, 'Angular Enterprise Development', 'angular-enterprise-development', 'Build large-scale enterprise applications with Angular. Advanced patterns, testing, performance optimization, and deployment strategies.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/angular.png', 279.99, '16 weeks', 'advanced', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:38:35', ''),
+(10, 'Next.js Full-Stack Development', 'nextjs-fullstack-development', 'Build production-ready applications with Next.js. Server-side rendering, API routes, authentication, and deployment to Vercel.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/nextjs.webp', 199.99, '10 weeks', 'intermediate', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:38:42', ''),
+(11, 'GraphQL API Development', 'graphql-api-development', 'Master GraphQL for modern API development. Schema design, resolvers, subscriptions, and integration with popular databases and frameworks.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/graphql.jpg', 189.99, '8 weeks', 'advanced', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:38:49', ''),
+(26, 'Blockchain Development with Solidity', 'blockchain-development-solidity', 'Build decentralized applications (DApps) and smart contracts using Solidity and Ethereum. Web3 development and cryptocurrency integration.', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/blockchain.png', 349.99, '18 weeks', 'advanced', 'Blockchain', NULL, NULL, 1, 0, 0, 0, '2025-09-25 17:05:56', '2025-10-02 18:38:58', ''),
+(54, 'Design of algorithms', 'design-of-algorithms', 'Students can get basic idea about how algorithms works', 15, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/designOfAlgorithm.jpg', 25.00, '4 weeks', 'beginner', 'Problem solving', NULL, NULL, 1, 0, 0, 0, '2025-09-28 05:20:06', '2025-10-02 18:39:05', ''),
+(55, 'Python for Beginners', 'python for beginners', 'Learn Python programming from scratch', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/Pythonforbeginners.jpg', 199.99, '8 weeks', 'beginner', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-15 05:32:29', '2025-10-02 18:39:14', ''),
+(56, 'React.js Masterclass', 'react.js masterclass', 'Advanced React.js concepts and best practices', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/reactjs.jpg', 249.99, '10 weeks', 'advanced', 'general', NULL, NULL, 1, 0, 0, 0, '2025-09-23 05:32:29', '2025-10-02 18:39:22', ''),
+(57, 'Data Science with Python', 'data science with python', 'Learn data analysis and machine learning', 2, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/datasciencewithpython.jpg', 349.99, '16 weeks', 'intermediate', 'general', NULL, NULL, 1, 0, 0, 0, '2025-08-12 05:32:29', '2025-10-02 18:39:32', ''),
+(58, 'Sample JS course', NULL, 'sample description', 15, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/Full-Stack-Web-Development-Course-in-Kolkata.webp', 10.00, NULL, 'beginner', 'Web Development', NULL, NULL, 1, 0, 0, 0, '2025-10-02 17:22:42', '2025-10-02 18:39:40', 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/videos/js_tutorial.mp4'),
+(59, 'Test', 'test', 'sample description', 15, 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/images/Full-Stack-Web-Development-Course-in-Kolkata.webp', 20.00, '5', 'intermediate', 'Web Development', 'No need', 'JS expert', 0, 1, 5, 10, '2025-10-02 17:45:44', '2025-10-02 18:39:47', 'https://creators-space-group-project.s3.ap-south-1.amazonaws.com/courses/videos/js_tutorial.mp4');
 
 -- --------------------------------------------------------
 
@@ -394,7 +404,7 @@ CREATE TABLE `enrollments` (
   `last_accessed` timestamp NULL DEFAULT NULL,
   `progress` decimal(5,2) DEFAULT 0.00,
   `current_lesson_id` int(11) DEFAULT NULL,
-  `status` enum('active','completed','paused','cancelled') DEFAULT 'active'
+  `status` enum('active','completed','paused','suspended') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -408,7 +418,7 @@ INSERT INTO `enrollments` (`id`, `user_id`, `course_id`, `enrolled_at`, `complet
 (204, 18, 1, '2025-09-07 05:32:29', NULL, NULL, 54.00, NULL, 'active'),
 (205, 25, 57, '2025-09-15 05:32:29', NULL, NULL, 86.00, NULL, 'active'),
 (206, 24, 57, '2025-09-10 05:32:29', NULL, NULL, 45.00, NULL, 'active'),
-(207, 25, 1, '2025-09-26 05:32:29', '2025-09-28 05:53:37', NULL, 100.00, NULL, 'completed'),
+(207, 25, 1, '2025-09-26 05:32:29', '2025-09-28 05:53:37', NULL, 100.00, NULL, 'active'),
 (208, 17, 8, '2025-09-10 05:32:29', NULL, NULL, 32.00, NULL, 'active'),
 (209, 21, 8, '2025-09-12 05:32:29', NULL, NULL, 88.00, NULL, 'active'),
 (210, 25, 11, '2025-09-14 05:32:29', NULL, NULL, 97.00, NULL, 'active'),
@@ -420,8 +430,7 @@ INSERT INTO `enrollments` (`id`, `user_id`, `course_id`, `enrolled_at`, `complet
 (216, 18, 11, '2025-09-03 05:32:29', NULL, NULL, 5.00, NULL, 'active'),
 (217, 17, 1, '2025-09-02 05:32:29', NULL, NULL, 80.00, NULL, 'active'),
 (218, 24, 26, '2025-09-18 05:32:29', NULL, NULL, 77.00, NULL, 'active'),
-(219, 16, 1, '2025-09-20 05:32:29', NULL, NULL, 57.00, NULL, 'active'),
-(220, 14, 4, '2025-09-15 05:32:29', NULL, NULL, 84.00, NULL, 'active');
+(219, 16, 1, '2025-09-20 05:32:29', NULL, NULL, 57.00, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -703,7 +712,7 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `username`, `pass
 (2, 'John', 'Instructor', 'instructor@creatorsspace.local', 'instructor', '$2y$10$uNK/Z/zvG.nV7sP1vlknsuFKozLn0gQXksoRUBo604mwBByZQRDze', 'instructor', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-25 08:11:01', '2025-09-27 19:22:09'),
 (14, 'Test', 'User', 'test@gmail.com', '', '$2y$10$6DZQgqLeUYWcBgn0.gHOWe/4nsOUJJFxUszD7bCACzSqWvlKG4dPq', 'user', 1, NULL, NULL, './assets/images/profiles/profile_14_1758833534.png', '', '', '', '0000-00-00', '2025-09-25 08:16:03', '2025-09-25 20:52:14'),
 (15, 'Test', 'User2', 'testuser@gmail.com', NULL, '$2y$10$4bXShBAF7x7YOIu4u7gprenfZk.x9KMlMaTcLQ..WSxSUs/yFqZu.', 'instructor', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-26 21:23:49', '2025-09-26 21:47:10'),
-(16, 'Test', 'User', 'test@example.com', 'testuser123', '$2y$10$nVGWBIfhFWuld4FwW2pTiOYEUSh.9q.SDGJtDbyMt.Uo6412NEs62', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-26 22:26:09', '2025-09-26 22:26:09'),
+(16, 'Test', 'User', 'test@example.com', 'testuser123', '$2y$10$nVGWBIfhFWuld4FwW2pTiOYEUSh.9q.SDGJtDbyMt.Uo6412NEs62', 'user', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-26 22:26:09', '2025-10-02 18:32:20'),
 (17, 'Test', 'User', 'testuser3@gmail.com', NULL, '$2y$10$9FAt44CcARqOJXOFLXfhDuGEUIJ3uf82h7hUPEYpcRuKvxgtdjssW', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-26 22:27:47', '2025-09-26 22:27:47'),
 (18, 'Alice', 'Johnson', 'alice.johnson@example.com', 'alice.johnson', '$2y$10$SVI/9UTIr9NEiTBjiDA7fuEh6GbytLRk3wUkTa9o9deJ.t.HfzTg.', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-17 05:32:27', '2025-09-28 05:32:27'),
 (19, 'Bob', 'Smith', 'bob.smith@example.com', 'bob.smith', '$2y$10$eQSJ/zhSCm1UmljzWS0KyeeETUAGMKYPR3VIYXjpbVEDL2ecohEDK', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-17 05:32:27', '2025-09-28 05:32:27'),
@@ -713,7 +722,7 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `username`, `pass
 (23, 'Frank', 'Miller', 'frank.miller@example.com', 'frank.miller', '$2y$10$J8g9NrJ9.UaspNi4DLxNCOp68OjJ.BBTrP5iHHoh6eA3Mc6NYwqSu', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-15 05:32:28', '2025-09-28 05:32:28'),
 (24, 'Grace', 'Taylor', 'grace.taylor@example.com', 'grace.taylor', '$2y$10$IfI.icuoB6Oin7R4ibaqr.QXZtMoO1TEqkjc6edaT5DoMDcBWTvR2', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-20 05:32:29', '2025-09-28 05:32:29'),
 (25, 'Henry', 'Anderson', 'henry.anderson@example.com', 'henry.anderson', '$2y$10$WYuxnmydDnrsrBgtplxRouLaVgMChXX0CX0j1Wr7IclXb3zXGVFfS', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-28 05:32:29', '2025-09-28 05:32:29'),
-(26, 'Pamuda', 'U de A Goonatilake', 'pamuda@mailinator.com', NULL, '$2y$10$.NbN0pL4SMl0JUzXKsZpiuZwSjRaUVtDTRvg5LKWQi4LiUR0lIGjq', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-29 05:18:43', '2025-09-29 05:18:43');
+(26, 'Pamuda', 'U de A Goonatilake', 'pamuda@mailinator.com', NULL, '$2y$10$.NbN0pL4SMl0JUzXKsZpiuZwSjRaUVtDTRvg5LKWQi4LiUR0lIGjq', 'user', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-09-29 05:18:43', '2025-10-02 18:32:05');
 
 --
 -- Indexes for dumped tables
@@ -1054,7 +1063,7 @@ ALTER TABLE `blog_posts`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `certificates`
@@ -1078,7 +1087,7 @@ ALTER TABLE `conversations`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `course_requests`
