@@ -62,7 +62,7 @@ function createCourseCard(course, index) {
     card.className = "course-card";
 
     // Calculate progress bar width
-    const progress = course.enrollment?.progress || 0;
+    const progress = course.overall_progress || 0;
     const progressWidth = Math.min(Math.max(progress, 0), 100);
     
     // Format enrollment date
@@ -77,27 +77,41 @@ function createCourseCard(course, index) {
         <div class="course-image">
             <img src="${course.image || './assets/images/webdev.png'}" alt="${course.title}" />
             <div class="status-badge status-${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</div>
+            <div class="progress-overlay">
+                <div class="course-progress-indicator">
+                    <div class="progress-circle" style="--progress: ${progress}">
+                        <span>${Math.round(progress)}%</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="course-content">
             <h3 class="course-title">${course.title}</h3>
             <p class="course-description">${course.description || 'Continue your learning journey with this course.'}</p>
             <div class="course-meta">
-                <span class="instructor">By: ${course.instructor?.name || 'Unknown'}</span>
+                <span class="instructor">By: ${course.instructor_name || 'Unknown'}</span>
                 <span class="enrolled-date">Enrolled: ${enrolledDate}</span>
             </div>
             <div class="progress-section">
                 <div class="progress-info">
-                    <span>Progress: ${progress}%</span>
+                    <span>Progress: ${Math.round(progress)}%</span>
+                    ${course.last_accessed_lesson_id ? `<span class="last-lesson">Last watched lesson</span>` : ''}
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progressWidth}%"></div>
                 </div>
             </div>
             <div class="course-actions">
-                <button class="btn continue-btn" onclick="continueCourse('${course.id}')">
+                <button class="btn continue-btn" onclick="continueVideoLearning('${course.id}')">
+                    <i class="fas fa-play"></i>
                     ${progress > 0 ? 'Continue Learning' : 'Start Learning'}
                 </button>
+                <button class="btn view-btn" onclick="viewCourse('${course.id}')">
+                    <i class="fas fa-eye"></i>
+                    View Course
+                </button>
                 <button class="btn remove-btn" onclick="removeCourse('${course.enrollment_id}', '${course.title}')">
+                    <i class="fas fa-times"></i>
                     Unenroll
                 </button>
             </div>
@@ -131,11 +145,34 @@ function showErrorState(message) {
     `;
 }
 
-function continueCourse(courseId) {
-    console.log('Continuing course:', courseId);
+// Continue learning with video player
+function continueVideoLearning(courseId) {
+    console.log('Continue video learning called for course:', courseId);
     
-    // Check if course-detail.php exists, otherwise redirect to courses page
+    // Check if video player is available
+    if (typeof videoPlayer === 'undefined') {
+        console.error('Video player not available, falling back to course detail page');
+        viewCourse(courseId);
+        return;
+    }
+    
+    // Use the video player's continue learning function
+    if (videoPlayer.continueLearning) {
+        videoPlayer.continueLearning(courseId);
+    } else {
+        console.error('Video player continueLearning method not available');
+        viewCourse(courseId);
+    }
+}
+
+// View course detail page
+function viewCourse(courseId) {
     window.location.href = `course-detail.php?id=${courseId}`;
+}
+
+// Legacy continue course function for backward compatibility
+function continueCourse(courseId) {
+    continueVideoLearning(courseId);
 }
 
 function removeCourse(enrollmentId, courseName) {

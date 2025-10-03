@@ -5,8 +5,8 @@ require_once __DIR__ . '/../backend/config/db_connect.php';
 // Set page-specific variables
 $pageTitle = "Course Details";
 $pageDescription = "Learn more about this course and enroll today.";
-$additionalCSS = ['./src/css/courses.css', './src/css/course-detail.css'];
-$additionalJS = ['./src/js/course-detail.js'];
+$additionalCSS = ['./src/css/courses.css', './src/css/course-detail.css', './src/css/video-player.css'];
+$additionalJS = ['./src/js/course-detail.js', './src/js/video-player.js'];
 
 // Get course ID from URL
 $courseId = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -161,9 +161,9 @@ include './includes/header.php';
                     <div class="course-actions">
                         <?php if ($isLoggedIn): ?>
                             <?php if ($isEnrolled): ?>
-                                <a href="mycourses.php" class="btn btn-success btn-large">
+                                <button class="btn btn-success btn-large" onclick="continueLearning(<?php echo $courseId; ?>)">
                                     <i class="fas fa-play"></i> Continue Learning
-                                </a>
+                                </button>
                             <?php else: ?>
                                 <button class="btn btn-primary btn-large add-to-cart-btn" 
                                         id="addToCartBtn"

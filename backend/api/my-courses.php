@@ -48,6 +48,9 @@ try {
         'c.instructor_id',
         'c.created_at as course_created_at',
         'e.id as enrollment_id',
+        'COALESCE(e.overall_progress, 0) as overall_progress',
+        'e.last_accessed_lesson_id',
+        'e.last_watched_time',
         'e.enrolled_at',
         'e.completed_at',
         'e.last_accessed',
@@ -96,25 +99,22 @@ try {
             'enrollment_id' => $enrollment['enrollment_id'],
             'title' => $enrollment['title'] ?? 'Untitled Course',
             'description' => $enrollment['description'] ?? 'No description available',
-            'price' => isset($enrollment['price']) ? $enrollment['price'] : 0,
-            'image' => './assets/images/webdev.png', // Default image since column doesn't exist
-            'instructor' => [
-                'id' => $enrollment['instructor_id'] ?? null,
-                'name' => trim(($enrollment['instructor_first_name'] ?? '') . ' ' . ($enrollment['instructor_last_name'] ?? '')) ?: 'Unknown Instructor'
-            ],
+            'instructor_name' => trim(($enrollment['first_name'] ?? '') . ' ' . ($enrollment['last_name'] ?? '')) ?: 'Unknown Instructor',
+            'enrolled_at' => $enrollment['enrolled_at'] ?? null,
+            'course_created_at' => $enrollment['course_created_at'] ?? null,
+            'image' => $enrollment['image_url'] ?? $enrollment['image'] ?? './assets/images/webdev.png',
+            'price' => $enrollment['price'] ?? null,
             'category' => $enrollment['category'] ?? 'General',
             'level' => $enrollment['level'] ?? 'beginner',
-            'duration' => $enrollment['duration'] ?? '0',
+            'duration' => $enrollment['duration'] ?? null,
             'language' => $enrollment['language'] ?? 'english',
+            'overall_progress' => floatval($enrollment['overall_progress'] ?? 0),
+            'last_accessed_lesson_id' => $enrollment['last_accessed_lesson_id'],
+            'last_watched_time' => floatval($enrollment['last_watched_time'] ?? 0),
             'enrollment' => [
                 'enrolled_at' => $enrollment['enrolled_at'],
-                'completed_at' => $enrollment['completed_at'],
-                'last_accessed' => $enrollment['last_accessed'],
-                'progress' => (int)($enrollment['progress'] ?? 0),
-                'current_lesson_id' => $enrollment['current_lesson_id'],
                 'status' => $enrollment['status'] ?? 'active'
-            ],
-            'course_created_at' => $enrollment['course_created_at']
+            ]
         ];
     }
     
