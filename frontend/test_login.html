@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+</head>
+<body>
+    <h2>Login Test for pamuda@mailinator.com</h2>
+    
+    <form id="testLoginForm">
+        <input type="email" id="email" value="pamuda@mailinator.com" placeholder="Email"><br><br>
+        <input type="password" id="password" value="Pamuda123" placeholder="Password"><br><br>
+        <button type="submit">Test Login</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('testLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = '<p>Testing login...</p>';
+            
+            // Get the current URL to build the backend URL
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
+            const loginUrl = baseUrl + '/backend/auth/login_process.php';
+            
+            console.log('Login URL:', loginUrl);
+            
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+            
+            fetch(loginUrl, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include' // Include cookies/session
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                return response.text(); // Get as text first to see raw response
+            })
+            .then(text => {
+                console.log('Raw response:', text);
+                resultDiv.innerHTML = '<h3>Raw Response:</h3><pre>' + text + '</pre>';
+                
+                // Try to parse as JSON
+                try {
+                    const data = JSON.parse(text);
+                    resultDiv.innerHTML += '<h3>Parsed JSON:</h3><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    
+                    if (data.success) {
+                        resultDiv.innerHTML += '<p style="color: green;"><strong>✅ Login successful!</strong></p>';
+                    } else {
+                        resultDiv.innerHTML += '<p style="color: red;"><strong>❌ Login failed: ' + data.message + '</strong></p>';
+                    }
+                } catch (e) {
+                    resultDiv.innerHTML += '<p style="color: red;">❌ Response is not valid JSON</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                resultDiv.innerHTML = '<p style="color: red;">❌ Network error: ' + error.message + '</p>';
+            });
+        });
+    </script>
+</body>
+</html>
