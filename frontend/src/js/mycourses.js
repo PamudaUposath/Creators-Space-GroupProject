@@ -1,23 +1,59 @@
 // My Courses JavaScript
 document.addEventListener("DOMContentLoaded", function() {
     console.log("My courses page loaded");
+    
+    // Check if required elements exist
+    const coursesGrid = document.getElementById("coursesGrid");
+    if (!coursesGrid) {
+        console.error("coursesGrid element not found!");
+        return;
+    }
+    
     loadEnrolledCourses();
 });
 
 function loadEnrolledCourses() {
     const coursesGrid = document.getElementById("coursesGrid");
-    const enrolledCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
-
-    if (enrolledCourses.length === 0) {
-        showEmptyState();
-        return;
-    }
-
-    coursesGrid.innerHTML = '';
     
-    enrolledCourses.forEach((course, index) => {
-        const courseCard = createCourseCard(course, index);
-        coursesGrid.appendChild(courseCard);
+    // Show loading state
+    coursesGrid.innerHTML = `
+        <div class="loading-state">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Loading your courses...</p>
+        </div>
+    `;
+    
+    // Fetch enrolled courses from backend API
+    fetch('../backend/api/my-courses.php', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const enrolledCourses = data.data || [];
+            
+            if (enrolledCourses.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            coursesGrid.innerHTML = '';
+            
+            enrolledCourses.forEach((course, index) => {
+                const courseCard = createCourseCard(course, index);
+                coursesGrid.appendChild(courseCard);
+            });
+        } else {
+            showErrorState(data.message || 'Failed to load courses');
+        }
+    })
+    .catch(error => {
+        console.error('Error loading enrolled courses:', error);
+        showErrorState('Network error. Please check your connection and try again.');
     });
 }
 
@@ -25,19 +61,44 @@ function createCourseCard(course, index) {
     const card = document.createElement("div");
     card.className = "course-card";
 
+    // Calculate progress bar width
+    const progress = course.enrollment?.progress || 0;
+    const progressWidth = Math.min(Math.max(progress, 0), 100);
+    
+    // Format enrollment date
+    const enrolledDate = course.enrollment?.enrolled_at ? 
+        new Date(course.enrollment.enrolled_at).toLocaleDateString() : 'N/A';
+    
+    // Determine status badge
+    const status = course.enrollment?.status || 'active';
+    const statusClass = status === 'completed' ? 'completed' : status === 'paused' ? 'paused' : 'active';
+
     card.innerHTML = `
         <div class="course-image">
             <img src="${course.image || './assets/images/webdev.png'}" alt="${course.title}" />
+            <div class="status-badge status-${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</div>
         </div>
         <div class="course-content">
             <h3 class="course-title">${course.title}</h3>
             <p class="course-description">${course.description || 'Continue your learning journey with this course.'}</p>
+            <div class="course-meta">
+                <span class="instructor">By: ${course.instructor?.name || 'Unknown'}</span>
+                <span class="enrolled-date">Enrolled: ${enrolledDate}</span>
+            </div>
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>Progress: ${progress}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progressWidth}%"></div>
+                </div>
+            </div>
             <div class="course-actions">
-                <button class="btn continue-btn" onclick="continueCourse('${course.id || index}')">
-                    Continue Learning
+                <button class="btn continue-btn" onclick="continueCourse('${course.id}')">
+                    ${progress > 0 ? 'Continue Learning' : 'Start Learning'}
                 </button>
-                <button class="btn remove-btn" onclick="removeCourse(${index})">
-                    Remove
+                <button class="btn remove-btn" onclick="removeCourse('${course.enrollment_id}', '${course.title}')">
+                    Unenroll
                 </button>
             </div>
         </div>
@@ -58,38 +119,61 @@ function showEmptyState() {
     `;
 }
 
-function continueCourse(courseId) {
-    console.log('Continuing course:', courseId);
-    Modal.alert('Course Access', 'Redirecting to course content...', 'info');
-    
-    // Simulate redirect delay
-    setTimeout(() => {
-        // Replace with actual course navigation logic
-        window.location.href = `course-content.php?id=${courseId}`;
-    }, 1500);
+function showErrorState(message) {
+    const coursesGrid = document.getElementById("coursesGrid");
+    coursesGrid.innerHTML = `
+        <div class="error-state">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h3>Error Loading Courses</h3>
+            <p>${message}</p>
+            <button class="btn primary" onclick="loadEnrolledCourses()">Try Again</button>
+        </div>
+    `;
 }
 
-function removeCourse(index) {
-    const enrolledCourses = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
-    const courseName = enrolledCourses[index]?.title || 'Course';
+function continueCourse(courseId) {
+    console.log('Continuing course:', courseId);
     
+    // Check if course-detail.php exists, otherwise redirect to courses page
+    window.location.href = `course-detail.php?id=${courseId}`;
+}
+
+function removeCourse(enrollmentId, courseName) {
     Modal.confirm(
-        'Remove Course',
-        `Are you sure you want to remove "${courseName}" from your enrolled courses? This action cannot be undone.`,
+        'Unenroll from Course',
+        `Are you sure you want to unenroll from "${courseName}"? You will lose your progress and may need to re-purchase if it's a paid course.`,
         () => {
-            // Confirmed - remove the course
-            enrolledCourses.splice(index, 1);
-            localStorage.setItem("enrolledCourses", JSON.stringify(enrolledCourses));
-            
-            Modal.toast(`${courseName} removed successfully!`, 'success');
-            loadEnrolledCourses();
+            // Confirmed - remove the enrollment
+            fetch('../backend/api/unenroll.php', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    enrollment_id: enrollmentId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Modal.toast(`Successfully unenrolled from ${courseName}!`, 'success');
+                    loadEnrolledCourses(); // Reload the courses
+                } else {
+                    Modal.toast(data.message || 'Failed to unenroll from course', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error unenrolling from course:', error);
+                Modal.toast('Network error. Please try again.', 'error');
+            });
         },
         () => {
             // Cancelled - show info message
-            Modal.toast('Course removal cancelled', 'info', 2000);
+            Modal.toast('Unenrollment cancelled', 'info', 2000);
         },
         {
-            confirmText: 'Remove Course',
+            confirmText: 'Unenroll',
             cancelText: 'Keep Course',
             confirmClass: 'btn-danger'
         }
