@@ -711,6 +711,229 @@ $page_description = 'Communicate with your students and manage course discussion
                 padding: 0 1rem;
             }
         }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(26, 32, 46, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .sidebar-header {
+            background: rgba(26, 32, 46, 0.95);
+        }
+
+        body.dark-mode .tab-container {
+            background: rgba(26, 32, 46, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .sidebar-header h2 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar-subtitle {
+            color: #f7fafc;
+        }
+
+        body.dark-mode .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .search-box input {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .search-box input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .conversation-item,
+        body.dark-mode .student-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .conversation-item:hover,
+        body.dark-mode .student-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .conversation-item.active {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .conversation-name,
+        body.dark-mode .student-name {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .conversation-last-message,
+        body.dark-mode .student-email,
+        body.dark-mode .conversation-time {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .chat-area {
+            background: rgba(26, 32, 46, 0.95);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .chat-subtitle {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .messages-container {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .message {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .message.sent {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .message-content {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .message-time {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .message-input-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .message-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .message-input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body.dark-mode .send-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        body.dark-mode .empty-state h3 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .empty-state p {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .typing-indicator {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .typing-text {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .section-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .online-status {
+            border: 2px solid #1a1a2e;
+        }
+
+        body.dark-mode .file-upload-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .file-upload-area:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .file-upload-icon {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .file-upload-text {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .file-upload-subtext {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .navbar {
+            background: rgba(26, 32, 46, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .navbar h1 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .navbar a {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .btn-logout {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        body.dark-mode .btn-logout:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%);
+        }
+
+        body.dark-mode .dropdown-menu {
+            background: rgba(26, 32, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .dropdown-menu a {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .dropdown-menu a:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        body.dark-mode .theme-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 
