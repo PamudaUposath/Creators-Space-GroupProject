@@ -57,8 +57,8 @@ try {
         'e.progress',
         'e.current_lesson_id',
         'e.status',
-        'u.first_name as instructor_first_name',
-        'u.last_name as instructor_last_name'
+        'u.first_name',
+        'u.last_name'
     ];
     
     // Add optional columns if they exist
