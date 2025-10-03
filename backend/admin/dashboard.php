@@ -9,8 +9,8 @@ requireAdmin();
 
 // Get dashboard statistics
 try {
-    // Get total users
-    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'user'");
+    // Get total users (excluding removed users)
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'user' AND (remove IS NULL OR remove = 0)");
     $totalUsers = $stmt->fetch()['total'];
 
     // Get total courses
@@ -21,8 +21,8 @@ try {
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM enrollments");
     $totalEnrollments = $stmt->fetch()['total'];
 
-    // Get total instructors
-    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'instructor'");
+    // Get total instructors (excluding removed instructors)
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'instructor' AND (remove IS NULL OR remove = 0)");
     $totalInstructors = $stmt->fetch()['total'];
 
     // Get total revenue
@@ -89,7 +89,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Creators-Space</title>
-    <link rel="shortcut icon" href="/frontend/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/svg+xml" href="assets/admin-favicon.svg">
+    <link rel="shortcut icon" href="assets/admin-favicon.svg" type="image/svg+xml">
     <style>
         * {
             margin: 0;

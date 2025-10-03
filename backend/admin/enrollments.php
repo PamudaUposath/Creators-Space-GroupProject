@@ -59,6 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $stmt->execute($enrollment_ids);
                             $message = count($enrollment_ids) . ' enrollments suspended successfully!';
                             break;
+                            case 'complete':
+                                $stmt = $pdo->prepare("UPDATE enrollments SET status = 'completed' WHERE id IN ($placeholders)");
+                                $stmt->execute($enrollment_ids);
+                                $message = count($enrollment_ids) . ' enrollments marked as completed!';
+                                break;
                         case 'delete':
                             $stmt = $pdo->prepare("DELETE FROM enrollments WHERE id IN ($placeholders)");
                             $stmt->execute($enrollment_ids);
@@ -146,6 +151,8 @@ $courses = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enrollment Management - Admin Panel</title>
+    <link rel="icon" type="image/svg+xml" href="assets/admin-favicon.svg">
+    <link rel="shortcut icon" href="assets/admin-favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -576,6 +583,7 @@ $courses = $stmt->fetchAll();
                             <option value="">Choose action...</option>
                             <option value="activate">Activate</option>
                             <option value="suspend">Suspend</option>
+                            <option value="complete">Complete</option>
                             <option value="delete">Delete</option>
                         </select>
                         <button type="submit" class="btn btn-primary">Apply</button>
@@ -585,108 +593,116 @@ $courses = $stmt->fetchAll();
             </div>
 
             <div style="overflow-x: auto;">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                <input type="checkbox" id="selectAll" onchange="toggleAll(this)">
-                            </th>
-                            <th>Student</th>
-                            <th>Course</th>
-                            <th>Instructor</th>
-                            <th>Status</th>
-                            <th>Progress</th>
-                            <th>Enrolled</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($enrollments as $enrollment): ?>
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <input type="checkbox" class="enrollment-checkbox" value="<?php echo $enrollment['id']; ?>" onchange="updateSelection()">
-                                </td>
-                                <td>
-                                    <div class="student-info">
-                                        <div class="student-avatar">
-                                            <?php if ($enrollment['student_image']): ?>
-                                                <img src="<?php echo htmlspecialchars($enrollment['student_image']); ?>" alt="Student" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                                            <?php else: ?>
-                                                <?php echo strtoupper(substr($enrollment['student_name'], 0, 1)); ?>
-                                            <?php endif; ?>
-                                        </div>
-                                        <div>
-                                            <strong><?php echo htmlspecialchars($enrollment['student_name']); ?></strong>
-                                            <br><small style="color: #666;"><?php echo htmlspecialchars($enrollment['student_email']); ?></small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <strong><?php echo htmlspecialchars($enrollment['course_title']); ?></strong>
-                                    <br>
-                                    <?php if ($enrollment['course_price'] > 0): ?>
-                                        <span class="badge badge-warning">$<?php echo number_format($enrollment['course_price'], 2); ?></span>
-                                    <?php else: ?>
-                                        <span class="badge badge-success">Free</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($enrollment['instructor_name']): ?>
-                                        <?php echo htmlspecialchars($enrollment['instructor_name']); ?>
-                                    <?php else: ?>
-                                        <span style="color: #999;">No instructor</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    $status_class = 'badge-secondary';
-                                    switch ($enrollment['status']) {
-                                        case 'active':
-                                            $status_class = 'badge-info';
-                                            break;
-                                        case 'completed':
-                                            $status_class = 'badge-success';
-                                            break;
-                                        case 'suspended':
-                                            $status_class = 'badge-danger';
-                                            break;
-                                    }
-                                    ?>
-                                    <span class="badge <?php echo $status_class; ?>">
-                                        <?php echo htmlspecialchars(ucfirst($enrollment['status'])); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: <?php echo $enrollment['progress']; ?>%"></div>
-                                    </div>
-                                    <small><?php echo number_format($enrollment['progress'], 1); ?>%</small>
-                                </td>
-                                <td>
-                                    <?php echo date('M j, Y', strtotime($enrollment['enrolled_at'])); ?>
-                                </td>
-                                <td>
-                                    <form method="POST" style="display: inline-block; margin-right: 5px;">
-                                        <input type="hidden" name="action" value="update_status">
-                                        <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['id']; ?>">
-                                        <select name="status" class="form-control" style="width: auto; display: inline;" onchange="this.form.submit()">
-                                            <option value="active" <?php echo $enrollment['status'] === 'active' ? 'selected' : ''; ?>>Active</option>
-                                            <option value="completed" <?php echo $enrollment['status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
-                                            <option value="suspended" <?php echo $enrollment['status'] === 'suspended' ? 'selected' : ''; ?>>Suspended</option>
-                                        </select>
-                                    </form>
-                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this enrollment?')">
-                                        <input type="hidden" name="action" value="delete_enrollment">
-                                        <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['id']; ?>">
-                                        <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.5rem;">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
+                                <th>
+                                    <input type="checkbox" id="selectAll" onchange="toggleAll(this)">
+                                </th>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Instructor</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Enrolled</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($enrollments)): ?>
+                                <tr>
+                                    <td colspan="8" style="text-align:center; color:#888; padding:2rem;">
+                                        <i class="fas fa-info-circle" style="margin-right:8px;"></i> No results found.
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($enrollments as $enrollment): ?>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" class="enrollment-checkbox" value="<?php echo $enrollment['id']; ?>" onchange="updateSelection()">
+                                        </td>
+                                        <td>
+                                            <div class="student-info">
+                                                <div class="student-avatar">
+                                                    <?php if ($enrollment['student_image']): ?>
+                                                        <img src="<?php echo htmlspecialchars($enrollment['student_image']); ?>" alt="Student" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                                    <?php else: ?>
+                                                        <?php echo strtoupper(substr($enrollment['student_name'], 0, 1)); ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div>
+                                                    <strong><?php echo htmlspecialchars($enrollment['student_name']); ?></strong>
+                                                    <br><small style="color: #666;"><?php echo htmlspecialchars($enrollment['student_email']); ?></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong><?php echo htmlspecialchars($enrollment['course_title']); ?></strong>
+                                            <br>
+                                            <?php if ($enrollment['course_price'] > 0): ?>
+                                                <span class="badge badge-warning">$<?php echo number_format($enrollment['course_price'], 2); ?></span>
+                                            <?php else: ?>
+                                                <span class="badge badge-success">Free</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($enrollment['instructor_name']): ?>
+                                                <?php echo htmlspecialchars($enrollment['instructor_name']); ?>
+                                            <?php else: ?>
+                                                <span style="color: #999;">No instructor</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $status_class = 'badge-secondary';
+                                            switch ($enrollment['status']) {
+                                                case 'active':
+                                                    $status_class = 'badge-info';
+                                                    break;
+                                                case 'completed':
+                                                    $status_class = 'badge-success';
+                                                    break;
+                                                case 'suspended':
+                                                    $status_class = 'badge-danger';
+                                                    break;
+                                            }
+                                            ?>
+                                            <span class="badge <?php echo $status_class; ?>">
+                                                <?php echo htmlspecialchars(ucfirst($enrollment['status'])); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: <?php echo $enrollment['progress']; ?>%"></div>
+                                            </div>
+                                            <small><?php echo number_format($enrollment['progress'], 1); ?>%</small>
+                                        </td>
+                                        <td>
+                                            <?php echo date('M j, Y', strtotime($enrollment['enrolled_at'])); ?>
+                                        </td>
+                                        <td>
+                                            <form method="POST" style="display: inline-block; margin-right: 5px;">
+                                                <input type="hidden" name="action" value="update_status">
+                                                <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['id']; ?>">
+                                                <select name="status" class="form-control" style="width: auto; display: inline;" onchange="this.form.submit()">
+                                                    <option value="active" <?php echo $enrollment['status'] === 'active' ? 'selected' : ''; ?>>Active</option>
+                                                    <option value="completed" <?php echo $enrollment['status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
+                                                    <option value="suspended" <?php echo $enrollment['status'] === 'suspended' ? 'selected' : ''; ?>>Suspended</option>
+                                                </select>
+                                            </form>
+                                            <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this enrollment?')">
+                                                <input type="hidden" name="action" value="delete_enrollment">
+                                                <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['id']; ?>">
+                                                <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.5rem;">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
             </div>
         </div>
     </main>

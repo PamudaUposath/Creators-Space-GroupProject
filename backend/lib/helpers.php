@@ -178,12 +178,12 @@ function getPlatformStatistics($pdo) {
     try {
         $stats = [];
         
-        // Get total students enrolled (users with role 'user')
-        $stmt = $pdo->query("SELECT COUNT(*) as total_students FROM users WHERE role = 'user' AND is_active = 1");
+        // Get total students enrolled (users with role 'user', excluding removed)
+        $stmt = $pdo->query("SELECT COUNT(*) as total_students FROM users WHERE role = 'user' AND is_active = 1 AND (remove IS NULL OR remove = 0)");
         $stats['students'] = $stmt->fetchColumn();
         
-        // Get total expert instructors (users with role 'instructor')
-        $stmt = $pdo->query("SELECT COUNT(*) as total_instructors FROM users WHERE role = 'instructor' AND is_active = 1");
+        // Get total expert instructors (users with role 'instructor', excluding removed)
+        $stmt = $pdo->query("SELECT COUNT(*) as total_instructors FROM users WHERE role = 'instructor' AND is_active = 1 AND (remove IS NULL OR remove = 0)");
         $stats['instructors'] = $stmt->fetchColumn();
         
         // Get total courses available
@@ -194,7 +194,7 @@ function getPlatformStatistics($pdo) {
         $stmt = $pdo->query("
             SELECT 
                 COUNT(DISTINCT user_id) as completed_students,
-                (SELECT COUNT(*) FROM users WHERE role = 'user' AND is_active = 1) as total_students
+                (SELECT COUNT(*) FROM users WHERE role = 'user' AND is_active = 1 AND (remove IS NULL OR remove = 0)) as total_students
             FROM enrollments 
             WHERE progress = 100.00 OR completed_at IS NOT NULL
         ");
