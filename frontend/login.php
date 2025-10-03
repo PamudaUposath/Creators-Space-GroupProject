@@ -613,34 +613,42 @@ include './includes/header.php';
       loginBtn.textContent = 'Logging in...';
 
       const formData = new FormData(this);
-      // Build a robust backend endpoint that works when the app is served
-      // from a subfolder (Apache: /Creators-Space-GroupProject/) or from
-      // project root (php -S). We derive the project root from the current
-      // path using '/frontend' as an anchor.
-      // Prefer the server-computed PROJECT_BASE helper (set in header.php).
+      // Build a robust backend endpoint using the helper function from header.php
       let loginUrl;
-      if (window.apiUrl) {
-        loginUrl = window.apiUrl('/backend/auth/login_process.php') + '?t=' + Date.now();
+      if (window.apiUrl && typeof window.apiUrl === 'function') {
+        loginUrl = window.apiUrl('/backend/auth/login_process.php');
+      } else if (window.PROJECT_BASE) {
+        loginUrl = window.PROJECT_BASE + '/backend/auth/login_process.php';
       } else {
+        // Fallback method for URL construction
         const origin = window.location.origin;
         const pathname = window.location.pathname;
         const projectRootPrefix = pathname.includes('/frontend') ? pathname.substring(0, pathname.indexOf('/frontend')) : '';
-        loginUrl = origin + projectRootPrefix + '/backend/auth/login_process.php?t=' + Date.now();
+        loginUrl = origin + projectRootPrefix + '/backend/auth/login_process.php';
       }
+      
+      // Add cache busting parameter
+      loginUrl += '?t=' + Date.now();
       console.log('Attempting login with URL:', loginUrl);
 
       fetch(loginUrl, {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'include' // Include cookies and session data for CORS
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
         console.log('Login response:', data); // Debug log
         
         // Reset button state
         spinner.style.display = 'none';
         loginBtn.disabled = false;
-        loginBtn.textContent = 'Login';
+        loginBtn.textContent = 'Sign In';
         
         if (data.success) {
           console.log('Login successful!');
@@ -648,13 +656,20 @@ include './includes/header.php';
           showMessage('Login successful! Redirecting...', 'success');
           
           // Get redirect path from response or default to index.php
-          let redirectPath = data.data.redirect || 'index.php';
+          let redirectPath = data.data && data.data.redirect ? data.data.redirect : 'index.php';
           console.log('Redirecting to:', redirectPath); // Debug log
           
-          // Simple redirect without complex path manipulation
+          // Handle absolute and relative redirects properly
           setTimeout(() => {
             console.log('Executing redirect to:', redirectPath); // Additional debug log
-            window.location.href = redirectPath;
+            
+            if (redirectPath.startsWith('http') || redirectPath.startsWith('/')) {
+              // Absolute URL or root-relative path
+              window.location.href = redirectPath;
+            } else {
+              // Relative path - ensure we're in the frontend directory context
+              window.location.href = redirectPath;
+            }
           }, 1500); // Slightly longer delay
         } else {
           console.log('Login failed:', data.message);
@@ -667,9 +682,9 @@ include './includes/header.php';
         // Reset button state
         spinner.style.display = 'none';
         loginBtn.disabled = false;
-        loginBtn.textContent = 'Login';
+        loginBtn.textContent = 'Sign In';
         
-        showMessage('An error occurred. Please try again.', 'error');
+        showMessage('Network error or server unavailable. Please try again.', 'error');
       });
     });
 
@@ -686,9 +701,12 @@ include './includes/header.php';
 
       const formData = new FormData(this);
       let forgotUrl;
-      if (window.apiUrl) {
+      if (window.apiUrl && typeof window.apiUrl === 'function') {
         forgotUrl = window.apiUrl('/backend/auth/forgot_password.php');
+      } else if (window.PROJECT_BASE) {
+        forgotUrl = window.PROJECT_BASE + '/backend/auth/forgot_password.php';
       } else {
+        // Fallback method for URL construction
         const originFP = window.location.origin;
         const pathnameFP = window.location.pathname;
         const projectRootPrefixFP = pathnameFP.includes('/frontend') ? pathnameFP.substring(0, pathnameFP.indexOf('/frontend')) : '';
@@ -697,16 +715,22 @@ include './includes/header.php';
 
       fetch(forgotUrl, {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'include'
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
         if (data.success) {
           showMessage('Password reset link sent to your email!', 'success');
           toggleForgotPassword(); // Go back to login form
           this.reset(); // Clear the form
         } else {
-          showMessage(data.message, 'error');
+          showMessage(data.message || 'Failed to send reset link', 'error');
         }
         spinner.style.display = 'none';
         submitBtn.disabled = false;
@@ -714,7 +738,7 @@ include './includes/header.php';
       })
       .catch(error => {
         console.error('Error:', error);
-        showMessage('An error occurred. Please try again.', 'error');
+        showMessage('Network error or server unavailable. Please try again.', 'error');
         spinner.style.display = 'none';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Reset Link';
