@@ -2,8 +2,8 @@
 // Set page-specific variables
 $pageTitle = "My Courses";
 $pageDescription = "View your enrolled courses and continue your learning journey.";
-$additionalCSS = ['./src/css/mycourses.css', './src/css/modal.css'];
-$additionalJS = ['./src/js/modal-utility.js', './src/js/mycourses.js'];
+$additionalCSS = ['./src/css/mycourses.css?v=' . time(), './src/css/modal.css', './src/css/video-player.css'];
+$additionalJS = ['./src/js/modal-utility.js', './src/js/mycourses.js', './src/js/video-player.js'];
 
 // Start session to check login status
 session_start();
@@ -29,11 +29,6 @@ include './includes/header.php';
 
     <!-- Main Content Container -->
     <div class="main-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-title">My Courses</h1>
-            <p class="page-subtitle">View your enrolled courses and continue your learning journey.</p>
-        </div>
     <section class="courses-hero">
         <div class="container">
             <div class="hero-content">

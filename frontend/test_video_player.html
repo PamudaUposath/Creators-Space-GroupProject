@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player Test</title>
+    <link rel="stylesheet" href="./src/css/video-player.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        .test-button { background: #667eea; color: white; padding: 10px 20px; margin: 10px; border: none; border-radius: 5px; cursor: pointer; }
+        .test-button:hover { background: #5a67d8; }
+        .debug-output { background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #667eea; }
+        .error { border-left-color: #e53e3e; background: #fed7d7; }
+        .success { border-left-color: #38a169; background: #c6f6d5; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎥 Video Player Test Page</h1>
+        
+        <h3>Test Continue Learning:</h3>
+        <button class="test-button" onclick="testContinueLearning(2)">Test Course 2 (UI/UX Design)</button>
+        <button class="test-button" onclick="testContinueLearning(3)">Test Course 3 (JavaScript)</button>
+        <button class="test-button" onclick="testContinueLearning(1)">Test Course 1 (Full Stack)</button>
+        
+        <h3>Test Individual Lessons:</h3>
+        <button class="test-button" onclick="testPlayLesson(1)">Test Lesson 1</button>
+        <button class="test-button" onclick="testPlayLesson(4)">Test Lesson 4 (UI/UX)</button>
+        <button class="test-button" onclick="testPlayLesson(7)">Test Lesson 7 (JavaScript)</button>
+        
+        <h3>API Tests:</h3>
+        <button class="test-button" onclick="testAPI()">Test Get Continue Data API</button>
+        <button class="test-button" onclick="testSession()">Test Session Data</button>
+        
+        <h3>Debug Output:</h3>
+        <div id="debugOutput"></div>
+    </div>
+
+    <script src="./src/js/video-player.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('debugOutput');
+            const div = document.createElement('div');
+            div.className = `debug-output ${type}`;
+            div.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            output.appendChild(div);
+            console.log(message);
+        }
+
+        function testContinueLearning(courseId) {
+            log(`Testing continue learning for course ${courseId}...`);
+            if (typeof videoPlayer !== 'undefined') {
+                videoPlayer.continueLearning(courseId);
+            } else {
+                log('Video player not found!', 'error');
+            }
+        }
+
+        function testPlayLesson(lessonId) {
+            log(`Testing play lesson ${lessonId}...`);
+            if (typeof videoPlayer !== 'undefined') {
+                videoPlayer.playLesson(lessonId);
+            } else {
+                log('Video player not found!', 'error');
+            }
+        }
+
+        async function testAPI() {
+            try {
+                log('Testing API calls...');
+                
+                // Test continue data for course 2
+                const response = await fetch('../backend/api/get_continue_data.php?course_id=2');
+                const data = await response.json();
+                
+                log(`API Response: ${JSON.stringify(data, null, 2)}`, data.success ? 'success' : 'error');
+                
+            } catch (error) {
+                log(`API Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSession() {
+            try {
+                log('Testing session data...');
+                
+                const response = await fetch('../backend/api/debug_session.php');
+                const data = await response.json();
+                
+                log(`Session Data: ${JSON.stringify(data, null, 2)}`, 'info');
+                
+            } catch (error) {
+                log(`Session Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Test video player initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof videoPlayer !== 'undefined') {
+                log('✅ Video player loaded successfully', 'success');
+            } else {
+                log('❌ Video player failed to load', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
