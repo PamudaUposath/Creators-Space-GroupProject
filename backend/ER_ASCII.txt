@@ -1,27 +1,297 @@
 CREATORS-SPACE E-LEARNING MANAGEMENT SYSTEM - ENTITY RELATIONSHIP DIAGRAM
+Production Database Schema (October 2025) - 21 Tables with Advanced Features
 
 ================================================================================
-                              TABLES OVERVIEW
+                              CORE SYSTEM TABLES
 ================================================================================
 
-+----------------+      +----------------+      +----------------+
-|     USERS      |      |    COURSES     |      |    LESSONS     |
-|----------------|      |----------------|      |----------------|
-| id (PK)        |      | id (PK)        |      | id (PK)        |
-| first_name     |      | title          |      | course_id (FK) |
-| last_name      |      | slug           |      | title          |
-| email (UNIQUE) |      | description    |      | content        |
-| username       |      | instructor_id  |      | video_url      |
-| password_hash  |      | image_url      |      | position       |
-| role           |      | price          |      | duration       |
-| is_active      |      | duration       |      | is_free        |
-| reset_token    |      | level          |      | created_at     |
-| reset_expires  |      | is_active      |      +----------------+
-| profile_image  |      | created_at     |
-| skills         |      | updated_at     |
-| created_at     |      +----------------+
-| updated_at     |
-+----------------+
++------------------+      +------------------+      +------------------+
+|      USERS       |      |     COURSES      |      |     LESSONS      |
+|------------------|      |------------------|      |------------------|
+| id (PK)          |      | id (PK)          |      | id (PK)          |
+| first_name       |      | title            |      | course_id (FK)   |
+| last_name        |      | slug             |      | title            |
+| email (UNIQUE)   |      | description      |      | content          |
+| username         |      | instructor_id(FK)|      | video_url        |
+| password_hash    |      | image_url        |      | position         |
+| role (ENUM)      |      | price            |      | duration         |
+| is_active        |      | duration         |      | is_free          |
+| reset_token      |      | level (ENUM)     |      | is_active        |
+| reset_expires    |      | category         |      | created_at       |
+| profile_image    |      | prerequisites    |      +------------------+
+| skills           |      | learning_obj     |
+| bio              |      | is_active        |      +------------------+
+| phone            |      | featured         |      |  LESSON_PROGRESS |
+| date_of_birth    |      | total_lessons    |      |------------------|
+| created_at       |      | total_duration   |      | id (PK)          |
+| updated_at       |      | video_url        |      | lesson_id (FK)   |
+| remove           |      | created_at       |      | user_id (FK)     |
++------------------+      | updated_at       |      | current_time     |
+                          +------------------+      | total_duration   |
+                                                    | completion_%     |
++------------------+      +------------------+      | actual_watch_time|
+|   ENROLLMENTS    |      |   CERTIFICATES   |      | watch_sessions   |
+|------------------|      |------------------|      | skipped_duration |
+| id (PK)          |      | id (PK)          |      | seek_violations  |
+| user_id (FK)     |      | user_id (FK)     |      | is_properly_watch|
+| course_id (FK)   |      | course_id (FK)   |      | is_completed     |
+| enrolled_at      |      | certificate_code |      | certificate_elig |
+| completed_at     |      | issued_at        |      | created_at       |
+| progress         |      +------------------+      | updated_at       |
+| completion_status|                                +------------------+
+| created_at       |
+| updated_at       |
++------------------+
+
+================================================================================
+                           AI AGENT & CHATBOT SYSTEM
+================================================================================
+
++---------------------+      +---------------------+      +---------------------+
+| AI_CONVERSATIONS    |      | AI_KNOWLEDGE_BASE   |      | AI_ANALYTICS        |
+|---------------------|      |---------------------|      |---------------------|
+| id (PK)             |      | id (PK)             |      | id (PK)             |
+| session_id (FK)     |      | category            |      | date                |
+| user_id (FK)        |      | question            |      | metric_name         |
+| user_message        |      | answer              |      | metric_value        |
+| bot_response        |      | keywords (JSON)     |      | metric_count        |
+| message_type (ENUM) |      | usage_count         |      | additional_data     |
+| intent              |      | effectiveness_score |      | created_at          |
+| context (JSON)      |      | is_active           |      +---------------------+
+| processing_time_ms  |      | created_by (FK)     |
+| user_feedback       |      | created_at          |      +---------------------+
+| created_at          |      | updated_at          |      | AI_RECOMMENDATIONS  |
++---------------------+      +---------------------+      |---------------------|
+                                                          | id (PK)             |
++---------------------+      +---------------------+      | user_id (FK)       |
+|AI_CONVERSATION_SESS |      | AI_USER_PREFERENCES |      | course_id (FK)      |
+|---------------------|      |---------------------|      | recommendation_type |
+| id (PK)             |      | id (PK)             |      | reason              |
+| user_id (FK)        |      | user_id (FK)        |      | confidence_score    |
+| started_at          |      | learning_style      |      | is_clicked          |
+| last_activity       |      | preferred_topics    |      | clicked_at          |
+| message_count       |      | difficulty_level    |      | created_at          |
+| session_duration    |      | study_time_pref     |      | action_taken_at     |
+| user_satisfaction   |      | notification_pref   |      +---------------------+
+| ended_at            |      | language_pref       |
++---------------------+      | created_at          |
+                             | updated_at          |
+                             +---------------------+
+
+================================================================================
+                        E-COMMERCE & PAYMENT SYSTEM
+================================================================================
+
++------------------+      +------------------+      +------------------+
+|      CART        |      |    PAYMENTS      |      | COURSE_REQUESTS  |
+|------------------|      |------------------|      |------------------|
+| id (PK)          |      | id (PK)          |      | id (PK)          |
+| user_id (FK)     |      | user_id (FK)     |      | user_id (FK)     |
+| course_id (FK)   |      | order_id         |      | course_title     |
+| quantity         |      | payment_id       |      | course_desc      |
+| added_at         |      | amount           |      | category         |
+| created_at       |      | currency         |      | preferred_level  |
+| updated_at       |      | payment_method   |      | additional_notes |
++------------------+      | status           |      | status           |
+                          | transaction_data |      | admin_response   |
+                          | created_at       |      | created_at       |
+                          +------------------+      | updated_at       |
+                                                    +------------------+
+
+================================================================================
+                         COMMUNICATION & MESSAGING
+================================================================================
+
++------------------+      +------------------+      +------------------+
+|  CONVERSATIONS   |      |     MESSAGES     |      | NOTIFICATIONS    |
+|------------------|      |------------------|      |------------------|
+| id (PK)          |      | id (PK)          |      | id (PK)          |
+| participant_1(FK)|      | conversation(FK) |      | user_id (FK)     |
+| participant_2(FK)|      | sender_id (FK)   |      | title            |
+| course_id (FK)   |      | message_text     |      | message          |
+| last_message(FK) |      | attachment_url   |      | type             |
+| last_message_at  |      | is_read          |      | is_read          |
+| created_at       |      | created_at       |      | action_url       |
++------------------+      +------------------+      | created_at       |
+                                                    +------------------+
+
++-------------------------+
+| COMMUNICATION_PREFS     |      
+|-------------------------|      
+| id (PK)                 |      
+| user_id (FK)            |      
+| email_messages          |      
+| email_announcements     |      
+| email_course_updates    |      
+| push_notifications      |      
+| created_at              |      
+| updated_at              |      
++-------------------------+
+
+================================================================================
+                            ANALYTICS & REPORTING
+================================================================================
+
++------------------+      +------------------+
+| STUDENT_REPORTS  |      |   INTERNSHIPS    |
+|------------------|      |------------------|
+| id (PK)          |      | id (PK)          |
+| user_id (FK)     |      | title            |
+| course_id (FK)   |      | company          |
+| report_type      |      | description      |
+| report_data(JSON)|      | requirements     |
+| generated_at     |      | duration         |
+| generated_by(FK) |      | location         |
+| created_at       |      | is_remote        |
++------------------+      | deadline         |
+                          | is_active        |
+                          | created_at       |
+                          +------------------+
+
+================================================================================
+                            ENTITY RELATIONSHIPS
+================================================================================
+
+PRIMARY RELATIONSHIPS:
+----------------------
+
+USERS ||--o{ ENROLLMENTS      : user enrolls in multiple courses
+USERS ||--o{ COURSES          : instructor creates multiple courses  
+USERS ||--o{ CERTIFICATES     : user receives multiple certificates
+USERS ||--o{ CART             : user has items in cart
+USERS ||--o{ PAYMENTS         : user makes multiple payments
+USERS ||--o{ COURSE_REQUESTS  : user requests multiple courses
+
+COURSES ||--o{ LESSONS        : course contains multiple lessons
+COURSES ||--o{ ENROLLMENTS    : course has multiple enrollments
+COURSES ||--o{ CERTIFICATES   : course generates certificates
+COURSES ||--o{ CART           : course can be in multiple carts
+COURSES ||--o{ CONVERSATIONS  : course-related discussions
+
+LESSONS ||--o{ LESSON_PROGRESS: lesson has progress tracking per user
+
+AI SYSTEM RELATIONSHIPS:
+-----------------------
+
+USERS ||--o{ AI_CONVERSATIONS     : user has multiple AI chats
+USERS ||--o{ AI_CONVERSATION_SESS : user has multiple AI sessions
+USERS ||--o{ AI_USER_PREFERENCES  : user has AI preferences
+USERS ||--o{ AI_RECOMMENDATIONS   : user receives AI recommendations
+
+AI_CONVERSATION_SESS ||--o{ AI_CONVERSATIONS : session contains messages
+
+COMMUNICATION RELATIONSHIPS:
+---------------------------
+
+USERS ||--o{ CONVERSATIONS : user participates in conversations
+USERS ||--o{ MESSAGES      : user sends/receives messages
+USERS ||--o{ NOTIFICATIONS : user receives notifications
+USERS ||--o{ COMMUNICATION_PREFS : user has communication preferences
+
+CONVERSATIONS ||--o{ MESSAGES : conversation contains messages
+
+ANALYTICS RELATIONSHIPS:
+-----------------------
+
+USERS ||--o{ STUDENT_REPORTS : user has performance reports
+COURSES ||--o{ STUDENT_REPORTS : course generates reports
+
+================================================================================
+                              BUSINESS RULES
+================================================================================
+
+ENROLLMENT RULES:
+- User can enroll in multiple courses
+- Course completion triggers certificate generation
+- Progress tracking is per lesson per user
+
+PAYMENT RULES:
+- Each payment is linked to a user and course(s)
+- PayHere integration for Sri Lankan market
+- Cart system supports multiple courses per transaction
+
+AI SYSTEM RULES:
+- AI conversations are session-based
+- Knowledge base supports multiple languages
+- User preferences drive AI recommendations
+- Analytics track AI system performance
+
+COMMUNICATION RULES:
+- Users can message instructors about courses
+- Notifications support multiple delivery channels
+- Conversation participants are limited to 2 users
+
+CERTIFICATION RULES:
+- Certificates require course completion
+- Unique certificate codes prevent duplication
+- Certificate eligibility based on lesson progress
+
+CONTENT DELIVERY RULES:
+- Video progress tracking with anti-cheating measures
+- AWS S3 integration for scalable media storage
+- Lesson completion based on actual watch time
+
+================================================================================
+                            SECURITY FEATURES
+================================================================================
+
+- Password hashing with secure algorithms
+- JWT-based authentication system
+- Role-based access control (user/instructor/admin)
+- API rate limiting and CORS protection
+- SQL injection prevention with prepared statements
+- XSS protection with input sanitization
+- CSRF token validation on sensitive operations
+
+================================================================================
+                          PRODUCTION INTEGRATIONS
+================================================================================
+
+AWS S3 STORAGE:
+- Bucket: creators-space-group-project.s3.ap-south-1.amazonaws.com
+- Video content, images, and documents
+- CDN optimization for global delivery
+
+PAYHERE GATEWAY:
+- Sri Lankan payment processing
+- Webhook handling for payment verification
+- Multi-currency support
+
+PHPMAILER SERVICE:
+- Professional email delivery
+- SMTP authentication
+- Certificate generation and delivery
+- Course completion notifications
+
+================================================================================
+                              DATABASE STATISTICS
+================================================================================
+
+Total Tables: 21
+Core Entities: 5 (Users, Courses, Lessons, Enrollments, Certificates)
+AI System Tables: 6 (Conversations, Sessions, Knowledge, Analytics, etc.)
+Communication Tables: 4 (Messages, Notifications, Preferences)
+E-commerce Tables: 3 (Cart, Payments, Requests)
+Analytics Tables: 2 (Reports, Internships)
+Progress Tracking: 1 (Lesson Progress)
+
+Key Indexes:
+- User email (unique)
+- Course slug (unique)
+- Payment order_id (unique)
+- Certificate codes (unique)
+- Session timestamps for performance
+
+================================================================================
+                                VERSION INFO
+================================================================================
+
+Schema Version: Final Production (October 2025)
+Database Engine: MySQL 8.0+
+PHP Version: 8.2+
+Framework: Native PHP with modern practices
+Last Updated: October 2025
+Created by: Creators-Space Development Team
 
 +------------------+    +------------------+    +------------------+
 |   ENROLLMENTS    |    |   CERTIFICATES   |    |    BOOKMARKS     |
