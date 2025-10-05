@@ -73,7 +73,6 @@ try {
         LIMIT 6
     ");
     $monthlyEnrollments = $stmt->fetchAll();
-    
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
     $totalUsers = $totalCourses = $totalEnrollments = $totalInstructors = 0;
@@ -105,7 +104,7 @@ try {
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);

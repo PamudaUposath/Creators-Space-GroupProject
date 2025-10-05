@@ -1,7 +1,8 @@
 /* Enhanced video player styles with certificate validation */
 
 /* Watch warning and violation notifications */
-.watch-warning, .skip-violation-warning {
+.watch-warning,
+.skip-violation-warning {
     position: absolute;
     top: 60px;
     left: 50%;
@@ -24,12 +25,14 @@
     top: 100px;
 }
 
-.watch-warning i, .skip-violation-warning i {
+.watch-warning i,
+.skip-violation-warning i {
     font-size: 1rem;
 }
 
 /* Certificate status indicators */
-.watch-integrity-indicator, .certificate-status {
+.watch-integrity-indicator,
+.certificate-status {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     padding: 6px 12px;
@@ -59,7 +62,7 @@
 }
 
 /* Notification styles for certificate validation */
-.violation-limit-notification, 
+.violation-limit-notification,
 .skip-prevention-notification,
 .certificate-eligible-notification,
 .certificate-ineligible-notification {
@@ -118,13 +121,14 @@
 }
 
 @keyframes slideIn {
-    from { 
-        opacity: 0; 
-        transform: translate(-50%, -50%) scale(0.8); 
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
     }
-    to { 
-        opacity: 1; 
-        transform: translate(-50%, -50%) scale(1); 
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
@@ -188,12 +192,14 @@
 
 /* Mobile responsive updates */
 @media (max-width: 768px) {
-    .watch-warning, .skip-violation-warning {
+
+    .watch-warning,
+    .skip-violation-warning {
         font-size: 0.8rem;
         padding: 10px 16px;
         max-width: 90%;
     }
-    
+
     .violation-limit-notification,
     .certificate-eligible-notification,
     .certificate-ineligible-notification {
@@ -201,16 +207,18 @@
         font-size: 0.9rem;
         max-width: 95%;
     }
-    
-    .watch-integrity-indicator, .certificate-status {
+
+    .watch-integrity-indicator,
+    .certificate-status {
         font-size: 0.7rem;
         padding: 4px 8px;
     }
-    
+
     .video-actions {
         gap: 8px;
     }
 }
+
 .video-modal {
     position: fixed;
     top: 0;
@@ -236,7 +244,7 @@
 }
 
 .video-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     color: white;
     padding: 20px 25px;
     display: flex;
@@ -342,18 +350,35 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideDown {
-    from { transform: translateX(-50%) translateY(-30px); opacity: 0; }
-    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    from {
+        transform: translateX(-50%) translateY(-30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
 }
 
 @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 /* Progress indicator styles */
@@ -374,7 +399,7 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: conic-gradient(#667eea 0deg, #764ba2 calc(var(--progress) * 3.6deg), rgba(255,255,255,0.2) calc(var(--progress) * 3.6deg));
+    background: conic-gradient(#5a73e5 0deg, #764ba2 calc(var(--progress) * 3.6deg), rgba(255, 255, 255, 0.2) calc(var(--progress) * 3.6deg));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -396,19 +421,19 @@
         max-width: 95vw;
         max-height: 95vh;
     }
-    
+
     .video-header {
         padding: 15px 20px;
     }
-    
+
     .video-header h3 {
         font-size: 1.1rem;
     }
-    
+
     .video-controls {
         padding: 12px 20px;
     }
-    
+
     .video-actions {
         flex-direction: column;
         gap: 10px;

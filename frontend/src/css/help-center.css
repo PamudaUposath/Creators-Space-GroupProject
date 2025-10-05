@@ -2,7 +2,7 @@
 
 .page-container {
     min-height: calc(100vh - 80px);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     padding: 2rem 0;
 }
 
@@ -406,20 +406,20 @@ body.dark-mode .faq-answer ul {
     .header-content h1 {
         font-size: 2rem;
     }
-    
+
     .search-container {
         margin: 0 1rem;
     }
-    
+
     .help-cards {
         grid-template-columns: 1fr;
     }
-    
+
     .support-options {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .support-btn {
         width: 100%;
         max-width: 280px;
