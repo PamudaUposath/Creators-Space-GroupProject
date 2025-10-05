@@ -93,13 +93,14 @@ body {
   }
 }
 
+/* 
 .navbar {}
 
 .navbar h1 {}
 
 .navbar a {}
 
-.navbar .nav-links a {}
+.navbar .nav-links a {} */
 
 .navbar .nav-links a:nth-child(-n + 7)::after {
   content: "";
@@ -157,9 +158,9 @@ body {
   color: black;
 }
 
-.navbar .nav-links {
-  /* Removed to use style.css nav-links styles */
-}
+/* .navbar .nav-links { */
+/* Removed to use style.css nav-links styles */
+/* } */
 
 .padding-inline-lg {
   padding-inline: 2rem;
@@ -188,8 +189,8 @@ body {
 
 /* Section Styling */
 .section {
-  margin-bottom: 4rem;
-  padding: 2rem 0;
+  /* margin-bottom: 4rem; */
+  padding: 2rem;
 }
 
 .section .section-title {
@@ -337,17 +338,6 @@ body {
 
 /*Mission Vision Section*/
 
-.mission-vision-section {
-  padding: 2rem 1rem;
-  background-color: #f0f0f0;
-  transition: background-color 0.3s;
-}
-
-.mission-vision-section h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
 .mv-row {
   display: flex;
   align-items: center;
@@ -391,12 +381,6 @@ body {
 
 .mv-image img:hover {
   transform: scale(1.05);
-}
-
-/* Dark Mode Support */
-.dark .mission-vision-section {
-  background-color: #1f1f1f;
-  color: #ffffff;
 }
 
 /* Technologies Used Section */
@@ -514,11 +498,6 @@ nav {
 /* rigth nav bar */
 .nav-right {
   margin-right: 10rem;
-}
-
-/* Navigation Links */
-.nav-links {
-  /* Removed to use style.css nav-links styles */
 }
 
 .nav-links li {
@@ -1021,8 +1000,7 @@ body.dark-mode .stat-item:hover {
     gap: 1.5rem;
   }
 
-  .mission-card,
-  .vision-card,
+  .mission-vision-card,
   .offering-card,
   .card {
     padding: 1.5rem;
@@ -1042,8 +1020,7 @@ body.dark-mode .stat-item:hover {
     font-size: 1.8rem;
   }
 
-  .mission-card h2,
-  .vision-card h2 {
+  .mission-vision-card h2 {
     font-size: 1.5rem;
   }
 
@@ -1124,9 +1101,9 @@ body.dark-mode .stat-item:hover {
 }
 
 /* Mission and Vision Cards */
-.mission-card,
-.vision-card {
-  background: rgba(255, 255, 255, 0.95);
+.mission-vision-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
   padding: 2.5rem;
   border-radius: 20px;
   text-align: center;
@@ -1135,24 +1112,16 @@ body.dark-mode .stat-item:hover {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.mission-card:hover,
-.vision-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-.mission-card h2,
-.vision-card h2 {
-  color: #000000 !important;
+.mission-vision-card h2 {
+  /* color: #000000 !important; */
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   margin-top: 1rem;
 }
 
-.mission-card p,
-.vision-card p {
-  color: #000000 !important;
+.mission-vision-card p {
+  /* color: #000000 !important; */
   font-size: 1.1rem;
   line-height: 1.7;
   font-weight: 400;
@@ -1185,7 +1154,7 @@ body.dark-mode .stat-item:hover {
 }
 
 .offering-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.1);
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
@@ -1200,15 +1169,15 @@ body.dark-mode .stat-item:hover {
 }
 
 .offering-card h3 {
-  color: #000000 !important;
+  /* color: #000000 !important; */
   font-size: 1.4rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   margin-top: 1rem;
 }
 
 .offering-card p {
-  color: #000000 !important;
+  color: #fff !important;
   font-size: 1rem;
   line-height: 1.6;
   font-weight: 400;
@@ -1220,12 +1189,12 @@ body.dark-mode .stat-item:hover {
 
 .offering-icon i {
   font-size: 2.5rem;
-  color: #000000 !important;
+  /* color: #000000 !important; */
 }
 
 /* Team Section and General Card Styles */
 .card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.1);
   padding: 2rem;
   border-radius: 20px;
   text-align: center;
@@ -1236,11 +1205,12 @@ body.dark-mode .stat-item:hover {
 
 .card:hover {
   transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: #fff !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card h3 {
-  color: #000000 !important;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -1248,14 +1218,13 @@ body.dark-mode .stat-item:hover {
 }
 
 .member-role {
-  color: #000000 !important;
   font-size: 1.1rem !important;
   font-weight: 600 !important;
   margin-bottom: 1rem !important;
 }
 
 .member-bio {
-  color: #000000 !important;
+  color: #fff !important;
   font-size: 1rem !important;
   line-height: 1.6 !important;
   margin-bottom: 1.5rem !important;
@@ -1280,7 +1249,6 @@ body.dark-mode .stat-item:hover {
 }
 
 .card p {
-  color: #000000 !important;
   font-size: 1rem !important;
   line-height: 1.6 !important;
   font-weight: 400 !important;
@@ -1511,15 +1479,13 @@ body.dark-mode .hero-btn:last-child:hover {
     gap: 1.5rem;
   }
 
-  .mission-card,
-  .vision-card,
+  .mission-vision-card,
   .offering-card,
   .card {
     padding: 1.5rem;
   }
 
-  .mission-card h2,
-  .vision-card h2 {
+  .mission-vision-card h2 {
     color: #000000 !important;
   }
 
@@ -1545,8 +1511,7 @@ body.dark-mode .hero-btn:last-child:hover {
     color: #ffffff !important;
   }
 
-  .mission-card h2,
-  .vision-card h2 {
+  .mission-vision-card h2 {
     font-size: 1.5rem;
     color: #ffffff !important;
   }

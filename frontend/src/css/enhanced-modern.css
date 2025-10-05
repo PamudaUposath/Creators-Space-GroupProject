@@ -355,70 +355,60 @@ body {
 /* Enhanced Cards with 3D Effect */
 .card,
 .offering-card,
-.mission-card,
-.vision-card {
-  /* background: linear-gradient(135deg, #4361ee 0%, #7209b7 100%) !important; */
-  /* backdrop-filter: blur(20px) !important; */
-  /* border: 1px solid rgba(255, 255, 255, 0.3) !important; */
+.mission-vision-card {
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 20px !important;
   transition: all 0.4s ease !important;
   transform-style: preserve-3d;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
-  color: #2c3e50 !important;
   padding: 2rem;
   margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* .card::before, */
-.offering-card::before,
-.mission-card::before,
-.vision-card::before {
+/* .offering-card::before,
+.mission-vision-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  /* background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%); */
   border-radius: 20px;
   z-index: -1;
-}
+} */
 
 .card:hover,
 .offering-card:hover,
-.mission-card:hover,
-.vision-card:hover {
+.mission-vision-card:hover {
+  background: rgba(255, 255, 255, 0.3);
   transform: translateY(-10px) !important;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
   border-color: rgba(166, 102, 234, 0.766) !important;
-  /* background: linear-gradient(135deg, #5d02ac 0%, #a4508b 100%) !important; */
+  /* color: #000000; */
 }
 
 .card:hover h3,
 .card:hover h4,
 .card:hover h5,
 .offering-card:hover h3,
-.mission-card:hover h2,
-.vision-card:hover h2,
+.mission-vision-card:hover h2,
 .card:hover p,
 .card:hover span,
-.offering-card:hover p,
-.mission-card:hover p,
-.vision-card:hover p {
-  color: #ffffff !important;
+.offering-card:hover p
+
+/* .mission-vision-card:hover p  */
+  {
+  color: #000000 !important;
 }
 
 .card h3,
 .card h4,
 .card h5,
 .offering-card h3,
-.mission-card h2,
-.vision-card h2 {
+.mission-vision-card h2 {
   color: #ffffff !important;
   text-shadow: none !important;
 }
@@ -428,8 +418,7 @@ body {
 .card p,
 .card span,
 .offering-card p,
-.mission-card p,
-.vision-card p {
+.mission-vision-card p {
   color: #ffffff !important;
   text-shadow: none !important;
 }

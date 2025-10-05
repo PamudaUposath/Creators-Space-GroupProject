@@ -357,6 +357,10 @@ body.dark .tech-stack-filters::-webkit-scrollbar-thumb:hover {
 }
 
 /* Project Card */
+.card:hover {
+  color: white !important;
+}
+
 .project-card {
   background: white;
   border-radius: 20px;
