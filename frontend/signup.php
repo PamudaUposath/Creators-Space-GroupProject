@@ -344,7 +344,7 @@ include './includes/header.php';
 
       <div id="message-container"></div>
 
-      <form id="signup-form" method="POST" action="../backend/auth/signup_process.php">
+      <form id="signup-form" method="POST" action="./login.php">
         <div class="form-columns">
           <div class="form-group">
             <label for="first_name">First Name</label>
