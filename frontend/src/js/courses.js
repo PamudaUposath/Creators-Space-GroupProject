@@ -541,3 +541,39 @@ window.CourseSearch = CourseSearch;
  *    const designKeywords = ['sketch', 'adobe xd', 'wireframing', 'prototyping'];
  *    courseSearch.addKeywords(designKeywords);
  */
+
+// Course Card Navigation Functions
+function navigateToCourse(courseId, event) {
+    // Navigate to course detail page
+    window.location.href = `course-detail.php?id=${courseId}`;
+}
+
+// Updated toggleBookmark function to prevent event propagation
+function toggleBookmark(courseId, event) {
+    // Prevent the card click event from firing
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    
+    // Existing bookmark functionality (if any)
+    const button = event.target.closest('button');
+    const icon = button.querySelector('i');
+    
+    // Toggle bookmark state
+    if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        button.style.background = 'rgba(74, 144, 226, 0.9)';
+        button.style.color = 'white';
+        console.log(`Bookmarked course ${courseId}`);
+        // Here you can add AJAX call to save bookmark to database
+    } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        button.style.background = 'rgba(255,255,255,0.9)';
+        button.style.color = 'inherit';
+        console.log(`Removed bookmark for course ${courseId}`);
+        // Here you can add AJAX call to remove bookmark from database
+    }
+}
