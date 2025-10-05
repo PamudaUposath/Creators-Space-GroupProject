@@ -1015,7 +1015,7 @@ img {
 
 /* Dark Mode Responsive Adjustments */
 body.dark {
-    background: #1a1a1a;
+    /* background: #1a1a1a; */
     color: #e0e0e0;
 }
 
