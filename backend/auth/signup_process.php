@@ -1,6 +1,18 @@
 <?php
 // backend/auth/signup_process.php
 
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Set proper headers for JSON response
+header('Content-Type: application/json; charset=UTF-8');
+header('Cache-Control: no-cache, must-revalidate');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Headers: Content-Type');
+
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
 
@@ -48,17 +60,17 @@ if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/', $password)) {
 }
 
 try {
-    // Check if email already exists (excluding removed users)
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND (remove IS NULL OR remove = 0)");
+    // Check if email already exists (excluding removed/inactive users)
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND is_active = 1 AND (remove IS NULL OR remove = 0)");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         errorResponse('Email already registered');
     }
     
-    // Check if username already exists (if provided, excluding removed users)
+    // Check if username already exists (if provided, excluding removed/inactive users)
     $username = sanitizeInput($_POST['username'] ?? '');
     if (!empty($username)) {
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? AND (remove IS NULL OR remove = 0)");
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? AND is_active = 1 AND (remove IS NULL OR remove = 0)");
         $stmt->execute([$username]);
         if ($stmt->fetch()) {
             errorResponse('Username already taken');

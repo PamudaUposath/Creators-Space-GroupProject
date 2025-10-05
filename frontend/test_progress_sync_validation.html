@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Synchronization Validation</title>
+    <link rel="stylesheet" href="./src/css/video-player.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f7fa; }
+        .test-container { max-width: 1200px; margin: 0 auto; }
+        .test-section { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .test-button { padding: 12px 24px; margin: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .test-button:hover { background: #5a67d8; }
+        .progress-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .progress-display { padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #007bff; }
+        .log-container { max-height: 300px; overflow-y: auto; background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 12px; }
+        .log-entry { margin: 3px 0; padding: 5px; border-radius: 3px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #cce5ff; color: #0056b3; }
+        .sync-status { padding: 10px; border-radius: 5px; margin: 10px 0; font-weight: bold; }
+        .sync-good { background: #d4edda; color: #155724; }
+        .sync-bad { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔄 Progress Synchronization Validation</h1>
+        
+        <div class="test-section">
+            <h3>Test Controls</h3>
+            <button class="test-button" onclick="startSyncTest(2)">Test Course 2 Sync</button>
+            <button class="test-button" onclick="startSyncTest(3)">Test Course 3 Sync</button>
+            <button class="test-button" onclick="simulateProgressUpdate()">Simulate Progress Update</button>
+            <button class="test-button" onclick="clearAllLogs()">Clear Logs</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>Progress Comparison</h3>
+            <div class="progress-comparison">
+                <div class="progress-display">
+                    <h4>My Courses API Progress</h4>
+                    <div><strong>Course ID:</strong> <span id="apiCourseId">Not tested</span></div>
+                    <div><strong>Progress:</strong> <span id="apiProgress">N/A</span></div>
+                    <div><strong>Last Updated:</strong> <span id="apiLastUpdate">Never</span></div>
+                </div>
+                <div class="progress-display">
+                    <h4>Video Player Progress</h4>
+                    <div><strong>Course ID:</strong> <span id="playerCourseId">Not active</span></div>
+                    <div><strong>Progress:</strong> <span id="playerProgress">N/A</span></div>
+                    <div><strong>Status:</strong> <span id="playerStatus">Closed</span></div>
+                </div>
+            </div>
+            <div id="syncStatus" class="sync-status" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Real-time Monitoring</h3>
+            <button class="test-button" onclick="startMonitoring()">Start Monitoring</button>
+            <button class="test-button" onclick="stopMonitoring()">Stop Monitoring</button>
+            <div id="monitoringLog" class="log-container"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>API Test Log</h3>
+            <div id="apiTestLog" class="log-container"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Synchronization Test Log</h3>
+            <div id="syncTestLog" class="log-container"></div>
+        </div>
+    </div>
+
+    <script src="./src/js/video-player.js"></script>
+    <script>
+        let currentTestCourseId = null;
+        let monitoringInterval = null;
+
+        function log(message, type = 'info', containerId = 'apiTestLog') {
+            const container = document.getElementById(containerId);
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+            console.log(message);
+        }
+
+        async function getMyCoursesProgress(courseId) {
+            try {
+                const response = await fetch('../backend/api/my-courses.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const course = data.data.find(c => c.id == courseId);
+                    return course ? course.overall_progress : null;
+                }
+                return null;
+            } catch (error) {
+                log(`Error fetching my-courses progress: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        async function getContinueDataProgress(courseId) {
+            try {
+                const response = await fetch(`../backend/api/get_continue_data.php?course_id=${courseId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    return data.continue_data.overall_progress;
+                }
+                return null;
+            } catch (error) {
+                log(`Error fetching continue data progress: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        function getVideoPlayerProgress() {
+            const courseProgressText = document.getElementById('courseProgressText');
+            const videoModal = document.querySelector('.video-modal');
+            
+            if (!videoModal) return { active: false, progress: null };
+            if (!courseProgressText) return { active: true, progress: null, error: 'No progress text element' };
+            
+            const progressMatch = courseProgressText.textContent.match(/Course:\s*(\d+)%/);
+            return { 
+                active: true, 
+                progress: progressMatch ? parseInt(progressMatch[1]) : 0,
+                text: courseProgressText.textContent
+            };
+        }
+
+        async function startSyncTest(courseId) {
+            currentTestCourseId = courseId;
+            log(`Starting synchronization test for course ${courseId}...`, 'info', 'syncTestLog');
+            
+            // Step 1: Get progress from both APIs
+            log('Step 1: Fetching progress from APIs...', 'info', 'syncTestLog');
+            
+            const myCoursesProgress = await getMyCoursesProgress(courseId);
+            const continueDataProgress = await getContinueDataProgress(courseId);
+            
+            log(`My Courses API progress: ${myCoursesProgress}%`, 'info', 'syncTestLog');
+            log(`Continue Data API progress: ${continueDataProgress}%`, 'info', 'syncTestLog');
+            
+            // Update API display
+            document.getElementById('apiCourseId').textContent = courseId;
+            document.getElementById('apiProgress').textContent = `${myCoursesProgress}%`;
+            document.getElementById('apiLastUpdate').textContent = new Date().toLocaleTimeString();
+            
+            // Check API consistency
+            if (Math.abs(myCoursesProgress - continueDataProgress) <= 1) {
+                log('✅ API progress values are consistent', 'success', 'syncTestLog');
+            } else {
+                log(`⚠️ API progress values differ: MyCourses=${myCoursesProgress}%, ContinueData=${continueDataProgress}%`, 'warning', 'syncTestLog');
+            }
+            
+            // Step 2: Open video player and check sync
+            log('Step 2: Opening video player...', 'info', 'syncTestLog');
+            
+            if (typeof videoPlayer !== 'undefined') {
+                await videoPlayer.continueLearning(courseId);
+                
+                // Wait for video player to initialize
+                setTimeout(() => {
+                    const playerData = getVideoPlayerProgress();
+                    
+                    document.getElementById('playerCourseId').textContent = courseId;
+                    document.getElementById('playerStatus').textContent = playerData.active ? 'Active' : 'Closed';
+                    document.getElementById('playerProgress').textContent = playerData.progress !== null ? `${playerData.progress}%` : 'N/A';
+                    
+                    log(`Video player progress: ${playerData.progress}% (${playerData.text})`, 'info', 'syncTestLog');
+                    
+                    // Check synchronization
+                    const syncStatus = document.getElementById('syncStatus');
+                    syncStatus.style.display = 'block';
+                    
+                    if (playerData.progress !== null && Math.abs(playerData.progress - myCoursesProgress) <= 1) {
+                        syncStatus.className = 'sync-status sync-good';
+                        syncStatus.textContent = '✅ Progress is synchronized! Video player and My Courses show same values.';
+                        log('✅ Progress synchronization PASSED', 'success', 'syncTestLog');
+                    } else {
+                        syncStatus.className = 'sync-status sync-bad';
+                        syncStatus.textContent = `❌ Progress NOT synchronized! MyCourses: ${myCoursesProgress}%, VideoPlayer: ${playerData.progress}%`;
+                        log(`❌ Progress synchronization FAILED: Expected ${myCoursesProgress}%, Got ${playerData.progress}%`, 'error', 'syncTestLog');
+                    }
+                }, 2000);
+            } else {
+                log('❌ Video player not available', 'error', 'syncTestLog');
+            }
+        }
+
+        async function simulateProgressUpdate() {
+            if (!currentTestCourseId) {
+                log('No course selected for testing', 'error');
+                return;
+            }
+            
+            log(`Simulating progress update for course ${currentTestCourseId}...`, 'info');
+            
+            try {
+                // Simulate a progress save
+                const response = await fetch('../backend/api/save_progress.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lesson_id: 1,
+                        course_id: currentTestCourseId,
+                        current_time: Math.random() * 500 + 200,
+                        total_duration: 1000,
+                        actual_watch_time: Math.random() * 450 + 150,
+                        watch_sessions: 1,
+                        skipped_duration: Math.random() * 20,
+                        seek_violations: 0,
+                        is_properly_watched: true,
+                        is_completed: false
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    log(`Progress updated: Course ${Math.round(data.progress.course_progress)}%`, 'success');
+                    
+                    // Re-run sync test to verify update
+                    setTimeout(() => startSyncTest(currentTestCourseId), 1000);
+                } else {
+                    log(`Progress update failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`Progress update error: ${error.message}`, 'error');
+            }
+        }
+
+        function startMonitoring() {
+            if (monitoringInterval) {
+                log('Monitoring already active', 'info', 'monitoringLog');
+                return;
+            }
+            
+            monitoringInterval = setInterval(async () => {
+                if (!currentTestCourseId) return;
+                
+                const apiProgress = await getMyCoursesProgress(currentTestCourseId);
+                const playerData = getVideoPlayerProgress();
+                
+                const timestamp = new Date().toLocaleTimeString();
+                
+                if (playerData.active && playerData.progress !== null) {
+                    const diff = Math.abs(apiProgress - playerData.progress);
+                    const status = diff <= 1 ? '✅ SYNC' : '❌ DIFF';
+                    log(`${timestamp} | API: ${apiProgress}% | Player: ${playerData.progress}% | ${status}`, 
+                         diff <= 1 ? 'success' : 'warning', 'monitoringLog');
+                } else {
+                    log(`${timestamp} | API: ${apiProgress}% | Player: Inactive`, 'info', 'monitoringLog');
+                }
+            }, 2000);
+            
+            log('Started real-time monitoring (every 2 seconds)', 'success', 'monitoringLog');
+        }
+
+        function stopMonitoring() {
+            if (monitoringInterval) {
+                clearInterval(monitoringInterval);
+                monitoringInterval = null;
+                log('Stopped monitoring', 'success', 'monitoringLog');
+            } else {
+                log('No monitoring active', 'info', 'monitoringLog');
+            }
+        }
+
+        function clearAllLogs() {
+            document.getElementById('apiTestLog').innerHTML = '';
+            document.getElementById('syncTestLog').innerHTML = '';
+            document.getElementById('monitoringLog').innerHTML = '';
+            log('All logs cleared', 'info');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Progress Synchronization Validation loaded', 'success');
+            log('Click "Test Course X Sync" to validate synchronization', 'info');
+        });
+    </script>
+</body>
+</html>

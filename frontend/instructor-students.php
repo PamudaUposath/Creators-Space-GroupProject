@@ -16,42 +16,197 @@ $message_type = '';
 
 // Handle certificate issuance
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'issue_certificate') {
+    // Enable debugging
+    $debug_log = [];
+    $debug_log[] = "=== CERTIFICATE ISSUANCE DEBUG START ===";
+    $debug_log[] = "Timestamp: " . date('Y-m-d H:i:s');
+    
     try {
         $enrollment_id = intval($_POST['enrollment_id']);
         $user_id = intval($_POST['user_id']);
         $course_id = intval($_POST['course_id']);
-
-        // Check if certificate already exists
-        $stmt = $pdo->prepare("SELECT id FROM certificates WHERE user_id = ? AND course_id = ?");
-        $stmt->execute([$user_id, $course_id]);
-
-        if (!$stmt->fetch()) {
-            // Generate certificate code
-            $certificate_code = 'CERT-' . strtoupper(substr(md5($course_id . $user_id . time()), 0, 8));
-
-            // Insert certificate
-            $stmt = $pdo->prepare("
-                INSERT INTO certificates (user_id, course_id, certificate_code, issued_at)
-                VALUES (?, ?, ?, NOW())
-            ");
-            $stmt->execute([$user_id, $course_id, $certificate_code]);
-
-            // Update enrollment as completed
-            $stmt = $pdo->prepare("
-                UPDATE enrollments SET status = 'completed', completed_at = NOW(), progress = 100
-                WHERE id = ?
-            ");
-            $stmt->execute([$enrollment_id]);
-
-            $message = "Certificate issued successfully! Certificate ID: $certificate_code";
-            $message_type = "success";
-        } else {
-            $message = "Certificate already exists for this student and course.";
+        
+        $debug_log[] = "Input Parameters:";
+        $debug_log[] = "  Enrollment ID: $enrollment_id";
+        $debug_log[] = "  User ID: $user_id";
+        $debug_log[] = "  Course ID: $course_id";
+        
+        // First, check the student's progress
+        $stmt = $pdo->prepare("SELECT progress FROM enrollments WHERE id = ? AND user_id = ? AND course_id = ?");
+        $stmt->execute([$enrollment_id, $user_id, $course_id]);
+        $enrollment = $stmt->fetch();
+        
+        $debug_log[] = "Progress Check:";
+        $debug_log[] = "  Found enrollment: " . ($enrollment ? 'Yes' : 'No');
+        if ($enrollment) {
+            $debug_log[] = "  Progress: " . $enrollment['progress'] . "%";
+        }
+        
+        if (!$enrollment) {
+            $debug_log[] = "ERROR: Enrollment not found";
+            $message = "Enrollment not found.";
             $message_type = "error";
+        } elseif ($enrollment['progress'] < 80) {
+            $debug_log[] = "ERROR: Progress insufficient (" . $enrollment['progress'] . "% < 80%)";
+            $message = "Certificate can only be issued to students with 80% or higher progress. Current progress: " . $enrollment['progress'] . "%";
+            $message_type = "error";
+        } else {
+            $debug_log[] = "✅ Progress check passed (" . $enrollment['progress'] . "% >= 80%)";
+            
+            // Check if certificate already exists
+            $stmt = $pdo->prepare("SELECT id FROM certificates WHERE user_id = ? AND course_id = ?");
+            $stmt->execute([$user_id, $course_id]);
+            $existing_cert = $stmt->fetch();
+            
+            $debug_log[] = "Certificate Existence Check:";
+            $debug_log[] = "  Existing certificate: " . ($existing_cert ? 'Yes (ID: ' . $existing_cert['id'] . ')' : 'No');
+            
+            if (!$existing_cert) {
+                $debug_log[] = "🎯 Proceeding with certificate issuance...";
+                
+                // Generate certificate code
+                $certificate_code = 'CERT-' . strtoupper(substr(md5($course_id . $user_id . time()), 0, 8));
+                $debug_log[] = "Generated certificate code: $certificate_code";
+                
+                // Get student and course details for email
+                $stmt = $pdo->prepare("
+                    SELECT 
+                        u.first_name, u.last_name, u.email,
+                        c.title as course_title,
+                        c.level,
+                        CONCAT(inst.first_name, ' ', COALESCE(inst.last_name, '')) as instructor_name
+                    FROM users u
+                    JOIN courses c ON c.id = ?
+                    LEFT JOIN users inst ON c.instructor_id = inst.id
+                    WHERE u.id = ?
+                ");
+                $stmt->execute([$course_id, $user_id]);
+                $details = $stmt->fetch();
+                
+                $debug_log[] = "Student Details Retrieved:";
+                $debug_log[] = "  Name: " . ($details ? $details['first_name'] . ' ' . $details['last_name'] : 'Not found');
+                $debug_log[] = "  Email: " . ($details ? $details['email'] : 'Not found');
+                $debug_log[] = "  Course: " . ($details ? $details['course_title'] : 'Not found');
+                
+                // Insert certificate
+                $stmt = $pdo->prepare("
+                    INSERT INTO certificates (user_id, course_id, certificate_code, issued_at)
+                    VALUES (?, ?, ?, NOW())
+                ");
+                $stmt->execute([$user_id, $course_id, $certificate_code]);
+                $debug_log[] = "✅ Certificate record inserted into database";
+                
+                // Update enrollment as completed
+                $stmt = $pdo->prepare("
+                    UPDATE enrollments SET status = 'completed', completed_at = NOW(), progress = 100
+                    WHERE id = ?
+                ");
+                $stmt->execute([$enrollment_id]);
+                $debug_log[] = "✅ Enrollment updated to completed status";
+                
+                // Generate and send certificate email
+                $debug_log[] = "📧 Starting certificate generation and email process...";
+                require_once '../backend/lib/certificate_html_generator.php';
+                require_once '../backend/lib/email_service.php';
+                $debug_log[] = "✅ Required libraries loaded";
+                
+                try {
+                    // Generate certificate HTML (works without GD extension)
+                    $debug_log[] = "🎓 Generating certificate HTML...";
+                    $certificatePath = generateCertificateHTML(
+                        $certificate_code,
+                        $details['first_name'] . ' ' . $details['last_name'],
+                        $details['course_title'],
+                        $details['level']
+                    );
+                    
+                    $debug_log[] = "✅ Certificate generated at: " . $certificatePath;
+                    $debug_log[] = "File exists: " . (file_exists($certificatePath) ? 'Yes' : 'No');
+                    if (file_exists($certificatePath)) {
+                        $debug_log[] = "File size: " . filesize($certificatePath) . " bytes";
+                    }
+                    
+                    // Get the certificate URL for sharing
+                    $certificateUrl = 'http://localhost/Creators-Space-GroupProject/storage/certificates/' . basename($certificatePath);
+                    $debug_log[] = "Certificate URL: " . $certificateUrl;
+                    
+                    // Try to send email with certificate
+                    $debug_log[] = "📬 Attempting to send certificate email...";
+                    $debug_log[] = "Email parameters:";
+                    $debug_log[] = "  To: " . $details['email'];
+                    $debug_log[] = "  Name: " . $details['first_name'] . ' ' . $details['last_name'];
+                    $debug_log[] = "  Course: " . $details['course_title'];
+                    $debug_log[] = "  Cert Code: " . $certificate_code;
+                    
+                    $emailSent = sendCertificateEmail(
+                        $details['email'],
+                        $details['first_name'] . ' ' . $details['last_name'],
+                        $details['course_title'],
+                        $certificate_code,
+                        $certificatePath,
+                        $details['level']
+                    );
+                    
+                    $debug_log[] = "Email sending result: " . ($emailSent ? 'SUCCESS' : 'FAILED');
+                    
+                    if ($emailSent) {
+                        $debug_log[] = "✅ SUCCESS: Certificate issued and email sent successfully!";
+                        $message = "🎉 Certificate issued successfully and sent via email!<br>";
+                        $message .= "<strong>Certificate ID:</strong> $certificate_code<br>";
+                        $message .= "<a href='$certificateUrl' target='_blank' style='color: #667eea;'>📜 View Certificate</a>";
+                        $message_type = "success";
+                    } else {
+                        $debug_log[] = "⚠️ Certificate issued but email failed to send";
+                        $message = "Certificate issued successfully! 🎉";
+                        // $message .= "<strong>Certificate ID:</strong> $certificate_code<br>";
+                        // $message .= "<strong>Student:</strong> " . htmlspecialchars($details['first_name'] . ' ' . $details['last_name']) . "<br>";
+                        // $message .= "<strong>Email:</strong> " . htmlspecialchars($details['email']) . "<br>";
+                        // $message .= "<a href='$certificateUrl' target='_blank' style='color: #667eea; font-weight: bold;'>📜 View Certificate</a><br>";
+                        // $message .= "<small style='color: #dc2626; font-weight: 500;'>⚠️ Email not sent - Please share the certificate link with the student manually</small>";
+                        $message_type = "success";
+                    }
+                } catch (Exception $e) {
+                    $debug_log[] = "ERROR in certificate/email process: " . $e->getMessage();
+                    $debug_log[] = "Stack trace: " . $e->getTraceAsString();
+                    $message = "Certificate issued successfully! Certificate ID: $certificate_code (Note: " . $e->getMessage() . ")";
+                    $message_type = "success";
+                }
+            } else {
+                $debug_log[] = "ERROR: Certificate already exists";
+                $message = "Certificate already exists for this student and course.";
+                $message_type = "error";
+            }
         }
     } catch (PDOException $e) {
+        $debug_log[] = "DATABASE ERROR: " . $e->getMessage();
+        $debug_log[] = "Stack trace: " . $e->getTraceAsString();
         $message = "Error issuing certificate: " . $e->getMessage();
         $message_type = "error";
+    } catch (Exception $e) {
+        $debug_log[] = "GENERAL ERROR: " . $e->getMessage();
+        $debug_log[] = "Stack trace: " . $e->getTraceAsString();
+        $message = "Error issuing certificate: " . $e->getMessage();
+        $message_type = "error";
+    }
+    
+    // Log debug information
+    $debug_log[] = "=== CERTIFICATE ISSUANCE DEBUG END ===";
+    error_log(implode("\n", $debug_log));
+    
+    // Also save debug log to a file for easy viewing
+    $debug_file = __DIR__ . '/../backend/logs/certificate_debug_' . date('Y-m-d') . '.log';
+    $debug_dir = dirname($debug_file);
+    if (!is_dir($debug_dir)) {
+        mkdir($debug_dir, 0755, true);
+    }
+    file_put_contents($debug_file, implode("\n", $debug_log) . "\n\n", FILE_APPEND | LOCK_EX);
+    
+    // Add debug info to message if in development
+    if (isset($_GET['debug']) && $_GET['debug'] === '1') {
+        $message .= "<br><br><details style='margin-top: 10px;'><summary style='cursor: pointer; color: #666;'>🐛 Debug Information (Click to expand)</summary>";
+        $message .= "<pre style='background: #f4f4f4; padding: 10px; border-radius: 5px; font-size: 12px; max-height: 300px; overflow-y: auto; margin-top: 10px;'>";
+        $message .= htmlspecialchars(implode("\n", $debug_log));
+        $message .= "</pre></details>";
     }
 }
 

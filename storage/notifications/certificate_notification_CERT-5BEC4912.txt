@@ -1,0 +1,11 @@
+Certificate Notification
+======================
+Date: 2025-10-05 16:05:44
+Student: Test User
+Email: testuser3@mailinator.com
+Course: Full Stack Web Development
+Certificate ID: CERT-5BEC4912
+Certificate URL: http://localhost/Creators-Space-GroupProject/storage/certificates/certificate_CERT-5BEC4912_1759673142.html
+
+Note: This notification was created because email server is not configured on localhost.
+In production, this would be sent as an email to the student.

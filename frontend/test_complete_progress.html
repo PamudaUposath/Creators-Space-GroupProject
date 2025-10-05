@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Testing</title>
+    <link rel="stylesheet" href="./src/css/video-player.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-container { max-width: 800px; margin: 0 auto; }
+        .test-button { padding: 10px 20px; margin: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .test-section { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea; }
+        .api-result { background: white; padding: 10px; margin: 10px 0; border-radius: 4px; font-family: monospace; font-size: 12px; }
+        .success { border-left-color: #28a745; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎥 Complete Progress Testing</h1>
+        
+        <div class="test-section">
+            <h3>API Testing</h3>
+            <button class="test-button" onclick="testMyCourses()">Test My Courses API</button>
+            <button class="test-button" onclick="testContinueData(2)">Test Continue Data API (Course 2)</button>
+            <button class="test-button" onclick="testSaveProgress()">Test Save Progress API</button>
+            <div id="apiResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Video Player Testing</h3>
+            <button class="test-button" onclick="testVideoPlayer(2)">Test Course 2 Video Player</button>
+            <button class="test-button" onclick="testVideoPlayer(3)">Test Course 3 Video Player</button>
+            <div id="videoResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Progress Persistence Testing</h3>
+            <button class="test-button" onclick="testProgressPersistence()">Test Progress Persistence</button>
+            <div id="persistenceResults"></div>
+        </div>
+    </div>
+
+    <script src="./src/js/video-player.js"></script>
+    <script>
+        function log(message, type = 'info', containerId = 'apiResults') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `api-result ${type}`;
+            div.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            container.appendChild(div);
+            console.log(message);
+        }
+
+        async function testMyCourses() {
+            log('Testing My Courses API...', 'info');
+            
+            try {
+                const response = await fetch('../backend/api/my-courses.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ My Courses API Success: ${data.count} courses found`, 'success');
+                    data.data.forEach(course => {
+                        log(`- Course: ${course.title} | Progress: ${course.overall_progress}% | Image: ${course.image}`, 'info');
+                    });
+                } else {
+                    log(`❌ My Courses API Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ My Courses API Failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testContinueData(courseId) {
+            log(`Testing Continue Data API for course ${courseId}...`, 'info');
+            
+            try {
+                const response = await fetch(`../backend/api/get_continue_data.php?course_id=${courseId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('✅ Continue Data API Success:', 'success');
+                    log(`- Lesson ID: ${data.continue_data.lesson_id}`, 'info');
+                    log(`- Lesson Title: ${data.continue_data.lesson_title}`, 'info');
+                    log(`- Last Watched Time: ${data.continue_data.last_watched_time}s`, 'info');
+                    log(`- Overall Progress: ${data.continue_data.overall_progress}%`, 'info');
+                    log(`- Lesson Completion: ${data.continue_data.lesson_completion}%`, 'info');
+                } else {
+                    log(`❌ Continue Data API Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Continue Data API Failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSaveProgress() {
+            log('Testing Save Progress API...', 'info');
+            
+            try {
+                const response = await fetch('../backend/api/save_progress.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lesson_id: 1,
+                        course_id: 2,
+                        current_time: 150,
+                        total_duration: 1000,
+                        actual_watch_time: 145,
+                        watch_sessions: 1,
+                        skipped_duration: 5,
+                        seek_violations: 0,
+                        is_properly_watched: true,
+                        is_completed: false
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('✅ Save Progress API Success:', 'success');
+                    log(`- Lesson Completion: ${Math.round(data.progress.lesson_completion)}%`, 'info');
+                    log(`- Course Progress: ${Math.round(data.progress.course_progress)}%`, 'info');
+                    log(`- Certificate Eligible: ${data.progress.is_certificate_eligible ? 'Yes' : 'No'}`, 'info');
+                } else {
+                    log(`❌ Save Progress API Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Save Progress API Failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testVideoPlayer(courseId) {
+            log(`Testing Video Player for course ${courseId}...`, 'info', 'videoResults');
+            
+            if (typeof videoPlayer === 'undefined') {
+                log('❌ Video Player not available', 'error', 'videoResults');
+                return;
+            }
+            
+            try {
+                // Test opening video player
+                await videoPlayer.continueLearning(courseId);
+                log('✅ Video Player opened successfully', 'success', 'videoResults');
+                
+                // Wait a bit and check if video elements exist
+                setTimeout(() => {
+                    const video = document.getElementById('lessonVideo');
+                    const courseProgressText = document.getElementById('courseProgressText');
+                    const watchTimeDisplay = document.getElementById('watchTimeDisplay');
+                    const certificateStatus = document.getElementById('certificateStatus');
+                    
+                    if (video) log('✅ Video element created', 'success', 'videoResults');
+                    else log('❌ Video element not found', 'error', 'videoResults');
+                    
+                    if (courseProgressText) log(`✅ Course progress text: ${courseProgressText.textContent}`, 'success', 'videoResults');
+                    else log('❌ Course progress text not found', 'error', 'videoResults');
+                    
+                    if (watchTimeDisplay) log(`✅ Watch time display: ${watchTimeDisplay.textContent}`, 'success', 'videoResults');
+                    else log('❌ Watch time display not found', 'error', 'videoResults');
+                    
+                    if (certificateStatus) log(`✅ Certificate status: ${certificateStatus.querySelector('span').textContent}`, 'success', 'videoResults');
+                    else log('❌ Certificate status not found', 'error', 'videoResults');
+                }, 1000);
+                
+            } catch (error) {
+                log(`❌ Video Player Test Failed: ${error.message}`, 'error', 'videoResults');
+            }
+        }
+
+        async function testProgressPersistence() {
+            log('Testing Progress Persistence...', 'info', 'persistenceResults');
+            
+            try {
+                // Test 1: Save some progress
+                log('Step 1: Saving initial progress (10%)...', 'info', 'persistenceResults');
+                let response = await fetch('../backend/api/save_progress.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lesson_id: 1,
+                        course_id: 2,
+                        current_time: 100,
+                        total_duration: 1000,
+                        actual_watch_time: 95,
+                        watch_sessions: 1,
+                        skipped_duration: 5,
+                        seek_violations: 0,
+                        is_properly_watched: true,
+                        is_completed: false
+                    })
+                });
+                
+                let data = await response.json();
+                if (data.success) {
+                    log(`✅ Initial progress saved: ${Math.round(data.progress.lesson_completion)}%`, 'success', 'persistenceResults');
+                }
+                
+                // Test 2: Try to save lower progress (should not decrease)
+                log('Step 2: Trying to save lower progress (5%) - should NOT decrease...', 'info', 'persistenceResults');
+                response = await fetch('../backend/api/save_progress.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lesson_id: 1,
+                        course_id: 2,
+                        current_time: 50,
+                        total_duration: 1000,
+                        actual_watch_time: 45,
+                        watch_sessions: 1,
+                        skipped_duration: 5,
+                        seek_violations: 0,
+                        is_properly_watched: true,
+                        is_completed: false
+                    })
+                });
+                
+                data = await response.json();
+                if (data.success) {
+                    const newProgress = Math.round(data.progress.lesson_completion);
+                    if (newProgress >= 10) {
+                        log(`✅ Progress preserved: ${newProgress}% (did not decrease)`, 'success', 'persistenceResults');
+                    } else {
+                        log(`❌ Progress decreased: ${newProgress}% (should have stayed 10%+)`, 'error', 'persistenceResults');
+                    }
+                }
+                
+                // Test 3: Save higher progress (should increase)
+                log('Step 3: Saving higher progress (20%) - should increase...', 'info', 'persistenceResults');
+                response = await fetch('../backend/api/save_progress.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lesson_id: 1,
+                        course_id: 2,
+                        current_time: 200,
+                        total_duration: 1000,
+                        actual_watch_time: 195,
+                        watch_sessions: 1,
+                        skipped_duration: 5,
+                        seek_violations: 0,
+                        is_properly_watched: true,
+                        is_completed: false
+                    })
+                });
+                
+                data = await response.json();
+                if (data.success) {
+                    const finalProgress = Math.round(data.progress.lesson_completion);
+                    if (finalProgress >= 19) {
+                        log(`✅ Progress increased: ${finalProgress}%`, 'success', 'persistenceResults');
+                    } else {
+                        log(`❌ Progress did not increase properly: ${finalProgress}%`, 'error', 'persistenceResults');
+                    }
+                }
+                
+                // Test 4: Check continue data
+                log('Step 4: Checking continue data retrieval...', 'info', 'persistenceResults');
+                response = await fetch('../backend/api/get_continue_data.php?course_id=2');
+                data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ Continue data retrieved: ${Math.round(data.continue_data.lesson_completion)}% lesson progress`, 'success', 'persistenceResults');
+                    log(`   - Overall progress: ${Math.round(data.continue_data.overall_progress)}%`, 'info', 'persistenceResults');
+                    log(`   - Last watched time: ${data.continue_data.last_watched_time}s`, 'info', 'persistenceResults');
+                } else {
+                    log(`❌ Continue data failed: ${data.message}`, 'error', 'persistenceResults');
+                }
+                
+            } catch (error) {
+                log(`❌ Progress Persistence Test Failed: ${error.message}`, 'error', 'persistenceResults');
+            }
+        }
+
+        // Auto-run basic tests on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Progress Testing Page Loaded', 'success');
+            log('Click the test buttons above to run specific tests', 'info');
+        });
+    </script>
+</body>
+</html>

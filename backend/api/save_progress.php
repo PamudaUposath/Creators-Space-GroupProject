@@ -55,7 +55,7 @@ try {
         ON DUPLICATE KEY UPDATE
         last_watched_time = VALUES(last_watched_time),
         total_duration = VALUES(total_duration),
-        completion_percentage = VALUES(completion_percentage),
+        completion_percentage = GREATEST(completion_percentage, VALUES(completion_percentage)),
         actual_watch_time = GREATEST(actual_watch_time, VALUES(actual_watch_time)),
         watch_sessions = VALUES(watch_sessions),
         skipped_duration = VALUES(skipped_duration),

@@ -1,0 +1,11 @@
+Certificate Notification
+======================
+Date: 2025-10-05 16:17:12
+Student: Carol Davis
+Email: carol.davis@mailinator.com
+Course: Full Stack Web Development
+Certificate ID: CERT-7F0C7BD2
+Certificate URL: http://localhost/Creators-Space-GroupProject/storage/certificates/certificate_CERT-7F0C7BD2_1759673830.html
+
+Note: This notification was created because email server is not configured on localhost.
+In production, this would be sent as an email to the student.

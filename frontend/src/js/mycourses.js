@@ -159,6 +159,17 @@ function continueVideoLearning(courseId) {
     // Use the video player's continue learning function
     if (videoPlayer.continueLearning) {
         videoPlayer.continueLearning(courseId);
+        
+        // Set up a listener to refresh course progress when video player closes
+        const checkVideoPlayerClosed = setInterval(() => {
+            const videoModal = document.querySelector('.video-modal');
+            if (!videoModal) {
+                // Video player closed, refresh the course cards to sync progress
+                console.log('Video player closed, refreshing course progress...');
+                loadEnrolledCourses();
+                clearInterval(checkVideoPlayerClosed);
+            }
+        }, 1000);
     } else {
         console.error('Video player continueLearning method not available');
         viewCourse(courseId);

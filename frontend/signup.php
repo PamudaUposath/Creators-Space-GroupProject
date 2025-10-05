@@ -523,51 +523,44 @@ include './includes/header.php';
 
       const formData = new FormData(this);
 
-      fetch('/backend/auth/signup_process.php', {
-          method: 'POST',
-          body: formData,
-          credentials: 'same-origin' // This ensures cookies/session are sent
-        })
-        .then(response => {
-          console.log('Response status:', response.status, response.statusText);
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          return response.text(); // Get as text first for debugging
-        })
-        .then(text => {
-          console.log('Raw response:', text);
-
-          try {
-            const data = JSON.parse(text);
-            console.log('Parsed response:', data);
-
-            // Reset button state first
-            spinner.style.display = 'none';
-
-            if (data.success) {
-              showMessage(data.message, 'success');
-              this.reset(); // Clear the form
-
-              // Disable the form and show redirect message
-              signupBtn.disabled = true;
-              signupBtn.textContent = 'Redirecting to Login...';
-
-              // Redirect to login page after 3 seconds
-              setTimeout(() => {
-                window.location.href = 'login.php';
-              }, 3000);
-            } else {
-              showMessage(data.message, 'error');
-              signupBtn.disabled = false;
-              signupBtn.textContent = 'Create Account';
-            }
-          } catch (parseError) {
-            console.error('JSON parse error:', parseError);
-            showMessage('Server returned invalid response. Please try again.', 'error');
-            spinner.style.display = 'none';
+      fetch('../backend/auth/signup_process.php', {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'  // This ensures cookies/session are sent
+      })
+      .then(response => {
+        console.log('Response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return response.text(); // Get as text first for debugging
+      })
+      .then(text => {
+        console.log('Raw response:', text);
+        
+        try {
+          const data = JSON.parse(text);
+          console.log('Parsed response:', data);
+          
+          // Reset button state first
+          spinner.style.display = 'none';
+          
+          if (data.success) {
+            showMessage(data.message + ' You will be redirected to the login page in 3 seconds.', 'success');
+            this.reset(); // Clear the form
+            
+            // Disable the form and show redirect message
+            signupBtn.disabled = true;
+            signupBtn.textContent = 'Account Created! Redirecting...';
+            
+            // Redirect to login page after 3 seconds
+            setTimeout(() => {
+              window.location.href = 'login.php';
+            }, 3000);
+          } else {
+            showMessage(data.message, 'error');
             signupBtn.disabled = false;
             signupBtn.textContent = 'Create Account';
           }

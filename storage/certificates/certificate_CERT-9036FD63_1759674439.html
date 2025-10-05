@@ -1,0 +1,352 @@
+
+    <!DOCTYPE html>
+    <html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Certificate of Completion - CERT-9036FD63</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@400;500;600&display=swap');
+            
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: 'Inter', Arial, sans-serif;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+            
+            .certificate-container {
+                width: 210mm; /* A4 landscape width */
+                height: 297mm; /* A4 landscape height */
+                background: white;
+                position: relative;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+                border-radius: 15px;
+                overflow: hidden;
+            }
+            
+            .certificate-border {
+                position: absolute;
+                top: 20mm;
+                left: 20mm;
+                right: 20mm;
+                bottom: 20mm;
+                border: 8px solid #667eea;
+                border-radius: 10px;
+            }
+            
+            .certificate-inner-border {
+                position: absolute;
+                top: 25mm;
+                left: 25mm;
+                right: 25mm;
+                bottom: 25mm;
+                border: 2px solid #764ba2;
+                border-radius: 8px;
+            }
+            
+            .certificate-content {
+                position: absolute;
+                top: 30mm;
+                left: 30mm;
+                right: 30mm;
+                bottom: 30mm;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .certificate-header {
+                margin-bottom: 30mm;
+            }
+            
+            .certificate-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 48px;
+                font-weight: 900;
+                color: #667eea;
+                letter-spacing: 3px;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 10px;
+            }
+            
+            .certificate-subtitle {
+                font-size: 24px;
+                color: #764ba2;
+                font-weight: 600;
+                letter-spacing: 2px;
+            }
+            
+            .certificate-body {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .presented-to {
+                font-size: 18px;
+                color: #555;
+                margin-bottom: 15px;
+                font-style: italic;
+            }
+            
+            .student-name {
+                font-family: 'Playfair Display', serif;
+                font-size: 42px;
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 20px;
+                text-decoration: underline;
+                text-decoration-color: #667eea;
+                text-decoration-thickness: 3px;
+                text-underline-offset: 8px;
+            }
+            
+            .completion-text {
+                font-size: 16px;
+                color: #666;
+                margin-bottom: 15px;
+                line-height: 1.5;
+            }
+            
+            .course-name {
+                font-family: 'Playfair Display', serif;
+                font-size: 32px;
+                font-weight: 700;
+                color: #667eea;
+                margin-bottom: 20px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .course-level {
+                display: inline-block;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                padding: 8px 20px;
+                border-radius: 25px;
+                font-size: 14px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 20px;
+            }
+            
+            .certificate-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                width: 100%;
+                margin-top: auto;
+                padding-top: 20mm;
+            }
+            
+            .date-section, .certificate-id-section {
+                text-align: center;
+            }
+            
+            .date-label, .certificate-id-label {
+                font-size: 12px;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 5px;
+            }
+            
+            .date-value {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .certificate-id-value {
+                font-family: monospace;
+                font-size: 14px;
+                font-weight: bold;
+                color: #667eea;
+                background: rgba(102,126,234,0.1);
+                padding: 5px 10px;
+                border-radius: 5px;
+                border: 1px solid rgba(102,126,234,0.3);
+            }
+            
+            .signature-section {
+                text-align: center;
+                position: relative;
+            }
+            
+            .signature-line {
+                border-top: 2px solid #333;
+                width: 200px;
+                margin-bottom: 5px;
+            }
+            
+            .signature-label {
+                font-size: 12px;
+                color: #666;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .creators-space-logo {
+                position: absolute;
+                top: 15mm;
+                right: 15mm;
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 24px;
+                font-weight: 900;
+                box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+            }
+            
+            .decorative-elements {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                opacity: 0.1;
+            }
+            
+            .decorative-corner {
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                background: radial-gradient(circle, #667eea, transparent);
+            }
+            
+            .decorative-corner.top-left {
+                top: 0;
+                left: 0;
+                border-radius: 0 0 100% 0;
+            }
+            
+            .decorative-corner.top-right {
+                top: 0;
+                right: 0;
+                border-radius: 0 0 0 100%;
+            }
+            
+            .decorative-corner.bottom-left {
+                bottom: 0;
+                left: 0;
+                border-radius: 0 100% 0 0;
+            }
+            
+            .decorative-corner.bottom-right {
+                bottom: 0;
+                right: 0;
+                border-radius: 100% 0 0 0;
+            }
+            
+            @media print {
+                body {
+                    background: none;
+                    padding: 0;
+                }
+                
+                .certificate-container {
+                    box-shadow: none;
+                    border-radius: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class='certificate-container'>
+            <!-- Decorative elements -->
+            <div class='decorative-elements'>
+                <div class='decorative-corner top-left'></div>
+                <div class='decorative-corner top-right'></div>
+                <div class='decorative-corner bottom-left'></div>
+                <div class='decorative-corner bottom-right'></div>
+            </div>
+            
+            <!-- Logo -->
+            <div class='creators-space-logo'>
+                CS
+            </div>
+            
+            <!-- Borders -->
+            <div class='certificate-border'></div>
+            <div class='certificate-inner-border'></div>
+            
+            <!-- Main content -->
+            <div class='certificate-content'>
+                <div class='certificate-header'>
+                    <div class='certificate-title'>CERTIFICATE</div>
+                    <div class='certificate-subtitle'>OF COMPLETION</div>
+                </div>
+                
+                <div class='certificate-body'>
+                    <div class='presented-to'>This certificate is proudly presented to</div>
+                    <div class='student-name'>Piyal piyal</div>
+                    <div class='completion-text'>
+                        for successfully completing the course
+                    </div>
+                    <div class='course-name'>Full Stack Web Development</div>
+                    <div class='course-level'>intermediate Level</div>
+                </div>
+                
+                <div class='certificate-footer'>
+                    <div class='date-section'>
+                        <div class='date-label'>Date Issued</div>
+                        <div class='date-value'>October 5, 2025</div>
+                    </div>
+                    
+                    <div class='signature-section'>
+                        <div class='signature-line'></div>
+                        <div class='signature-label'>Creators Space</div>
+                    </div>
+                    
+                    <div class='certificate-id-section'>
+                        <div class='certificate-id-label'>Certificate ID</div>
+                        <div class='certificate-id-value'>CERT-9036FD63</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            // Print functionality
+            function printCertificate() {
+                window.print();
+            }
+            
+            // Add print button for convenience
+            document.addEventListener('DOMContentLoaded', function() {
+                const printBtn = document.createElement('button');
+                printBtn.textContent = 'Print Certificate';
+                printBtn.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; z-index: 1000;';
+                printBtn.onclick = printCertificate;
+                document.body.appendChild(printBtn);
+                
+                // Hide print button when printing
+                const style = document.createElement('style');
+                style.textContent = '@media print { button { display: none !important; } }';
+                document.head.appendChild(style);
+            });
+        </script>
+    </body>
+    </html>
+    

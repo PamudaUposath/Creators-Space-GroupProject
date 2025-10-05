@@ -3,7 +3,7 @@
 $pageTitle = "Certificates";
 $pageDescription = "Verify your learning achievements and showcase your skills with Creators-Space certificates.";
 $additionalCSS = ['./src/css/certificates.css'];
-$additionalJS = ['./src/js/certificates.js'];
+$additionalJS = []; // Disabled external JS to prevent conflicts
 
 // Include header
 include './includes/header.php';
@@ -26,14 +26,14 @@ include './includes/header.php';
                         <p>Enter your certificate ID to verify its authenticity</p>
                     </div>
                     
-                    <form class="verification-form" id="verificationForm">
+                    <form class="verification-form" id="verificationForm" onsubmit="return false;">
                         <div class="form-group">
                             <label for="certificateId">Certificate ID</label>
                             <input type="text" id="certificateId" placeholder="Enter your certificate ID (e.g., CERT-JS30-2024-001)" required>
-                            <small class="form-help">Try: CERT-JS30-2024-001, CERT-FSWD-2024-002</small>
+                            <small class="form-help">Try: TEST_20251005163648_PIYAL, CERT-JS30-2024-001, CERT-FSWD-2024-002</small>
                         </div>
                         
-                        <button type="button" id="verifyBtn" class="verify-btn">
+                        <button type="button" id="verifyBtn" class="verify-btn" onclick="return false;">
                             <i class="fas fa-search"></i> Verify Certificate
                         </button>
                     </form>
@@ -43,22 +43,51 @@ include './includes/header.php';
                     </div>
                 </div>
                 
-                <!-- Inline Debug Script -->
+                <!-- Certificate Verification Script -->
                 <script>
                 document.addEventListener('DOMContentLoaded', function() {
+                    // Remove any existing event listeners to prevent conflicts
                     const verifyBtn = document.getElementById('verifyBtn');
                     const certificateInput = document.getElementById('certificateId');
                     const resultDiv = document.getElementById('verificationResult');
+                    const verificationForm = document.getElementById('verificationForm');
+                    
+                    // Mark that our script is loaded to prevent external script conflicts
+                    window.certificateVerificationLoaded = true;
+                    
+                    // Prevent form submission completely
+                    if (verificationForm) {
+                        verificationForm.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return false;
+                        });
+                    }
+                    
+                    // Handle Enter key in input
+                    if (certificateInput) {
+                        certificateInput.addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (verifyBtn) {
+                                    verifyBtn.click();
+                                }
+                                return false;
+                            }
+                        });
+                    }
                     
                     if (verifyBtn) {
                         verifyBtn.addEventListener('click', function(e) {
                             e.preventDefault();
+                            e.stopPropagation();
                             
                             const certificateId = certificateInput ? certificateInput.value.trim() : '';
                             
                             if (!certificateId) {
                                 alert('Please enter a certificate ID');
-                                return;
+                                return false;
                             }
                             
                             // Show loading state
@@ -172,6 +201,8 @@ include './includes/header.php';
                                     verifyBtn.innerHTML = originalText;
                                     verifyBtn.disabled = false;
                                 });
+                            
+                            return false;
                         });
                     }
                 });
