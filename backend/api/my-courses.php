@@ -46,6 +46,7 @@ try {
         'c.title',
         'c.description',
         'c.instructor_id',
+        'c.image_url',
         'c.created_at as course_created_at',
         'e.id as enrollment_id',
         'COALESCE(e.overall_progress, 0) as overall_progress',
@@ -78,9 +79,18 @@ try {
         $selectFields[] = 'c.language';
     }
     
-    // Fetch user's enrolled courses with course details
+    // Fetch user's enrolled courses with course details and real-time progress
     $stmt = $pdo->prepare("
-        SELECT " . implode(', ', $selectFields) . "
+        SELECT " . implode(', ', $selectFields) . ",
+               COALESCE(
+                   (SELECT AVG(completion_percentage) 
+                    FROM lesson_progress lp 
+                    JOIN lessons l ON lp.lesson_id = l.id 
+                    WHERE lp.user_id = e.user_id 
+                      AND lp.course_id = c.id 
+                      AND l.is_published = 1), 
+                   0
+               ) as calculated_progress
         FROM enrollments e
         JOIN courses c ON e.course_id = c.id
         LEFT JOIN users u ON c.instructor_id = u.id
@@ -102,13 +112,13 @@ try {
             'instructor_name' => trim(($enrollment['first_name'] ?? '') . ' ' . ($enrollment['last_name'] ?? '')) ?: 'Unknown Instructor',
             'enrolled_at' => $enrollment['enrolled_at'] ?? null,
             'course_created_at' => $enrollment['course_created_at'] ?? null,
-            'image' => $enrollment['image_url'] ?? $enrollment['image'] ?? './assets/images/webdev.png',
+            'image' => $enrollment['image_url'] ?? './assets/images/webdev.png',
             'price' => $enrollment['price'] ?? null,
             'category' => $enrollment['category'] ?? 'General',
             'level' => $enrollment['level'] ?? 'beginner',
             'duration' => $enrollment['duration'] ?? null,
             'language' => $enrollment['language'] ?? 'english',
-            'overall_progress' => floatval($enrollment['overall_progress'] ?? 0),
+            'overall_progress' => floatval($enrollment['calculated_progress'] ?? $enrollment['overall_progress'] ?? 0),
             'last_accessed_lesson_id' => $enrollment['last_accessed_lesson_id'],
             'last_watched_time' => floatval($enrollment['last_watched_time'] ?? 0),
             'enrollment' => [

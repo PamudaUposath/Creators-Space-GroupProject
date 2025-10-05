@@ -1,5 +1,11 @@
 // Certificate Verification JavaScript
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if inline verification script is already loaded
+    if (window.certificateVerificationLoaded) {
+        console.log('Certificate verification already handled by inline script');
+        return;
+    }
+    
     const verifyBtn = document.getElementById('verifyBtn');
     const resultDiv = document.getElementById('verificationResult');
     const certificateInput = document.getElementById('certificateId');

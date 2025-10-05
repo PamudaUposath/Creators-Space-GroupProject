@@ -1,0 +1,249 @@
+
+    <!DOCTYPE html>
+    <html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>Certificate - CERT-FINAL-20251005165906</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@400;500;600&display=swap');
+            
+            body {
+                margin: 0;
+                padding: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                font-family: 'Inter', sans-serif;
+                min-height: calc(100vh - 40px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .certificate {
+                width: 1000px;
+                height: 700px;
+                background: white;
+                border: 15px solid #2c3e50;
+                border-radius: 20px;
+                position: relative;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                overflow: hidden;
+            }
+            
+            .certificate::before {
+                content: '';
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+                border: 3px solid #3498db;
+                border-radius: 10px;
+            }
+            
+            .header {
+                text-align: center;
+                padding: 40px 60px 20px 60px;
+                background: linear-gradient(135deg, #3498db, #2980b9);
+                color: white;
+                position: relative;
+            }
+            
+            .logo {
+                font-size: 28px;
+                font-weight: 900;
+                margin-bottom: 10px;
+                font-family: 'Playfair Display', serif;
+            }
+            
+            .subtitle {
+                font-size: 14px;
+                opacity: 0.9;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+            
+            .main-content {
+                padding: 60px;
+                text-align: center;
+                background: white;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .certificate-title {
+                font-family: 'Playfair Display', serif;
+                font-size: 48px;
+                font-weight: 700;
+                color: #2c3e50;
+                margin-bottom: 20px;
+                letter-spacing: 2px;
+            }
+            
+            .awarded-text {
+                font-size: 18px;
+                color: #7f8c8d;
+                margin-bottom: 30px;
+                font-weight: 500;
+            }
+            
+            .student-name {
+                font-family: 'Playfair Display', serif;
+                font-size: 42px;
+                font-weight: 700;
+                color: #3498db;
+                margin-bottom: 30px;
+                text-decoration: underline;
+                text-decoration-color: #e74c3c;
+                text-decoration-thickness: 3px;
+                text-underline-offset: 8px;
+            }
+            
+            .course-info {
+                margin-bottom: 40px;
+            }
+            
+            .completion-text {
+                font-size: 20px;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                font-weight: 600;
+            }
+            
+            .course-name {
+                font-family: 'Playfair Display', serif;
+                font-size: 32px;
+                font-weight: 700;
+                color: #27ae60;
+                margin-bottom: 10px;
+            }
+            
+            .course-level {
+                font-size: 16px;
+                color: #f39c12;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                background: rgba(243, 156, 18, 0.1);
+                padding: 5px 15px;
+                border-radius: 20px;
+                display: inline-block;
+            }
+            
+            .footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 50px;
+                padding-top: 30px;
+                border-top: 2px solid #ecf0f1;
+            }
+            
+            .certificate-id {
+                font-family: 'Inter', monospace;
+                font-size: 14px;
+                color: #7f8c8d;
+                background: #ecf0f1;
+                padding: 8px 12px;
+                border-radius: 5px;
+            }
+            
+            .issue-date {
+                font-size: 16px;
+                color: #2c3e50;
+                font-weight: 600;
+            }
+            
+            .signature-area {
+                position: absolute;
+                bottom: 40px;
+                right: 80px;
+                text-align: center;
+            }
+            
+            .signature-line {
+                width: 200px;
+                height: 2px;
+                background: #2c3e50;
+                margin-bottom: 10px;
+            }
+            
+            .signature-text {
+                font-size: 12px;
+                color: #7f8c8d;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .decorative-corner {
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                background: linear-gradient(45deg, #3498db, transparent);
+                opacity: 0.1;
+            }
+            
+            .decorative-corner.top-left {
+                top: 0;
+                left: 0;
+                border-radius: 0 0 100px 0;
+            }
+            
+            .decorative-corner.bottom-right {
+                bottom: 0;
+                right: 0;
+                border-radius: 100px 0 0 0;
+            }
+            
+            .verification-info {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 10px;
+                color: #95a5a6;
+                text-align: center;
+                line-height: 1.4;
+            }
+        </style>
+    </head>
+    <body>
+        <div class='certificate'>
+            <div class='decorative-corner top-left'></div>
+            <div class='decorative-corner bottom-right'></div>
+            
+            <div class='header'>
+                <div class='logo'>CREATORS SPACE</div>
+                <div class='subtitle'>Certificate of Completion</div>
+            </div>
+            
+            <div class='main-content'>
+                <h1 class='certificate-title'>CERTIFICATE</h1>
+                <p class='awarded-text'>This is to certify that</p>
+                
+                <div class='student-name'>Pamuda Ugonatilake</div>
+                
+                <div class='course-info'>
+                    <p class='completion-text'>has successfully completed the course</p>
+                    <div class='course-name'>Advanced Web Development Masterclass</div>
+                    <div class='course-level'>Advanced Level</div>
+                </div>
+                
+                <div class='footer'>
+                    <div class='certificate-id'>ID: CERT-FINAL-20251005165906</div>
+                    <div class='issue-date'>Issued: October 5, 2025</div>
+                </div>
+            </div>
+            
+            <div class='signature-area'>
+                <div class='signature-line'></div>
+                <div class='signature-text'>Authorized Signature</div>
+            </div>
+            
+            <div class='verification-info'>
+                Verify this certificate at: creators-space.com/verify<br>
+                Certificate ID: CERT-FINAL-20251005165906
+            </div>
+        </div>
+    </body>
+    </html>

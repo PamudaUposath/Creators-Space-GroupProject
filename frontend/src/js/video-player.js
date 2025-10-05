@@ -29,6 +29,8 @@ class VideoPlayer {
             const data = await response.json();
             
             if (data.success && data.lesson.video_url) {
+                // Add course name to lesson data
+                data.lesson.course_name = data.lesson.course_title;
                 this.showVideoPlayer(data.lesson);
             } else {
                 this.showError(data.message || 'Video not available');
@@ -77,8 +79,20 @@ class VideoPlayer {
         }
     }
 
-    showVideoPlayer(lesson, isContinuing = false) {
+    async showVideoPlayer(lesson, isContinuing = false) {
         this.resumeTime = lesson.last_watched_time || 0;
+        
+        // Log lesson data for debugging
+        console.log('Video player opening with lesson data:', {
+            lesson_id: lesson.id,
+            course_id: lesson.course_id || lesson.courseId,
+            overall_progress: lesson.overall_progress,
+            lesson_completion: lesson.lesson_completion,
+            last_watched_time: lesson.last_watched_time
+        });
+        
+        // Use course name from lesson data, with fallback
+        let courseName = lesson.course_name || lesson.course_title || lesson.title;
         
         // Create modal HTML
         const modal = document.createElement('div');
@@ -86,7 +100,7 @@ class VideoPlayer {
         modal.innerHTML = `
             <div class="video-container">
                 <div class="video-header">
-                    <h3>${this.escapeHtml(lesson.title)}</h3>
+                    <h3>${this.escapeHtml(courseName)}</h3>
                     <button onclick="videoPlayer.closeVideoPlayer()" class="close-btn">&times;</button>
                 </div>
                 <div class="video-wrapper">
@@ -97,7 +111,7 @@ class VideoPlayer {
                         preload="metadata"
                         data-lesson-id="${lesson.id}"
                         data-course-id="${lesson.course_id || lesson.courseId}"
-                        controlslist="nodownload nofullscreen noremoteplayback"
+                        controlslist="nodownload noremoteplayback"
                         disablepictureinpicture
                         oncontextmenu="return false;"
                     >
@@ -120,11 +134,11 @@ class VideoPlayer {
                 </div>
                 <div class="video-controls">
                     <div class="progress-info">
-                        <span>Lesson Progress</span>
-                        <span id="progressPercentage">${Math.round(lesson.completion_percentage || 0)}%</span>
+                        <span style="color: #ffffffff;">Lesson Progress</span>
+                        <span style="color: #ffffffff;" id="progressPercentage">${Math.round(lesson.lesson_completion || lesson.completion_percentage || 0)}%</span>
                     </div>
                     <div class="lesson-progress">
-                        <div class="lesson-progress-bar" id="progressBar" style="width: ${lesson.completion_percentage || 0}%"></div>
+                        <div class="lesson-progress-bar" id="progressBar"  style="width: ${lesson.lesson_completion || lesson.completion_percentage || 0}%"></div>
                     </div>
                     <div class="video-actions">
                         <select class="speed-control" id="playbackSpeed">
@@ -136,8 +150,8 @@ class VideoPlayer {
                             <option value="2">2x</option>
                         </select>
                         <div class="course-progress-indicator">
-                            <div class="progress-circle" style="--progress: ${lesson.overall_progress || 0}"></div>
-                            Course: ${Math.round(lesson.overall_progress || 0)}%
+                            <div class="progress-circle" id="courseProgressCircle" style="--progress: ${lesson.overall_progress || 0}"></div>
+                            <span id="courseProgressText">Course: ${Math.round(lesson.overall_progress || 0)}%</span>
                         </div>
                         <div class="watch-integrity-indicator">
                             <span id="watchTimeDisplay">Valid Watch Time: 0%</span>
@@ -163,6 +177,12 @@ class VideoPlayer {
                 this.currentVideo.currentTime = this.resumeTime;
             }, { once: true });
         }
+        
+        // Initialize progress displays with correct values
+        this.initializeProgressDisplays(lesson);
+        
+        // Fetch and update latest course progress to ensure sync
+        this.refreshCourseProgress(lesson.course_id || lesson.courseId);
     }
 
     setupVideoEvents() {
@@ -215,6 +235,60 @@ class VideoPlayer {
 
         // Prevent common skip shortcuts
         document.addEventListener('keydown', this.handleKeyboardShortcuts.bind(this));
+    }
+
+    initializeProgressDisplays(lesson) {
+        // Ensure course progress displays correct initial value
+        const courseProgressCircle = document.getElementById('courseProgressCircle');
+        const courseProgressText = document.getElementById('courseProgressText');
+        
+        if (courseProgressCircle && courseProgressText) {
+            const courseProgress = Math.round(lesson.overall_progress || 0);
+            courseProgressCircle.style.setProperty('--progress', courseProgress);
+            courseProgressText.textContent = `Course: ${courseProgress}%`;
+            
+            console.log(`Course progress initialized: ${courseProgress}%`);
+        }
+        
+        // Initialize valid watch time display
+        const watchTimeDisplay = document.getElementById('watchTimeDisplay');
+        if (watchTimeDisplay) {
+            watchTimeDisplay.textContent = 'Valid Watch Time: 0%';
+        }
+        
+        // Initialize certificate status
+        const certificateStatus = document.getElementById('certificateStatus');
+        if (certificateStatus) {
+            certificateStatus.innerHTML = `
+                <i class="fas fa-certificate"></i>
+                <span>Certificate Eligibility: Watching...</span>
+            `;
+            certificateStatus.className = 'certificate-status not-eligible';
+        }
+    }
+
+    async refreshCourseProgress(courseId) {
+        if (!courseId) return;
+        
+        try {
+            const response = await fetch(`../backend/api/get_continue_data.php?course_id=${courseId}`);
+            const data = await response.json();
+            
+            if (data.success && data.continue_data) {
+                const courseProgressCircle = document.getElementById('courseProgressCircle');
+                const courseProgressText = document.getElementById('courseProgressText');
+                
+                if (courseProgressCircle && courseProgressText) {
+                    const courseProgress = Math.round(data.continue_data.overall_progress || 0);
+                    courseProgressCircle.style.setProperty('--progress', courseProgress);
+                    courseProgressText.textContent = `Course: ${courseProgress}%`;
+                    
+                    console.log(`Course progress refreshed: ${courseProgress}%`);
+                }
+            }
+        } catch (error) {
+            console.error('Error refreshing course progress:', error);
+        }
     }
 
     initializeWatchTracking() {
@@ -325,18 +399,33 @@ class VideoPlayer {
         const duration = this.currentVideo ? this.currentVideo.duration : 0;
         if (duration > 0) {
             const watchPercentage = Math.min((this.actualWatchTime / duration) * 100, 100);
+            
+            // Update valid watch time display
             const display = document.getElementById('watchTimeDisplay');
             if (display) {
                 display.textContent = `Valid Watch Time: ${Math.round(watchPercentage)}%`;
+                
+                // Color code based on validity
+                if (watchPercentage >= 90) {
+                    display.style.color = '#4CAF50'; // Green
+                } else if (watchPercentage >= 70) {
+                    display.style.color = '#FF9800'; // Orange
+                } else {
+                    display.style.color = '#F44336'; // Red
+                }
             }
             
-            // Update certificate status
+            // Update certificate status in real-time
             const certStatus = document.getElementById('certificateStatus');
             if (certStatus) {
-                const isEligible = watchPercentage >= 90 && this.seekViolations < this.skipViolationLimit;
+                const isEligible = watchPercentage >= 90 && this.seekViolations <= 3 && this.isValidWatching;
+                const statusText = isEligible ? 'Eligible ✓' : 
+                                 watchPercentage >= 90 ? 'Reviewing...' : 
+                                 'Watching...';
+                
                 certStatus.innerHTML = `
                     <i class="fas fa-certificate"></i>
-                    <span>Certificate: ${isEligible ? 'Eligible ✓' : 'Not Eligible ✗'}</span>
+                    <span>Certificate Eligibility: ${statusText}</span>
                 `;
                 certStatus.className = `certificate-status ${isEligible ? 'eligible' : 'not-eligible'}`;
             }
@@ -521,13 +610,20 @@ class VideoPlayer {
             
             if (data.success && data.progress) {
                 // Update course progress indicator
-                const courseProgress = document.querySelector('.course-progress-indicator .progress-circle');
-                if (courseProgress) {
-                    courseProgress.style.setProperty('--progress', data.progress.course_progress);
-                    courseProgress.parentElement.innerHTML = `
-                        <div class="progress-circle" style="--progress: ${data.progress.course_progress}"></div>
-                        Course: ${Math.round(data.progress.course_progress)}%
-                    `;
+                const courseProgressCircle = document.getElementById('courseProgressCircle');
+                const courseProgressText = document.getElementById('courseProgressText');
+                
+                if (courseProgressCircle && courseProgressText) {
+                    const courseProgress = Math.round(data.progress.course_progress);
+                    courseProgressCircle.style.setProperty('--progress', courseProgress);
+                    courseProgressText.textContent = `Course: ${courseProgress}%`;
+                }
+                
+                // Update valid watch time display
+                const watchTimeDisplay = document.getElementById('watchTimeDisplay');
+                if (watchTimeDisplay && data.progress.actual_watch_percentage !== undefined) {
+                    const watchPercentage = Math.round(Math.min(data.progress.actual_watch_percentage, 100));
+                    watchTimeDisplay.textContent = `Valid Watch Time: ${watchPercentage}%`;
                 }
                 
                 // Show completion message if lesson completed properly
@@ -536,9 +632,16 @@ class VideoPlayer {
                 }
                 
                 // Update certificate eligibility display
-                if (data.progress.certificate_eligible !== undefined) {
-                    this.updateCertificateEligibility(data.progress.certificate_eligible);
+                if (data.progress.is_certificate_eligible !== undefined) {
+                    this.updateCertificateEligibility(data.progress.is_certificate_eligible);
                 }
+                
+                console.log('Progress updated:', {
+                    lessonCompletion: Math.round(data.progress.lesson_completion),
+                    courseProgress: Math.round(data.progress.course_progress),
+                    validWatchTime: Math.round(data.progress.actual_watch_percentage || 0),
+                    certificateEligible: data.progress.is_certificate_eligible
+                });
             }
         } catch (error) {
             console.error('Error saving progress:', error);
@@ -548,9 +651,10 @@ class VideoPlayer {
     updateCertificateEligibility(isEligible) {
         const certStatus = document.getElementById('certificateStatus');
         if (certStatus) {
+            const statusText = isEligible ? 'Eligible ✓' : 'Not Eligible ✗';
             certStatus.innerHTML = `
                 <i class="fas fa-certificate"></i>
-                <span>Certificate: ${isEligible ? 'Eligible ✓' : 'Not Eligible ✗'}</span>
+                <span>Certificate Eligibility: ${statusText}</span>
             `;
             certStatus.className = `certificate-status ${isEligible ? 'eligible' : 'not-eligible'}`;
         }

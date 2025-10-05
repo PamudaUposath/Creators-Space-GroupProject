@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Progress Sync Test</title>
+    <link rel="stylesheet" href="./src/css/video-player.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .test-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .test-button { padding: 12px 24px; margin: 10px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .test-button:hover { background: #5a67d8; }
+        .monitor-section { background: #e3f2fd; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #2196f3; }
+        .progress-display { background: white; padding: 15px; margin: 10px 0; border-radius: 4px; font-family: monospace; border: 1px solid #ddd; }
+        .log-entry { margin: 5px 0; padding: 8px; background: #f8f9fa; border-radius: 3px; font-size: 12px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #cce5ff; color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎯 Course Progress Sync Test</h1>
+        
+        <div class="monitor-section">
+            <h3>Real-time Progress Monitor</h3>
+            <div class="progress-display">
+                <div><strong>Course Progress (from API):</strong> <span id="apiProgress">Loading...</span></div>
+                <div><strong>Course Progress (in Video Player):</strong> <span id="playerProgress">No video active</span></div>
+                <div><strong>Video Player Status:</strong> <span id="playerStatus">Closed</span></div>
+                <div><strong>Last API Response Time:</strong> <span id="lastUpdate">Never</span></div>
+            </div>
+            
+            <button class="test-button" onclick="startMonitoring()">Start Monitoring</button>
+            <button class="test-button" onclick="stopMonitoring()">Stop Monitoring</button>
+            <button class="test-button" onclick="refreshProgress()">Refresh Progress</button>
+        </div>
+        
+        <div class="monitor-section">
+            <h3>Test Video Player Course Progress</h3>
+            <button class="test-button" onclick="testCourseProgress(2)">Test Course 2 Progress</button>
+            <button class="test-button" onclick="testCourseProgress(3)">Test Course 3 Progress</button>
+            <button class="test-button" onclick="simulateProgressSave()">Simulate Progress Save</button>
+        </div>
+        
+        <div class="monitor-section">
+            <h3>Debug Log</h3>
+            <div id="debugLog" style="max-height: 300px; overflow-y: auto;"></div>
+            <button class="test-button" onclick="clearLog()">Clear Log</button>
+        </div>
+    </div>
+
+    <script src="./src/js/video-player.js"></script>
+    <script>
+        let monitorInterval = null;
+        let currentCourseId = null;
+
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('debugLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(message);
+        }
+
+        async function getCourseProgressFromAPI(courseId) {
+            try {
+                const response = await fetch(`../backend/api/get_continue_data.php?course_id=${courseId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    return {
+                        course_progress: data.continue_data.overall_progress || 0,
+                        lesson_progress: data.continue_data.lesson_completion || 0
+                    };
+                }
+                return null;
+            } catch (error) {
+                log(`Error fetching course progress: ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        function getVideoPlayerProgress() {
+            const courseProgressText = document.getElementById('courseProgressText');
+            const videoElement = document.getElementById('lessonVideo');
+            const modal = document.querySelector('.video-modal');
+            
+            if (!modal) {
+                return { status: 'closed', progress: null };
+            }
+            
+            if (!courseProgressText) {
+                return { status: 'open_no_progress', progress: null };
+            }
+            
+            const progressText = courseProgressText.textContent;
+            const progressMatch = progressText.match(/Course:\s*(\d+)%/);
+            const progress = progressMatch ? parseInt(progressMatch[1]) : 0;
+            
+            return { 
+                status: 'open', 
+                progress: progress,
+                element_text: progressText,
+                video_loaded: !!videoElement
+            };
+        }
+
+        function updateMonitorDisplay() {
+            if (!currentCourseId) return;
+            
+            // Update API progress
+            getCourseProgressFromAPI(currentCourseId).then(apiData => {
+                if (apiData) {
+                    document.getElementById('apiProgress').textContent = `${Math.round(apiData.course_progress)}%`;
+                    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+                }
+            });
+            
+            // Update player progress
+            const playerData = getVideoPlayerProgress();
+            document.getElementById('playerStatus').textContent = playerData.status;
+            
+            if (playerData.status === 'open') {
+                document.getElementById('playerProgress').textContent = `${playerData.progress}% (${playerData.element_text})`;
+            } else if (playerData.status === 'open_no_progress') {
+                document.getElementById('playerProgress').textContent = 'Video open but no progress element found';
+            } else {
+                document.getElementById('playerProgress').textContent = 'No video active';
+            }
+        }
+
+        function startMonitoring() {
+            if (monitorInterval) {
+                log('Monitoring already active', 'info');
+                return;
+            }
+            
+            if (!currentCourseId) {
+                currentCourseId = 2; // Default to course 2
+            }
+            
+            monitorInterval = setInterval(updateMonitorDisplay, 1000);
+            log(`Started monitoring course ${currentCourseId} progress every second`, 'success');
+        }
+
+        function stopMonitoring() {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+                monitorInterval = null;
+                log('Stopped monitoring', 'success');
+            } else {
+                log('No monitoring active', 'info');
+            }
+        }
+
+        async function refreshProgress() {
+            if (!currentCourseId) {
+                log('No course selected for monitoring', 'error');
+                return;
+            }
+            
+            log(`Refreshing progress for course ${currentCourseId}...`, 'info');
+            updateMonitorDisplay();
+        }
+
+        async function testCourseProgress(courseId) {
+            currentCourseId = courseId;
+            log(`Testing course ${courseId} progress sync...`, 'info');
+            
+            // First get API progress
+            const apiData = await getCourseProgressFromAPI(courseId);
+            if (apiData) {
+                log(`API reports course progress: ${Math.round(apiData.course_progress)}%`, 'success');
+            }
+            
+            // Open video player
+            if (typeof videoPlayer !== 'undefined') {
+                log('Opening video player...', 'info');
+                await videoPlayer.continueLearning(courseId);
+                
+                // Wait a bit for UI to update
+                setTimeout(() => {
+                    const playerData = getVideoPlayerProgress();
+                    log(`Video player progress: ${playerData.progress}% (${playerData.element_text})`, 'info');
+                    
+                    if (apiData && Math.abs(playerData.progress - apiData.course_progress) > 1) {
+                        log(`⚠️ Progress sync issue: API=${Math.round(apiData.course_progress)}%, Player=${playerData.progress}%`, 'error');
+                    } else {
+                        log(`✅ Progress sync looks good`, 'success');
+                    }
+                }, 1500);
+            } else {
+                log('Video player not available', 'error');
+            }
+        }
+
+        async function simulateProgressSave() {
+            if (!currentCourseId) {
+                log('No course selected', 'error');
+                return;
+            }
+            
+            log('Simulating progress save...', 'info');
+            
+            try {
+                const response = await fetch('../backend/api/save_progress.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lesson_id: 1,
+                        course_id: currentCourseId,
+                        current_time: 300,
+                        total_duration: 1000,
+                        actual_watch_time: 290,
+                        watch_sessions: 1,
+                        skipped_duration: 10,
+                        seek_violations: 0,
+                        is_properly_watched: true,
+                        is_completed: false
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    log(`Progress saved: Course ${Math.round(data.progress.course_progress)}%, Lesson ${Math.round(data.progress.lesson_completion)}%`, 'success');
+                    
+                    // Check if video player UI updated
+                    setTimeout(() => {
+                        const playerData = getVideoPlayerProgress();
+                        if (playerData.status === 'open') {
+                            log(`Video player now shows: ${playerData.progress}%`, 'info');
+                        }
+                    }, 500);
+                } else {
+                    log(`Save progress failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`Save progress error: ${error.message}`, 'error');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('debugLog').innerHTML = '';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Course Progress Sync Test loaded', 'success');
+            log('Click "Test Course X Progress" to open video player and check sync', 'info');
+            log('Use "Start Monitoring" to continuously monitor progress sync', 'info');
+        });
+    </script>
+</body>
+</html>
