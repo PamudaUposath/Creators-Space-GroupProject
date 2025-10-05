@@ -42,8 +42,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, NOW())
                 ");
                 $stmt->execute([
-                    $title, $slug, $description, $instructor_id, $image_url, $price, $duration, $level, $category,
-                    $prerequisites, $learning_objectives, $featured, $total_lessons, $total_duration_minutes, $video_url
+                    $title,
+                    $slug,
+                    $description,
+                    $instructor_id,
+                    $image_url,
+                    $price,
+                    $duration,
+                    $level,
+                    $category,
+                    $prerequisites,
+                    $learning_objectives,
+                    $featured,
+                    $total_lessons,
+                    $total_duration_minutes,
+                    $video_url
                 ]);
                 $message = 'Course added successfully!';
                 break;
@@ -93,9 +106,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     WHERE id = ?
                 ");
                 $stmt->execute([
-                    $title, $slug, $description, $instructor_id, $image_url, $price, $duration, 
-                    $level, $category, $prerequisites, $learning_objectives, $featured, 
-                    $total_lessons, $total_duration_minutes, $video_url, $course_id
+                    $title,
+                    $slug,
+                    $description,
+                    $instructor_id,
+                    $image_url,
+                    $price,
+                    $duration,
+                    $level,
+                    $category,
+                    $prerequisites,
+                    $learning_objectives,
+                    $featured,
+                    $total_lessons,
+                    $total_duration_minutes,
+                    $video_url,
+                    $course_id
                 ]);
                 $message = 'Course updated successfully!';
                 break;
@@ -165,7 +191,7 @@ $stats = $stmt->fetch();
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -438,7 +464,7 @@ $stats = $stmt->fetch();
         }
 
         .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             color: white;
             padding: 1.5rem 2rem;
             border-radius: 10px 10px 0 0;
@@ -729,7 +755,7 @@ $stats = $stmt->fetch();
                 <div class="modal-body">
                     <input type="hidden" name="action" value="edit_course">
                     <input type="hidden" name="course_id" id="edit_course_id">
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="edit_title">Course Title *</label>
@@ -840,7 +866,7 @@ $stats = $stmt->fetch();
             document.getElementById('edit_featured').checked = course.featured == 1;
             document.getElementById('edit_total_lessons').value = course.total_lessons || '0';
             document.getElementById('edit_total_duration_minutes').value = course.total_duration_minutes || '0';
-            
+
             // Show modal
             document.getElementById('editModal').style.display = 'block';
         }

@@ -19,6 +19,7 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,28 +35,29 @@ if (isset($_SESSION['user_id'])) {
             align-items: center;
             justify-content: center;
         }
-        
+
         .cancel-container {
             max-width: 500px;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             text-align: center;
             padding: 50px 30px;
             animation: slideUp 0.6s ease-out;
         }
-        
+
         @keyframes slideUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .cancel-icon {
             width: 80px;
             height: 80px;
@@ -67,32 +69,42 @@ if (isset($_SESSION['user_id'])) {
             margin: 0 auto 20px;
             animation: shake 0.8s ease-out;
         }
-        
+
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
         }
-        
+
         .cancel-icon i {
             color: white;
             font-size: 2.5em;
         }
-        
+
         h1 {
             color: #ff6b6b;
             margin-bottom: 20px;
             font-weight: bold;
         }
-        
+
         .cancel-message {
             color: #666;
             margin-bottom: 30px;
             line-height: 1.6;
         }
-        
+
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
@@ -100,12 +112,12 @@ if (isset($_SESSION['user_id'])) {
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-warning {
             background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
             border: none;
@@ -116,13 +128,13 @@ if (isset($_SESSION['user_id'])) {
             transition: all 0.3s ease;
             color: white;
         }
-        
+
         .btn-warning:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 152, 0, 0.4);
             color: white;
         }
-        
+
         .help-info {
             background: #fff3cd;
             border-radius: 10px;
@@ -130,26 +142,26 @@ if (isset($_SESSION['user_id'])) {
             margin: 20px 0;
             border-left: 4px solid #ffc107;
         }
-        
+
         .help-info h5 {
             color: #856404;
             margin-bottom: 10px;
         }
-        
+
         .help-info p {
             margin: 5px 0;
             color: #856404;
         }
-        
+
         .help-info ul {
             text-align: left;
             color: #856404;
         }
-        
+
         .help-info li {
             margin: 5px 0;
         }
-        
+
         .user-info {
             background: #fff0f0;
             border-radius: 10px;
@@ -159,26 +171,27 @@ if (isset($_SESSION['user_id'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="cancel-container">
         <div class="cancel-icon">
             <i class="fas fa-times"></i>
         </div>
-        
+
         <h1>Payment Canceled</h1>
-        
+
         <?php if ($user): ?>
             <div class="user-info">
                 <p><strong>Hello <?php echo htmlspecialchars($user['first_name']); ?>!</strong></p>
                 <p>Your payment was canceled and no charges were made.</p>
             </div>
         <?php endif; ?>
-        
+
         <div class="cancel-message">
             <p>💳 Your payment has been canceled and no charges were made to your account.</p>
             <p>Don't worry! Your cart items are still saved and ready when you're ready to complete your purchase.</p>
         </div>
-        
+
         <div class="help-info">
             <h5><i class="fas fa-question-circle"></i> Need Help?</h5>
             <ul>
@@ -188,7 +201,7 @@ if (isset($_SESSION['user_id'])) {
                 <li>Contact our support team if issues persist</li>
             </ul>
         </div>
-        
+
         <div class="action-buttons">
             <?php if ($isLoggedIn): ?>
                 <a href="cart.php" class="btn btn-warning">
@@ -203,7 +216,7 @@ if (isset($_SESSION['user_id'])) {
                 </a>
             <?php endif; ?>
         </div>
-        
+
         <div class="mt-4">
             <p class="text-muted">
                 <i class="fas fa-shield-alt"></i> Your payment information is secure
@@ -216,35 +229,36 @@ if (isset($_SESSION['user_id'])) {
                 <i class="fas fa-home"></i> Homepage
             </a>
         </div>
-        
+
         <div class="mt-3">
             <small class="text-muted">
                 Need assistance? Contact us at support@creatorsspace.com
             </small>
         </div>
     </div>
-    
+
     <script>
         // Auto-redirect to cart after 60 seconds if logged in
         <?php if ($isLoggedIn): ?>
-        setTimeout(function() {
-            const autoRedirect = confirm("Would you like to return to your cart to try again?");
-            if (autoRedirect) {
-                window.location.href = 'cart.php';
-            }
-        }, 60000);
+            setTimeout(function() {
+                const autoRedirect = confirm("Would you like to return to your cart to try again?");
+                if (autoRedirect) {
+                    window.location.href = 'cart.php';
+                }
+            }, 60000);
         <?php endif; ?>
-        
+
         // Add interactive elements
         document.querySelectorAll('.btn').forEach(button => {
             button.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-2px) scale(1.02)';
             });
-            
+
             button.addEventListener('mouseleave', function() {
                 this.style.transform = '';
             });
         });
     </script>
 </body>
+
 </html>

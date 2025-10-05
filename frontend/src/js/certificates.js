@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle button click
     if (verifyBtn) {
-        verifyBtn.addEventListener('click', function(e) {
+        verifyBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const certificateId = certificateInput.value.trim();
-            
+
             if (!certificateId) {
                 showResult('Please enter a certificate ID.', 'error');
                 return;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Simulate verification process
             setTimeout(() => {
                 verifyCertificate(certificateId);
-                
+
                 // Reset button
                 verifyBtn.innerHTML = originalText;
                 verifyBtn.disabled = false;
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle Enter key press in input field
     if (certificateInput) {
-        certificateInput.addEventListener('keypress', function(e) {
+        certificateInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 verifyBtn.click();
             }
@@ -50,10 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Debug button handler
     const debugBtn = document.getElementById('debugBtn');
     if (debugBtn) {
-        debugBtn.addEventListener('click', function(e) {
+        debugBtn.addEventListener('click', function (e) {
             e.preventDefault();
             console.log('=== DEBUG TEST START ===');
-            
+
             // Test 1: Direct fetch to proxy
             console.log('Test 1: Testing proxy directly');
             fetch('verify_proxy.php?id=CERT-FSWD-2024-002')
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Use the same domain with a simple path
         const apiUrl = `verify_proxy.php?id=${encodeURIComponent(certificateId)}`;
         console.log('Making API call to:', apiUrl);
-        
+
         fetch(apiUrl)
             .then(response => {
                 console.log('Response status:', response.status, response.statusText);
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     const data = JSON.parse(text);
                     console.log('Parsed data:', data);
-                    
+
                     if (data.success && data.verified) {
                         showResult(generateValidCertificateHTML(data.data), 'success');
                     } else {
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resultDiv.innerHTML = html;
             resultDiv.className = `verification-result ${type}`;
             resultDiv.style.display = 'block';
-            
+
             // Smooth scroll to result
             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 align-items: center;
                 gap: 0.5rem;
                 padding: 0.75rem 1.5rem;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
                 color: #ffffff;
                 text-decoration: none;
                 border-radius: 8px;

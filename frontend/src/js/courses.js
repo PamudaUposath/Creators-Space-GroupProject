@@ -7,7 +7,7 @@ class CourseSearch {
     this.coursesGrid = document.getElementById('coursesGrid');
     this.courses = this.extractCourseData();
     this.config = this.getSearchConfiguration();
-    
+
     this.init();
   }
 
@@ -18,43 +18,43 @@ class CourseSearch {
       keywords: [
         // Programming Languages
         'javascript', 'python', 'java', 'typescript', 'php', 'c++', 'c#', 'go', 'rust',
-        
+
         // Web Development
         'web development', 'frontend', 'backend', 'full stack', 'fullstack',
         'html', 'css', 'react', 'angular', 'vue', 'node.js', 'express',
-        
+
         // Design & UI/UX
         'ui/ux', 'design', 'user interface', 'user experience', 'figma', 'photoshop',
         'graphic design', 'web design', 'responsive design',
-        
+
         // Data & Analytics
         'data science', 'machine learning', 'artificial intelligence', 'ai', 'data analysis',
         'statistics', 'big data', 'analytics',
-        
+
         // Mobile Development
         'mobile development', 'ios', 'android', 'react native', 'flutter', 'swift', 'kotlin',
-        
+
         // DevOps & Infrastructure
         'devops', 'docker', 'kubernetes', 'aws', 'azure', 'cloud computing', 'ci/cd',
-        
+
         // Databases
         'database', 'sql', 'mysql', 'postgresql', 'mongodb', 'redis',
-        
+
         // General Programming Concepts
         'programming', 'coding', 'software development', 'algorithms', 'data structures',
         'api', 'rest', 'graphql', 'microservices'
       ],
-      
+
       // Search options
       maxSuggestions: 5,
       minQueryLength: 1,
       searchDelay: 300, // milliseconds
-      
+
       // Categories for filtering (can be extended)
       categories: [
         'programming', 'design', 'data-science', 'mobile', 'web-development'
       ],
-      
+
       // Levels for filtering
       levels: ['beginner', 'intermediate', 'advanced']
     };
@@ -86,17 +86,17 @@ class CourseSearch {
   // Method to get keywords from course content (for auto-generation)
   extractKeywordsFromCourses() {
     const extractedKeywords = new Set();
-    
+
     this.courses.forEach(course => {
       // Extract common words from titles and descriptions
       const words = course.searchText.split(/\s+/)
         .filter(word => word.length > 3) // Only words longer than 3 characters
         .map(word => word.toLowerCase())
         .filter(word => /^[a-zA-Z]+$/.test(word)); // Only alphabetic words
-      
+
       words.forEach(word => extractedKeywords.add(word));
     });
-    
+
     return Array.from(extractedKeywords);
   }
 
@@ -113,7 +113,7 @@ class CourseSearch {
       const description = card.querySelector('p').textContent.trim();
       const level = card.getAttribute('data-level');
       const instructor = card.querySelector('.fas.fa-user').nextElementSibling.textContent.trim();
-      
+
       return {
         element: card,
         title: title.toLowerCase(),
@@ -145,7 +145,7 @@ class CourseSearch {
 
   handleSearchInput(e) {
     const query = e.target.value.trim();
-    
+
     if (query.length > 0) {
       this.showSuggestions(query);
       this.applyFilters();
@@ -180,7 +180,7 @@ class CourseSearch {
     const query = this.searchInput.value.trim();
     this.applyFilters();
     this.hideSuggestions();
-    
+
     // Add visual feedback
     this.searchBtn.style.transform = 'scale(0.95)';
     setTimeout(() => {
@@ -190,7 +190,7 @@ class CourseSearch {
 
   showSuggestions(query) {
     const suggestions = this.generateSuggestions(query);
-    
+
     if (suggestions.length > 0) {
       this.suggestionsContainer.innerHTML = suggestions
         .slice(0, this.config.maxSuggestions) // Use configurable max suggestions
@@ -199,7 +199,7 @@ class CourseSearch {
             ${this.highlightMatch(suggestion, query)}
           </div>
         `).join('');
-      
+
       // Add click listeners to suggestions
       this.suggestionsContainer.querySelectorAll('.search-suggestion-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -208,7 +208,7 @@ class CourseSearch {
           this.hideSuggestions();
         });
       });
-      
+
       this.suggestionsContainer.classList.add('show');
     } else {
       this.hideSuggestions();
@@ -222,21 +222,21 @@ class CourseSearch {
   generateSuggestions(query) {
     const suggestions = new Set();
     const queryLower = query.toLowerCase();
-    
+
     this.courses.forEach(course => {
       // Add course titles that match
       if (course.title.includes(queryLower)) {
         suggestions.add(course.title);
       }
     });
-    
+
     // Add relevant keywords from configuration
     this.config.keywords.forEach(keyword => {
       if (keyword.includes(queryLower) && queryLower.length >= this.config.minQueryLength) {
         suggestions.add(keyword);
       }
     });
-    
+
     return Array.from(suggestions);
   }
 
@@ -248,10 +248,10 @@ class CourseSearch {
   filterCourses(query) {
     const queryLower = query.toLowerCase();
     let visibleCount = 0;
-    
+
     this.courses.forEach(course => {
       const matches = course.searchText.includes(queryLower);
-      
+
       if (matches || query === '') {
         course.element.style.display = 'block';
         course.element.style.animation = 'fadeInUp 0.5s ease forwards';
@@ -288,7 +288,7 @@ class CourseSearch {
     }
 
     if (query) {
-      const visibleCourses = this.courses.filter(course => 
+      const visibleCourses = this.courses.filter(course =>
         course.element.style.display !== 'none'
       ).length;
 
@@ -299,7 +299,7 @@ class CourseSearch {
           Found ${visibleCourses} course${visibleCourses !== 1 ? 's' : ''} for "${query}"
         </p>
       `;
-      
+
       this.coursesGrid.parentElement.insertBefore(message, this.coursesGrid);
     }
   }
@@ -315,12 +315,12 @@ class CourseSearch {
         <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
         <h3 style="margin-bottom: 1rem;">No courses found</h3>
         <p>Try adjusting your search terms or browse all courses.</p>
-        <button class="clear-search-btn" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer;">
+        <button class="clear-search-btn" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer;">
           Clear Search
         </button>
       </div>
     `;
-    
+
     this.coursesGrid.appendChild(message);
     // Attach event listener to the Clear Search button
     const clearBtn = message.querySelector('.clear-search-btn');
@@ -341,7 +341,7 @@ class CourseSearch {
     this.showAllCourses();
     this.hideSuggestions();
     this.hideNoResultsMessage();
-    
+
     const searchMessage = document.querySelector('.search-results-message');
     if (searchMessage) {
       searchMessage.remove();
@@ -368,7 +368,7 @@ class CourseSearch {
     const levelFilter = document.getElementById('levelFilter')?.value || '';
     const categoryFilter = document.getElementById('categoryFilter')?.value || '';
     const priceFilter = document.getElementById('priceFilter')?.value || '';
-    
+
     let visibleCount = 0;
 
     this.courses.forEach(course => {
@@ -392,7 +392,7 @@ class CourseSearch {
         course.element.style.display = 'none';
       }
     });
-    
+
     // Update results display
     this.updateFilterResults(visibleCount, searchTerm, levelFilter, categoryFilter, priceFilter);
   }
@@ -403,9 +403,9 @@ class CourseSearch {
     if (existingMessage) {
       existingMessage.remove();
     }
-    
+
     const coursesGrid = this.coursesGrid;
-    
+
     if (visibleCount === 0) {
       // Show no results message
       const message = document.createElement('div');
@@ -421,7 +421,7 @@ class CourseSearch {
             ${categoryFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Category: ${categoryFilter}</span>` : ''}
             ${priceFilter ? `<span style="background: rgba(102, 126, 234, 0.2); padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">Price: ${priceFilter}</span>` : ''}
           </div>
-          <button id="clearAllFiltersBtn" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer; font-weight: 600;">
+          <button id="clearAllFiltersBtn" style="padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%); border: none; border-radius: 25px; color: white; cursor: pointer; font-weight: 600;">
             Clear All Filters
           </button>
         </div>
@@ -454,15 +454,15 @@ class CourseSearch {
     const levelFilter = document.getElementById('levelFilter');
     const categoryFilter = document.getElementById('categoryFilter');
     const priceFilter = document.getElementById('priceFilter');
-    
+
     if (levelFilter) levelFilter.value = '';
     if (categoryFilter) categoryFilter.value = '';
     if (priceFilter) priceFilter.value = '';
-    
+
     // Clear suggestions and show all courses
     this.hideSuggestions();
     this.showAllCourses();
-    
+
     // Remove any existing filter messages
     const existingMessage = document.querySelector('.filter-results-message');
     if (existingMessage) {
@@ -492,14 +492,14 @@ style.textContent = `
 document.head.appendChild(style);
 
 // Initialize search functionality when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   window.courseSearch = new CourseSearch();
-  
+
   // Add some visual enhancements
   const searchInput = document.getElementById('courseSearch');
   if (searchInput) {
     // Add loading state for search
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
       if (this.value.length > 2) {
         this.style.background = 'rgba(255, 255, 255, 0.15)';
       } else {

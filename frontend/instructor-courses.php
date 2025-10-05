@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $duration = trim($_POST['duration']);
                     $level = $_POST['level'];
                     $category = trim($_POST['category']);
-                    
+
                     $stmt = $pdo->prepare("
                         INSERT INTO course_requests (instructor_id, title, description, price, duration, level, category, status, requested_at)
                         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
                     ");
                     $stmt->execute([$instructor_id, $title, $description, $price, $duration, $level, $category]);
-                    
+
                     $message = "Course request submitted successfully! Admin will review your request.";
                     $message_type = "success";
                 } catch (PDOException $e) {
@@ -40,17 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $message_type = "error";
                 }
                 break;
-                
+
             case 'toggle_course':
                 try {
                     $course_id = intval($_POST['course_id']);
                     $is_active = intval($_POST['is_active']);
-                    
+
                     $stmt = $pdo->prepare("
                         UPDATE courses SET is_active = ? WHERE id = ? AND instructor_id = ?
                     ");
                     $stmt->execute([$is_active, $course_id, $instructor_id]);
-                    
+
                     $status = $is_active ? "activated" : "deactivated";
                     $message = "Course $status successfully!";
                     $message_type = "success";
@@ -81,7 +81,7 @@ try {
     ");
     $stmt->execute([$instructor_id]);
     $courses = $stmt->fetchAll();
-    
+
     // Get instructor's course requests
     $stmt = $pdo->prepare("
         SELECT cr.*, 
@@ -105,6 +105,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -112,7 +113,7 @@ try {
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -122,7 +123,7 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
@@ -135,13 +136,13 @@ try {
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.95) 0%, rgba(118,75,162,0.95) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
             backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding: 1rem 0;
             z-index: 1000;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .navbar::before {
@@ -151,7 +152,7 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -200,13 +201,13 @@ try {
             font-weight: 800;
             letter-spacing: -0.02em;
             transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             width: auto;
         }
 
         .navbar h1 a:hover {
-            color: #667eea !important;
-            text-shadow: 0 0 20px rgba(102,126,234,0.8);
+            color: #5a73e5 !important;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
             transform: translateY(-1px);
         }
 
@@ -242,7 +243,7 @@ try {
             letter-spacing: 0.3px;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             margin: 10px 2px;
         }
 
@@ -259,7 +260,7 @@ try {
 
         .navbar .nav-links a:hover {
             color: #ffffff !important;
-            text-shadow: 0 0 8px rgba(255,255,255,0.6);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .navbar .nav-links a:hover::after {
@@ -271,12 +272,12 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             padding: 0.4rem 0.8rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             max-width: fit-content;
         }
 
@@ -285,7 +286,7 @@ try {
             font-weight: 500;
             font-size: 0.75rem;
             margin-right: 0.2rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             max-width: 60px;
             overflow: hidden;
@@ -308,7 +309,7 @@ try {
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             color: #ffffff !important;
             margin: 10px 2px;
         }
@@ -320,7 +321,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
 
@@ -331,8 +332,8 @@ try {
         .navbar .btn.profile-btn {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
             color: #ffffff !important;
-            border-color: rgba(255,255,255,0.2) !important;
-            box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             font-size: 0.9rem !important;
             padding: 0 !important;
             width: 35px !important;
@@ -370,11 +371,11 @@ try {
 
         .navbar .btn:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .navbar .btn.profile-btn:hover {
-            box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
 
         .navbar .btn.logout-btn:hover {
@@ -392,8 +393,8 @@ try {
         }
 
         .theme-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
             padding: 0.6rem;
             border-radius: 50%;
@@ -417,7 +418,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
 
@@ -426,10 +427,10 @@ try {
         }
 
         .theme-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
         }
 
         .theme-btn:active {
@@ -452,21 +453,22 @@ try {
         }
 
         body.dark-mode .navbar {
-            background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(20,20,40,0.95) 100%) !important;
-            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         body.dark-mode .theme-btn {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         body.dark-mode .theme-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.35);
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover,
+        .nav-links a.active {
             color: #667eea;
         }
 
@@ -701,7 +703,9 @@ try {
             color: #374151;
         }
 
-        .form-input, .form-textarea, .form-select {
+        .form-input,
+        .form-textarea,
+        .form-select {
             width: 100%;
             padding: 0.75rem;
             border: 2px solid #e2e8f0;
@@ -710,7 +714,9 @@ try {
             transition: border-color 0.2s ease;
         }
 
-        .form-input:focus, .form-textarea:focus, .form-select:focus {
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -962,14 +968,14 @@ try {
                     Creators-Space
                 </a>
             </h1>
-            
+
             <div class="navbar-right">
                 <div class="nav-links align-items-center">
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
                     <a href="instructor-messages.php">Messages</a>
-                    
+
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">
                         <button id="theme-toggle-btn" class="theme-btn" title="Toggle Dark/Light Mode">
@@ -977,7 +983,7 @@ try {
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- User Section -->
                 <div id="userSection">
                     <a href="#" class="btn profile-btn" title="Profile">
@@ -1028,7 +1034,7 @@ try {
                                     <?php echo ucfirst($request['status']); ?>
                                 </span>
                             </div>
-                            
+
                             <div class="request-details">
                                 <p class="request-description"><?php echo htmlspecialchars(substr($request['description'], 0, 150)); ?>...</p>
                                 <div class="request-meta">
@@ -1037,7 +1043,7 @@ try {
                                     <span class="request-category"><?php echo htmlspecialchars($request['category']); ?></span>
                                 </div>
                             </div>
-                            
+
                             <div class="request-footer">
                                 <small class="request-date">
                                     Requested: <?php echo date('M d, Y', strtotime($request['requested_at'])); ?>
@@ -1133,16 +1139,17 @@ try {
         <?php endif; ?>
     </div>
 
-        <!-- Request Course Modal -->
-        <div id="createCourseModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Request New Course</h2>
-                    <span class="close" onclick="closeCreateModal()">&times;</span>
-                </div>
+    <!-- Request Course Modal -->
+    <div id="createCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Request New Course</h2>
+                <span class="close" onclick="closeCreateModal()">&times;</span>
+            </div>
 
-                <form method="POST">
-                    <input type="hidden" name="action" value="request_course">                <div class="form-group">
+            <form method="POST">
+                <input type="hidden" name="action" value="request_course">
+                <div class="form-group">
                     <label class="form-label">Course Title *</label>
                     <input type="text" name="title" class="form-input" required placeholder="e.g., Advanced React Development">
                 </div>
@@ -1209,7 +1216,7 @@ try {
         // Theme toggle functionality
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeIcon = document.getElementById('theme-icon');
-        
+
         // Load saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -1218,11 +1225,11 @@ try {
         } else {
             themeIcon.className = 'fas fa-moon';
         }
-        
+
         // Theme toggle functionality
         themeToggleBtn.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            
+
             if (document.body.classList.contains('dark-mode')) {
                 themeIcon.className = 'fas fa-sun';
                 localStorage.setItem('theme', 'dark');
@@ -1230,7 +1237,7 @@ try {
                 themeIcon.className = 'fas fa-moon';
                 localStorage.setItem('theme', 'light');
             }
-            
+
             // Add a little animation to the button
             themeToggleBtn.style.transform = 'scale(0.9)';
             setTimeout(() => {
@@ -1253,4 +1260,5 @@ try {
         console.log('Course management page loaded successfully');
     </script>
 </body>
+
 </html>
