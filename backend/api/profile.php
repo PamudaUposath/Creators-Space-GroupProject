@@ -4,23 +4,47 @@
  * Creators-Space Project
  */
 
+// Start output buffering to catch any unwanted output
+ob_start();
+
 session_start();
 require_once '../config/db_connect.php';
 
+// Clean any output that might have been generated
+ob_clean();
+
 // Enable CORS for API requests
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT');
+header('Access-Control/**
+ * Remove user profile image
+ */
+function handleRemoveProfileImage($pdo, $user_id) {
+    try {rigin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode([
+    sendJsonResponse([
         'success' => false,
         'message' => 'User not authenticated'
     ]);
     exit();
+}
+
+// Helper function to ensure clean JSON output
+function sendJsonResponse($data) {
+    // Clean any output buffer
+    if (ob_get_level()) {
+        ob_clean();
+    }
+    
+    // Set JSON header
+    header('Content-Type: application/json');
+    
+    // Send response
+    echo json_encode($data);
 }
 
 $user_id = $_SESSION['user_id'];
@@ -43,6 +67,9 @@ try {
         case 'POST':
         case 'PUT':
             handleUpdateProfile($pdo, $user_id, $input);
+            break;
+        case 'DELETE':
+            handleRemoveProfileImage($pdo, $user_id);
             break;
         default:
             http_response_code(405);
@@ -182,7 +209,7 @@ function handleUpdateProfile($pdo, $user_id, $input) {
  */
 function handleImageUpload($pdo, $user_id) {
     if (!isset($_FILES['profile_image'])) {
-        echo json_encode([
+        sendJsonResponse([
             'success' => false,
             'message' => 'No image file provided'
         ]);
@@ -196,7 +223,7 @@ function handleImageUpload($pdo, $user_id) {
     $maxSize = 5 * 1024 * 1024; // 5MB
 
     if (!in_array($file['type'], $allowedTypes)) {
-        echo json_encode([
+        sendJsonResponse([
             'success' => false,
             'message' => 'Invalid file type. Please upload JPEG, PNG, or GIF'
         ]);
@@ -204,7 +231,7 @@ function handleImageUpload($pdo, $user_id) {
     }
 
     if ($file['size'] > $maxSize) {
-        echo json_encode([
+        sendJsonResponse([
             'success' => false,
             'message' => 'File too large. Maximum size is 5MB'
         ]);
@@ -237,7 +264,7 @@ function handleImageUpload($pdo, $user_id) {
                 $_SESSION['profile_image'] = $imageUrl;
             }
             
-            echo json_encode([
+            sendJsonResponse([
                 'success' => true,
                 'message' => 'Profile image updated successfully',
                 'image_url' => $imageUrl
@@ -245,15 +272,68 @@ function handleImageUpload($pdo, $user_id) {
         } else {
             // Remove uploaded file if database update failed
             unlink($fullPath);
-            echo json_encode([
+            sendJsonResponse([
                 'success' => false,
                 'message' => 'Failed to update profile image in database'
             ]);
         }
     } else {
-        echo json_encode([
+        sendJsonResponse([
             'success' => false,
             'message' => 'Failed to upload image'
+        ]);
+    }
+}
+
+/**
+ * Remove user profile image
+ */
+function handleRemoveProfileImage($pdo, $user_id) {
+    // Debug logging
+    error_log("🔥 handleRemoveProfileImage called for user_id: " . $user_id);
+    
+    try {
+        // Get current profile image path
+        $stmt = $pdo->prepare("SELECT profile_image FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user && !empty($user['profile_image'])) {
+            // Delete the physical file if it exists and is not the default
+            $imagePath = $user['profile_image'];
+            $fullPath = '../../frontend/' . ltrim($imagePath, './');
+            
+            // Only delete if it's not the default user icon
+            if (strpos($imagePath, 'userIcon_Square.png') === false && file_exists($fullPath)) {
+                unlink($fullPath);
+            }
+        }
+        
+        // Update database to remove profile image
+        $stmt = $pdo->prepare("UPDATE users SET profile_image = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+        
+        if ($stmt->execute([$user_id])) {
+            // Update session data
+            if (isset($_SESSION['profile_image'])) {
+                unset($_SESSION['profile_image']);
+            }
+            
+            sendJsonResponse([
+                'success' => true,
+                'message' => 'Profile image removed successfully'
+            ]);
+        } else {
+            sendJsonResponse([
+                'success' => false,
+                'message' => 'Failed to remove profile image'
+            ]);
+        }
+        
+    } catch (Exception $e) {
+        error_log("Error removing profile image: " . $e->getMessage());
+        sendJsonResponse([
+            'success' => false,
+            'message' => 'Server error occurred'
         ]);
     }
 }
