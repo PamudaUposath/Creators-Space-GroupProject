@@ -2,7 +2,7 @@
 
 .page-container {
     min-height: calc(100vh - 80px);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     padding: 2rem 0;
 }
 
@@ -391,17 +391,17 @@ body.dark-mode .tools-box h3 {
     .content-container {
         grid-template-columns: 1fr;
     }
-    
+
     .table-of-contents {
         position: relative;
         border-right: none;
         border-bottom: 1px solid #e9ecef;
     }
-    
+
     .terms-sections {
         padding: 2rem;
     }
-    
+
     .agreement-section,
     .privacy-tools-section {
         padding: 2rem;
@@ -412,21 +412,21 @@ body.dark-mode .tools-box h3 {
     .header-content h1 {
         font-size: 2rem;
     }
-    
+
     .terms-sections {
         padding: 1.5rem;
     }
-    
+
     .terms-section h2 {
         font-size: 1.5rem;
     }
-    
+
     .agreement-actions,
     .tools-actions {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .btn {
         width: 100%;
         max-width: 280px;
@@ -434,13 +434,14 @@ body.dark-mode .tools-box h3 {
 }
 
 @media (max-width: 480px) {
+
     .table-of-contents,
     .terms-sections,
     .agreement-section,
     .privacy-tools-section {
         padding: 1rem;
     }
-    
+
     .last-updated {
         font-size: 0.8rem;
         padding: 0.4rem 0.8rem;

@@ -13,7 +13,7 @@ require_once '../backend/config/db_connect.php';
 
 try {
     $instructor_id = $_SESSION['user_id'];
-    
+
     // Get instructor's courses
     $stmt = $pdo->prepare("
         SELECT c.*, 
@@ -43,7 +43,7 @@ try {
     ");
     $stmt->execute([$instructor_id]);
     $stats = $stmt->fetch();
-    
+
     // Calculate total revenue correctly (separate query to avoid JOIN multiplication)
     $stmt = $pdo->prepare("
         SELECT COALESCE(SUM(
@@ -68,7 +68,6 @@ try {
     ");
     $stmt->execute([$instructor_id]);
     $recent_enrollments = $stmt->fetchAll();
-
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
     $courses = [];
@@ -79,6 +78,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,7 +86,7 @@ try {
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -96,7 +96,7 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
@@ -109,13 +109,13 @@ try {
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.95) 0%, rgba(118,75,162,0.95) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
             backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding: 1rem 0;
             z-index: 1000;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .navbar::before {
@@ -125,7 +125,7 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -174,13 +174,13 @@ try {
             font-weight: 800;
             letter-spacing: -0.02em;
             transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             width: auto;
         }
 
         .navbar h1 a:hover {
-            color: #667eea !important;
-            text-shadow: 0 0 20px rgba(102,126,234,0.8);
+            color: #5a73e5 !important;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
             transform: translateY(-1px);
         }
 
@@ -216,7 +216,7 @@ try {
             letter-spacing: 0.3px;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             margin: 10px 2px;
         }
 
@@ -233,7 +233,7 @@ try {
 
         .navbar .nav-links a:hover {
             color: #ffffff !important;
-            text-shadow: 0 0 8px rgba(255,255,255,0.6);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .navbar .nav-links a:hover::after {
@@ -245,12 +245,12 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             padding: 0.4rem 0.8rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             max-width: fit-content;
         }
 
@@ -259,7 +259,7 @@ try {
             font-weight: 500;
             font-size: 0.75rem;
             margin-right: 0.2rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             max-width: 60px;
             overflow: hidden;
@@ -282,7 +282,7 @@ try {
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             color: #ffffff !important;
             margin: 10px 2px;
         }
@@ -294,7 +294,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
 
@@ -305,8 +305,8 @@ try {
         .navbar .btn.profile-btn {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
             color: #ffffff !important;
-            border-color: rgba(255,255,255,0.2) !important;
-            box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             font-size: 0.9rem !important;
             padding: 0 !important;
             width: 35px !important;
@@ -344,11 +344,11 @@ try {
 
         .navbar .btn:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .navbar .btn.profile-btn:hover {
-            box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
 
         .navbar .btn.logout-btn:hover {
@@ -366,8 +366,8 @@ try {
         }
 
         .theme-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
             padding: 0.6rem;
             border-radius: 50%;
@@ -391,7 +391,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
 
@@ -400,10 +400,10 @@ try {
         }
 
         .theme-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
         }
 
         .theme-btn:active {
@@ -426,18 +426,18 @@ try {
         }
 
         body.dark-mode .navbar {
-            background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(20,20,40,0.95) 100%) !important;
-            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         body.dark-mode .theme-btn {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         body.dark-mode .theme-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.35);
         }
 
         .container {
@@ -501,10 +501,21 @@ try {
             color: white;
         }
 
-        .stat-icon.courses { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .stat-icon.students { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .stat-icon.certificates { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .stat-icon.revenue { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .stat-icon.courses {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-icon.students {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .stat-icon.certificates {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .stat-icon.revenue {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+        }
 
         .stat-number {
             font-size: 2rem;
@@ -524,7 +535,8 @@ try {
             gap: 2rem;
         }
 
-        .courses-section, .recent-section {
+        .courses-section,
+        .recent-section {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px;
@@ -710,14 +722,14 @@ try {
                     Creators-Space
                 </a>
             </h1>
-            
+
             <div class="navbar-right">
                 <div class="nav-links align-items-center">
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
                     <a href="instructor-messages.php">Messages</a>
-                    
+
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">
                         <button id="theme-toggle-btn" class="theme-btn" title="Toggle Dark/Light Mode">
@@ -725,7 +737,7 @@ try {
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- User Section -->
                 <div id="userSection">
                     <a href="#" class="btn profile-btn" title="Profile">
@@ -864,7 +876,7 @@ try {
             // Theme toggle functionality
             const themeToggleBtn = document.getElementById('theme-toggle-btn');
             const themeIcon = document.getElementById('theme-icon');
-            
+
             // Load saved theme preference
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
@@ -873,11 +885,11 @@ try {
             } else {
                 themeIcon.className = 'fas fa-moon';
             }
-            
+
             // Theme toggle functionality
             themeToggleBtn.addEventListener('click', function() {
                 document.body.classList.toggle('dark-mode');
-                
+
                 if (document.body.classList.contains('dark-mode')) {
                     themeIcon.className = 'fas fa-sun';
                     localStorage.setItem('theme', 'dark');
@@ -885,7 +897,7 @@ try {
                     themeIcon.className = 'fas fa-moon';
                     localStorage.setItem('theme', 'light');
                 }
-                
+
                 // Add a little animation to the button
                 themeToggleBtn.style.transform = 'scale(0.9)';
                 setTimeout(() => {
@@ -899,7 +911,7 @@ try {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-2px)';
                 });
-                
+
                 card.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0)';
                 });
@@ -919,4 +931,5 @@ try {
         });
     </script>
 </body>
+
 </html>

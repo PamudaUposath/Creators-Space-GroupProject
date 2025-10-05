@@ -4,13 +4,13 @@ session_start();
 
 // If already logged in, redirect to home
 if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit;
+  header('Location: index.php');
+  exit;
 }
 
 $error = $_SESSION['error'] ?? '';
 if ($error) {
-    unset($_SESSION['error']);
+  unset($_SESSION['error']);
 }
 
 // Set page-specific variables
@@ -23,451 +23,454 @@ include './includes/header.php';
 ?>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2.5rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 14px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #334155;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    padding-right: 3rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    color: #1f2937;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  }
+
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder {
+    color: #9ca3af;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 1.1rem;
+    transition: color 0.2s ease;
+  }
+
+  .toggle-password:hover {
+    color: #374151;
+  }
+
+  .inline-feedback {
+    font-size: 0.85rem;
+    color: #dc2626;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .checkbox-group input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: #667eea;
+    cursor: pointer;
+  }
+
+  .checkbox-group label {
+    color: #374151;
+    font-weight: 400;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+
+  .forgot-password {
+    display: block;
+    text-align: right;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .forgot-password:hover {
+    color: #5b21b6;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.875rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .spinner {
+    display: none;
+    width: 28px;
+    height: 28px;
+    margin: 1rem auto 0;
+    border: 3px solid rgba(102, 126, 234, 0.3);
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+  }
+
+  .error-message {
+    background: rgba(254, 226, 226, 0.8);
+    color: #dc2626;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #fecaca;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .success-message {
+    background: rgba(220, 252, 231, 0.8);
+    color: #166534;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #bbf7d0;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .signup-section {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .signup-section p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+  }
+
+  .signup-section a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .signup-section a:hover {
+    color: #5b21b6;
+  }
+
+  .forgot-password-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .forgot-form {
+    display: none;
+  }
+
+  .forgot-form.active {
+    display: block;
+  }
+
+  .forgot-form h3 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .forgot-form p {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .back-to-login {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: #64748b;
+    text-decoration: none;
+    margin-top: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .back-to-login:hover {
+    color: #374151;
+  }
+
+  @media (max-width: 640px) {
     .main-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      padding: 2rem 1rem;
+      padding: 1rem;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 2.5rem;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      font-size: 14px;
-      color: #64748b;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .back-link:hover {
-      color: #334155;
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
     }
 
     h2 {
-      text-align: center;
-      margin-bottom: 0.5rem;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1e293b;
+      font-size: 1.75rem;
     }
+  }
 
-    .subtitle {
-      text-align: center;
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
-      font-weight: 400;
-    }
+  /* Dark Mode Styles */
+  .dark-mode body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  }
 
-    .form-group {
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
+  .dark-mode .container {
+    background: rgba(40, 40, 40, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #374151;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
+  .dark-mode .back-link {
+    color: #a3bffa;
+  }
 
-    .input-wrapper {
-      position: relative;
-    }
+  .dark-mode .back-link:hover {
+    color: #c7d2fe;
+  }
 
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 0.875rem 1rem;
-      padding-right: 3rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.8);
-      font-size: 1rem;
-      font-weight: 400;
-      transition: all 0.2s ease;
-      color: #1f2937;
-    }
+  .dark-mode h2 {
+    color: #f9fafb;
+  }
 
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      outline: none;
-      border-color: #667eea;
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-    }
+  .dark-mode .subtitle {
+    color: #a3bffa;
+  }
 
-    input[type="email"]::placeholder,
-    input[type="password"]::placeholder {
-      color: #9ca3af;
-    }
+  .dark-mode label {
+    color: #d1d5db;
+  }
 
-    .toggle-password {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #6b7280;
-      font-size: 1.1rem;
-      transition: color 0.2s ease;
-    }
+  .dark-mode input[type="email"],
+  .dark-mode input[type="password"] {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
 
-    .toggle-password:hover {
-      color: #374151;
-    }
+  .dark-mode input[type="email"]:focus,
+  .dark-mode input[type="password"]:focus {
+    outline: none;
+    border-color: #60a5fa;
+    background: rgba(0, 0, 0, 0);
+    /* Fully transparent to show container background */
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+    /* Softer blue shadow */
+    color: #f9fafb;
+    /* Ensure text remains white */
+  }
 
-    .inline-feedback {
-      font-size: 0.85rem;
-      color: #dc2626;
-      margin-top: 0.5rem;
-      font-weight: 500;
-    }
+  .dark-mode input[type="email"]::placeholder,
+  .dark-mode input[type="password"]::placeholder {
+    color: #9ca3af;
+  }
 
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
+  .dark-mode .toggle-password {
+    color: #d1d5db;
+  }
 
-    .checkbox-group input[type="checkbox"] {
-      width: 1.1rem;
-      height: 1.1rem;
-      accent-color: #667eea;
-      cursor: pointer;
-    }
+  .dark-mode .toggle-password:hover {
+    color: #e5e7eb;
+  }
 
-    .checkbox-group label {
-      color: #374151;
-      font-weight: 400;
-      cursor: pointer;
-      margin-bottom: 0;
-    }
+  .dark-mode .checkbox-group label {
+    color: #d1d5db;
+  }
 
-    .forgot-password {
-      display: block;
-      text-align: right;
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
+  .dark-mode .forgot-password {
+    color: #60a5fa;
+  }
 
-    .forgot-password:hover {
-      color: #5b21b6;
-    }
+  .dark-mode .forgot-password:hover {
+    color: #93c5fd;
+  }
 
-    .btn {
-      width: 100%;
-      padding: 0.875rem;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
+  .dark-mode .btn {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+  }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
+  .dark-mode .btn:hover {
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+  }
 
-    .btn:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
+  .dark-mode .btn:disabled {
+    background: #4b5563;
+  }
 
-    .spinner {
-      display: none;
-      width: 28px;
-      height: 28px;
-      margin: 1rem auto 0;
-      border: 3px solid rgba(102, 126, 234, 0.3);
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-    }
+  .dark-mode .error-message {
+    background: rgba(127, 29, 29, 0.8);
+    border-color: #991b1b;
+    color: #f87171;
+  }
 
-    .error-message {
-      background: rgba(254, 226, 226, 0.8);
-      color: #dc2626;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #fecaca;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
+  .dark-mode .success-message {
+    background: rgba(22, 101, 52, 0.8);
+    border-color: #166534;
+    color: #34d399;
+  }
 
-    .success-message {
-      background: rgba(220, 252, 231, 0.8);
-      color: #166534;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      border: 1px solid #bbf7d0;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
+  .dark-mode .signup-section {
+    border-top-color: #4b5563;
+  }
 
-    .signup-section {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-    }
+  .dark-mode .signup-section p {
+    color: #a3bffa;
+  }
 
-    .signup-section p {
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-bottom: 0;
-    }
+  .dark-mode .signup-section a {
+    color: #60a5fa;
+  }
 
-    .signup-section a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
+  .dark-mode .signup-section a:hover {
+    color: #93c5fd;
+  }
 
-    .signup-section a:hover {
-      color: #5b21b6;
-    }
+  .dark-mode .forgot-password-section {
+    border-top-color: #4b5563;
+  }
 
-    .forgot-password-section {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-    }
+  .dark-mode .forgot-form h3 {
+    color: #f9fafb;
+  }
 
-    .forgot-form {
-      display: none;
-    }
+  .dark-mode .forgot-form p {
+    color: #a3bffa;
+  }
 
-    .forgot-form.active {
-      display: block;
-    }
+  .dark-mode .back-to-login {
+    color: #a3bffa;
+  }
 
-    .forgot-form h3 {
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
+  .dark-mode .back-to-login:hover {
+    color: #c7d2fe;
+  }
 
-    .forgot-form p {
-      font-size: 0.95rem;
-      color: #64748b;
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
-    }
-
-    .back-to-login {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.95rem;
-      color: #64748b;
-      text-decoration: none;
-      margin-top: 1rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .back-to-login:hover {
-      color: #374151;
-    }
-
-    @media (max-width: 640px) {
-      .main-content {
-        padding: 1rem;
-      }
-      
-      .container {
-        padding: 2rem 1.5rem;
-        border-radius: 16px;
-      }
-      
-      h2 {
-        font-size: 1.75rem;
-      }
-    }
-
-    /* Dark Mode Styles */
-    .dark-mode body {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    }
-
-    .dark-mode .container {
-      background: rgba(40, 40, 40, 0.95);
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .dark-mode .back-link {
-      color: #a3bffa;
-    }
-
-    .dark-mode .back-link:hover {
-      color: #c7d2fe;
-    }
-
-    .dark-mode h2 {
-      color: #f9fafb;
-    }
-
-    .dark-mode .subtitle {
-      color: #a3bffa;
-    }
-
-    .dark-mode label {
-      color: #d1d5db;
-    }
-
-    .dark-mode input[type="email"],
-    .dark-mode input[type="password"] {
-      background: rgba(0, 0, 0, 0.3);
-      border-color: #4b5563;
-      color: #f9fafb;
-    }
-
-    .dark-mode input[type="email"]:focus,
-    .dark-mode input[type="password"]:focus {
-      outline: none;
-      border-color: #60a5fa;
-      background: rgba(0, 0, 0, 0); /* Fully transparent to show container background */
-      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2); /* Softer blue shadow */
-      color: #f9fafb; /* Ensure text remains white */
-    }
-
-    .dark-mode input[type="email"]::placeholder,
-    .dark-mode input[type="password"]::placeholder {
-      color: #9ca3af;
-    }
-
-    .dark-mode .toggle-password {
-      color: #d1d5db;
-    }
-
-    .dark-mode .toggle-password:hover {
-      color: #e5e7eb;
-    }
-
-    .dark-mode .checkbox-group label {
-      color: #d1d5db;
-    }
-
-    .dark-mode .forgot-password {
-      color: #60a5fa;
-    }
-
-    .dark-mode .forgot-password:hover {
-      color: #93c5fd;
-    }
-
-    .dark-mode .btn {
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-    }
-
-    .dark-mode .btn:hover {
-      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
-    }
-
-    .dark-mode .btn:disabled {
-      background: #4b5563;
-    }
-
-    .dark-mode .error-message {
-      background: rgba(127, 29, 29, 0.8);
-      border-color: #991b1b;
-      color: #f87171;
-    }
-
-    .dark-mode .success-message {
-      background: rgba(22, 101, 52, 0.8);
-      border-color: #166534;
-      color: #34d399;
-    }
-
-    .dark-mode .signup-section {
-      border-top-color: #4b5563;
-    }
-
-    .dark-mode .signup-section p {
-      color: #a3bffa;
-    }
-
-    .dark-mode .signup-section a {
-      color: #60a5fa;
-    }
-
-    .dark-mode .signup-section a:hover {
-      color: #93c5fd;
-    }
-
-    .dark-mode .forgot-password-section {
-      border-top-color: #4b5563;
-    }
-
-    .dark-mode .forgot-form h3 {
-      color: #f9fafb;
-    }
-
-    .dark-mode .forgot-form p {
-      color: #a3bffa;
-    }
-
-    .dark-mode .back-to-login {
-      color: #a3bffa;
-    }
-
-    .dark-mode .back-to-login:hover {
-      color: #c7d2fe;
-    }
-
-    /*
+  /*
     .back-btn {
     background: linear-gradient(to right, #667eea, #764ba2); 
     color: white;
@@ -498,7 +501,7 @@ include './includes/header.php';
       <a href="index.php" class="back-link">
         ← Back to Homepage
       </a>
-    
+
       <h2>Welcome Back</h2>
       <p class="subtitle">Sign in to your account to continue</p>
 
@@ -565,7 +568,7 @@ include './includes/header.php';
           <a href="#" onclick="toggleForgotPassword()" class="back-to-login">← Back to Login</a>
         </div>
       </div>
-  </div>
+    </div>
   </div> <!-- Close main-content -->
 
   <script>
@@ -574,7 +577,7 @@ include './includes/header.php';
       const container = document.getElementById('message-container');
       const className = type === 'success' ? 'success-message' : 'error-message';
       container.innerHTML = `<div class="${className}">${message}</div>`;
-      
+
       // Auto-hide after 10 seconds for success messages (longer to let user read)
       if (type === 'success') {
         setTimeout(() => {
@@ -591,7 +594,7 @@ include './includes/header.php';
     function toggleForgotPassword() {
       const forgotForm = document.getElementById('forgot-form');
       const loginForm = document.getElementById('login-form');
-      
+
       if (forgotForm.classList.contains('active')) {
         forgotForm.classList.remove('active');
         loginForm.style.display = 'block';
@@ -604,10 +607,10 @@ include './includes/header.php';
     // Handle login form submission
     document.getElementById('login-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       const spinner = document.getElementById('spinner');
       const loginBtn = document.getElementById('loginBtn');
-      
+
       spinner.style.display = 'block';
       loginBtn.disabled = true;
       loginBtn.textContent = 'Logging in...';
@@ -626,75 +629,75 @@ include './includes/header.php';
         const projectRootPrefix = pathname.includes('/frontend') ? pathname.substring(0, pathname.indexOf('/frontend')) : '';
         loginUrl = origin + projectRootPrefix + '/backend/auth/login_process.php';
       }
-      
+
       // Add cache busting parameter
       loginUrl += '?t=' + Date.now();
       console.log('Attempting login with URL:', loginUrl);
 
       fetch(loginUrl, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include' // Include cookies and session data for CORS
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Login response:', data); // Debug log
-        
-        // Reset button state
-        spinner.style.display = 'none';
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Sign In';
-        
-        if (data.success) {
-          console.log('Login successful!');
-          
-          showMessage('Login successful! Redirecting...', 'success');
-          
-          // Get redirect path from response or default to index.php
-          let redirectPath = data.data && data.data.redirect ? data.data.redirect : 'index.php';
-          console.log('Redirecting to:', redirectPath); // Debug log
-          
-          // Handle absolute and relative redirects properly
-          setTimeout(() => {
-            console.log('Executing redirect to:', redirectPath); // Additional debug log
-            
-            if (redirectPath.startsWith('http') || redirectPath.startsWith('/')) {
-              // Absolute URL or root-relative path
-              window.location.href = redirectPath;
-            } else {
-              // Relative path - ensure we're in the frontend directory context
-              window.location.href = redirectPath;
-            }
-          }, 1500); // Slightly longer delay
-        } else {
-          console.log('Login failed:', data.message);
-          showMessage(data.message || 'Login failed', 'error');
-        }
-      })
-      .catch(error => {
-        console.error('Fetch error:', error);
-        
-        // Reset button state
-        spinner.style.display = 'none';
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Sign In';
-        
-        showMessage('Network error or server unavailable. Please try again.', 'error');
-      });
+          method: 'POST',
+          body: formData,
+          credentials: 'include' // Include cookies and session data for CORS
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Login response:', data); // Debug log
+
+          // Reset button state
+          spinner.style.display = 'none';
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Sign In';
+
+          if (data.success) {
+            console.log('Login successful!');
+
+            showMessage('Login successful! Redirecting...', 'success');
+
+            // Get redirect path from response or default to index.php
+            let redirectPath = data.data && data.data.redirect ? data.data.redirect : 'index.php';
+            console.log('Redirecting to:', redirectPath); // Debug log
+
+            // Handle absolute and relative redirects properly
+            setTimeout(() => {
+              console.log('Executing redirect to:', redirectPath); // Additional debug log
+
+              if (redirectPath.startsWith('http') || redirectPath.startsWith('/')) {
+                // Absolute URL or root-relative path
+                window.location.href = redirectPath;
+              } else {
+                // Relative path - ensure we're in the frontend directory context
+                window.location.href = redirectPath;
+              }
+            }, 1500); // Slightly longer delay
+          } else {
+            console.log('Login failed:', data.message);
+            showMessage(data.message || 'Login failed', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+
+          // Reset button state
+          spinner.style.display = 'none';
+          loginBtn.disabled = false;
+          loginBtn.textContent = 'Sign In';
+
+          showMessage('Network error or server unavailable. Please try again.', 'error');
+        });
     });
 
     // Handle forgot password form submission
     document.getElementById('forgot-password-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       const spinner = document.getElementById('forgot-spinner');
       const submitBtn = this.querySelector('button[type="submit"]');
-      
+
       spinner.style.display = 'block';
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending...';
@@ -714,35 +717,35 @@ include './includes/header.php';
       }
 
       fetch(forgotUrl, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          showMessage('Password reset link sent to your email!', 'success');
-          toggleForgotPassword(); // Go back to login form
-          this.reset(); // Clear the form
-        } else {
-          showMessage(data.message || 'Failed to send reset link', 'error');
-        }
-        spinner.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Reset Link';
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        showMessage('Network error or server unavailable. Please try again.', 'error');
-        spinner.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Reset Link';
-      });
+          method: 'POST',
+          body: formData,
+          credentials: 'include'
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            showMessage('Password reset link sent to your email!', 'success');
+            toggleForgotPassword(); // Go back to login form
+            this.reset(); // Clear the form
+          } else {
+            showMessage(data.message || 'Failed to send reset link', 'error');
+          }
+          spinner.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Reset Link';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showMessage('Network error or server unavailable. Please try again.', 'error');
+          spinner.style.display = 'none';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Reset Link';
+        });
     });
 
     // Email validation
@@ -751,10 +754,11 @@ include './includes/header.php';
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       emailFeedback.textContent = regex.test(this.value) ? "" : "Enter a valid email address";
     });
-    
+
     // Debug: Test if JavaScript is working
     console.log('Login page JavaScript loaded successfully');
   </script>
 
 </body>
+
 </html>

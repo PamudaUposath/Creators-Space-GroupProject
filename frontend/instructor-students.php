@@ -20,29 +20,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $enrollment_id = intval($_POST['enrollment_id']);
         $user_id = intval($_POST['user_id']);
         $course_id = intval($_POST['course_id']);
-        
+
         // Check if certificate already exists
         $stmt = $pdo->prepare("SELECT id FROM certificates WHERE user_id = ? AND course_id = ?");
         $stmt->execute([$user_id, $course_id]);
-        
+
         if (!$stmt->fetch()) {
             // Generate certificate code
             $certificate_code = 'CERT-' . strtoupper(substr(md5($course_id . $user_id . time()), 0, 8));
-            
+
             // Insert certificate
             $stmt = $pdo->prepare("
                 INSERT INTO certificates (user_id, course_id, certificate_code, issued_at)
                 VALUES (?, ?, ?, NOW())
             ");
             $stmt->execute([$user_id, $course_id, $certificate_code]);
-            
+
             // Update enrollment as completed
             $stmt = $pdo->prepare("
                 UPDATE enrollments SET status = 'completed', completed_at = NOW(), progress = 100
                 WHERE id = ?
             ");
             $stmt->execute([$enrollment_id]);
-            
+
             $message = "Certificate issued successfully! Certificate ID: $certificate_code";
             $message_type = "success";
         } else {
@@ -85,30 +85,29 @@ try {
         LEFT JOIN certificates cert ON cert.user_id = u.id AND cert.course_id = c.id
         WHERE c.instructor_id = ?
     ";
-    
+
     $params = [$instructor_id];
-    
+
     if ($course_filter) {
         $query .= " AND c.id = ?";
         $params[] = $course_filter;
     }
-    
+
     if ($status_filter) {
         $query .= " AND e.status = ?";
         $params[] = $status_filter;
     }
-    
+
     $query .= " ORDER BY e.enrolled_at DESC";
-    
+
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     $enrollments = $stmt->fetchAll();
-    
+
     // Get instructor's courses for filter dropdown
     $stmt = $pdo->prepare("SELECT id, title FROM courses WHERE instructor_id = ? ORDER BY title");
     $stmt->execute([$instructor_id]);
     $courses = $stmt->fetchAll();
-    
 } catch (PDOException $e) {
     error_log("Error fetching students: " . $e->getMessage());
     $enrollments = [];
@@ -118,6 +117,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,7 +125,7 @@ try {
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -135,7 +135,7 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
@@ -148,13 +148,13 @@ try {
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.95) 0%, rgba(118,75,162,0.95) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
             backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding: 1rem 0;
             z-index: 1000;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .navbar::before {
@@ -164,7 +164,7 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -213,13 +213,13 @@ try {
             font-weight: 800;
             letter-spacing: -0.02em;
             transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             width: auto;
         }
 
         .navbar h1 a:hover {
-            color: #667eea !important;
-            text-shadow: 0 0 20px rgba(102,126,234,0.8);
+            color: #5a73e5 !important;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
             transform: translateY(-1px);
         }
 
@@ -255,7 +255,7 @@ try {
             letter-spacing: 0.3px;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             margin: 10px 2px;
         }
 
@@ -272,7 +272,7 @@ try {
 
         .navbar .nav-links a:hover {
             color: #ffffff !important;
-            text-shadow: 0 0 8px rgba(255,255,255,0.6);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .navbar .nav-links a:hover::after {
@@ -284,12 +284,12 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             padding: 0.4rem 0.8rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             max-width: fit-content;
         }
 
@@ -298,7 +298,7 @@ try {
             font-weight: 500;
             font-size: 0.75rem;
             margin-right: 0.2rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             max-width: 60px;
             overflow: hidden;
@@ -321,7 +321,7 @@ try {
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             color: #ffffff !important;
             margin: 10px 2px;
         }
@@ -333,7 +333,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
 
@@ -344,8 +344,8 @@ try {
         .navbar .btn.profile-btn {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
             color: #ffffff !important;
-            border-color: rgba(255,255,255,0.2) !important;
-            box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             font-size: 0.9rem !important;
             padding: 0 !important;
             width: 35px !important;
@@ -383,11 +383,11 @@ try {
 
         .navbar .btn:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .navbar .btn.profile-btn:hover {
-            box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
 
         .navbar .btn.logout-btn:hover {
@@ -405,8 +405,8 @@ try {
         }
 
         .theme-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
             padding: 0.6rem;
             border-radius: 50%;
@@ -430,7 +430,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
 
@@ -439,10 +439,10 @@ try {
         }
 
         .theme-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
         }
 
         .theme-btn:active {
@@ -465,18 +465,18 @@ try {
         }
 
         body.dark-mode .navbar {
-            background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(20,20,40,0.95) 100%) !important;
-            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         body.dark-mode .theme-btn {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         body.dark-mode .theme-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.35);
         }
 
         .header-content {
@@ -507,7 +507,8 @@ try {
             transition: color 0.2s ease;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover,
+        .nav-links a.active {
             color: #667eea;
         }
 
@@ -646,7 +647,8 @@ try {
             border-collapse: collapse;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
@@ -728,10 +730,25 @@ try {
             font-weight: 600;
         }
 
-        .status-active { background: rgba(72, 187, 120, 0.2); color: #38a169; }
-        .status-completed { background: rgba(72, 187, 120, 0.2); color: #38a169; }
-        .status-paused { background: rgba(237, 137, 54, 0.2); color: #dd6b20; }
-        .status-cancelled { background: rgba(245, 101, 101, 0.2); color: #e53e3e; }
+        .status-active {
+            background: rgba(72, 187, 120, 0.2);
+            color: #38a169;
+        }
+
+        .status-completed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #38a169;
+        }
+
+        .status-paused {
+            background: rgba(237, 137, 54, 0.2);
+            color: #dd6b20;
+        }
+
+        .status-cancelled {
+            background: rgba(245, 101, 101, 0.2);
+            color: #e53e3e;
+        }
 
         .certificate-info {
             display: flex;
@@ -834,17 +851,27 @@ try {
             overflow-y: auto;
             animation: modalSlideIn 0.3s ease-out;
             /* Hide scrollbar */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
         }
 
         .modal-content::-webkit-scrollbar {
-            display: none; /* WebKit */
+            display: none;
+            /* WebKit */
         }
 
         @keyframes modalSlideIn {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
@@ -982,17 +1009,17 @@ try {
                 margin: 2% auto;
                 max-height: 90vh;
             }
-            
+
             .modal-body {
                 padding: 1.5rem;
             }
-            
+
             .modal-footer {
                 padding: 1rem 1.5rem !important;
                 flex-direction: row !important;
                 gap: 0.5rem;
             }
-            
+
             .modal-footer .btn {
                 flex: 1;
                 min-width: 100px;
@@ -1011,14 +1038,14 @@ try {
                     Creators-Space
                 </a>
             </h1>
-            
+
             <div class="navbar-right">
                 <div class="nav-links align-items-center">
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
                     <a href="instructor-messages.php">Messages</a>
-                    
+
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">
                         <button id="theme-toggle-btn" class="theme-btn" title="Toggle Dark/Light Mode">
@@ -1026,7 +1053,7 @@ try {
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- User Section -->
                 <div id="userSection">
                     <a href="#" class="btn profile-btn" title="Profile">
@@ -1135,7 +1162,7 @@ try {
                                     <?php echo date('M j, Y', strtotime($enrollment['enrolled_at'])); ?>
                                     <br>
                                     <span style="font-size: 0.8rem; color: #64748b;">
-                                        <?php 
+                                        <?php
                                         if ($enrollment['last_accessed']) {
                                             echo 'Last accessed: ' . date('M j', strtotime($enrollment['last_accessed']));
                                         } else {
@@ -1178,8 +1205,8 @@ try {
                                                 <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['enrollment_id']; ?>">
                                                 <input type="hidden" name="user_id" value="<?php echo $enrollment['user_id']; ?>">
                                                 <input type="hidden" name="course_id" value="<?php echo $enrollment['course_id']; ?>">
-                                                <button type="submit" class="btn btn-success btn-small" 
-                                                        onclick="return confirm('Issue certificate for this student?');">
+                                                <button type="submit" class="btn btn-success btn-small"
+                                                    onclick="return confirm('Issue certificate for this student?');">
                                                     <i class="fas fa-certificate"></i> Issue Certificate
                                                 </button>
                                             </form>
@@ -1192,12 +1219,12 @@ try {
                                                 <i class="fas fa-check"></i> Completed
                                             </span>
                                         <?php endif; ?>
-                                        <button class="btn btn-primary btn-small" 
-                                                onclick="messageStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
+                                        <button class="btn btn-primary btn-small"
+                                            onclick="messageStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
                                             <i class="fas fa-envelope"></i> Message
                                         </button>
-                                        <button class="btn btn-danger btn-small" 
-                                                onclick="reportStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
+                                        <button class="btn btn-danger btn-small"
+                                            onclick="reportStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
                                             <i class="fas fa-flag"></i> Report
                                         </button>
                                     </div>
@@ -1230,7 +1257,7 @@ try {
                             <option value="other">Other</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="reportSeverity">Severity:</label>
                         <select id="reportSeverity" name="severity" required>
@@ -1240,21 +1267,21 @@ try {
                             <option value="urgent">Urgent</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="reportSubject">Subject:</label>
                         <input type="text" id="reportSubject" name="subject" required placeholder="Brief description of the issue" maxlength="255">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="reportDescription">Detailed Description:</label>
                         <textarea id="reportDescription" name="description" required placeholder="Please provide detailed information about the issue..." rows="5"></textarea>
                     </div>
-                    
+
                     <input type="hidden" id="reportStudentId" name="student_id">
                     <input type="hidden" id="reportCourseId" name="course_id">
                 </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
                     <button type="submit" class="btn btn-danger">Submit Report</button>
@@ -1279,7 +1306,7 @@ try {
         // Theme toggle functionality
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeIcon = document.getElementById('theme-icon');
-        
+
         // Load saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -1288,11 +1315,11 @@ try {
         } else {
             themeIcon.className = 'fas fa-moon';
         }
-        
+
         // Theme toggle functionality
         themeToggleBtn.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            
+
             if (document.body.classList.contains('dark-mode')) {
                 themeIcon.className = 'fas fa-sun';
                 localStorage.setItem('theme', 'dark');
@@ -1300,7 +1327,7 @@ try {
                 themeIcon.className = 'fas fa-moon';
                 localStorage.setItem('theme', 'light');
             }
-            
+
             // Add a little animation to the button
             themeToggleBtn.style.transform = 'scale(0.9)';
             setTimeout(() => {
@@ -1318,16 +1345,20 @@ try {
         let currentStudentData = {};
 
         function reportStudent(studentId, studentName, courseId) {
-            currentStudentData = { studentId, studentName, courseId };
-            
+            currentStudentData = {
+                studentId,
+                studentName,
+                courseId
+            };
+
             // Set hidden form fields
             document.getElementById('reportStudentId').value = studentId;
             document.getElementById('reportCourseId').value = courseId;
-            
+
             // Update modal title
-            document.querySelector('#reportModal .modal-header h3').innerHTML = 
+            document.querySelector('#reportModal .modal-header h3').innerHTML =
                 `<i class="fas fa-flag"></i> Report Student: ${studentName}`;
-            
+
             // Show modal
             document.getElementById('reportModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -1350,16 +1381,16 @@ try {
         // Handle form submission
         document.getElementById('reportForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
-            
+
             try {
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData);
-                
+
                 const response = await fetch('../backend/api/submit_student_report.php', {
                     method: 'POST',
                     headers: {
@@ -1367,9 +1398,9 @@ try {
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert(`Report submitted successfully for ${currentStudentData.studentName}. Report ID: ${result.report_id}`);
                     closeReportModal();
@@ -1400,4 +1431,5 @@ try {
         console.log('Student management page loaded successfully');
     </script>
 </body>
+
 </html>

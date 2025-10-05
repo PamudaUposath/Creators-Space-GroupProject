@@ -12,7 +12,7 @@
 .page-title {
     font-size: 3rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -83,7 +83,7 @@
     font-size: 0.8rem;
     font-weight: bold;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .verified-time {
@@ -147,7 +147,7 @@
 .verify-btn {
     width: 100%;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     color: #ffffff;
     border: none;
     border-radius: 12px;
@@ -213,7 +213,7 @@
 .certificate-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -297,7 +297,7 @@
 .step-number {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     color: #ffffff;
     border-radius: 50%;
     display: flex;
@@ -368,7 +368,7 @@
 }
 
 .cta-btn.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
     color: #ffffff;
 }
 
@@ -401,29 +401,29 @@ body.dark-mode .cta-section {
     .page-title {
         font-size: 2.5rem;
     }
-    
+
     .page-subtitle {
         font-size: 1.1rem;
     }
-    
+
     .verification-card,
     .certificate-container {
         padding: 1.5rem;
     }
-    
+
     .certificates-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .steps-container {
         grid-template-columns: 1fr;
     }
-    
+
     .cta-buttons {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .cta-btn {
         width: 100%;
         max-width: 300px;
@@ -434,20 +434,20 @@ body.dark-mode .cta-section {
     .page-title {
         font-size: 2rem;
     }
-    
+
     .certificate-container {
         padding: 1rem;
     }
-    
+
     .verification-card {
         padding: 1.5rem;
     }
-    
+
     .step {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .step-number {
         margin: 0 auto 1rem;
     }

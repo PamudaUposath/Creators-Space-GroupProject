@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%) !important;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -19,7 +19,8 @@ body {
 .main-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 6rem 1rem 2rem 1rem; /* Added top padding for navbar */
+  padding: 6rem 1rem 2rem 1rem;
+  /* Added top padding for navbar */
 }
 
 /* Page Header */
@@ -36,7 +37,7 @@ body {
 .page-title {
   font-size: 3.5rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -62,7 +63,8 @@ body {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  margin-top: 1rem; /* Extra margin to ensure spacing */
+  margin-top: 1rem;
+  /* Extra margin to ensure spacing */
 }
 
 .courses-hero .container {
@@ -79,7 +81,7 @@ body {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -163,11 +165,9 @@ body {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: conic-gradient(
-    #667eea 0deg, 
-    #764ba2 calc(var(--progress) * 3.6deg), 
-    rgba(255, 255, 255, 0.3) calc(var(--progress) * 3.6deg)
-  );
+  background: conic-gradient(#5a73e5 0deg,
+      #764ba2 calc(var(--progress) * 3.6deg),
+      rgba(255, 255, 255, 0.3) calc(var(--progress) * 3.6deg));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -484,34 +484,34 @@ body {
   .main-content {
     padding: 1rem 0.5rem;
   }
-  
+
   .courses-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .course-card {
     margin: 0 0.5rem;
   }
-  
+
   .course-meta {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-  
+
   .course-actions {
     flex-direction: column;
   }
-  
+
   .page-title {
     font-size: 2rem;
   }
-  
+
   .hero-content h1 {
     font-size: 2rem;
   }
-  
+
   .hero-content p {
     font-size: 1rem;
   }
@@ -521,19 +521,19 @@ body {
   .courses-grid {
     gap: 1rem;
   }
-  
+
   .course-card {
     margin: 0;
   }
-  
+
   .course-content {
     padding: 1rem;
   }
-  
+
   .progress-section {
     padding: 0.75rem;
   }
-  
+
   .course-meta {
     padding: 0.5rem;
   }

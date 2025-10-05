@@ -18,14 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $last_name = trim($_POST['last_name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $username = trim($_POST['username'] ?? '');
-        
+
         // Validate required fields
         if (empty($first_name) || empty($last_name) || empty($email) || empty($username)) {
             $_SESSION['error'] = 'All fields are required.';
             header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
             exit;
         }
-        
+
         // Validate email format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error'] = 'Please enter a valid email address.';
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
             exit;
         }
-        
+
         // Check if username exists (excluding removed users)
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? AND (remove IS NULL OR remove = 0)");
         $stmt->execute([$username]);
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log('Email sending error: ' . $e->getMessage());
             $_SESSION['message'] = 'Instructor added, but there was an error sending the welcome email.';
         }
-        
+
         logActivity($_SESSION['user_id'], 'admin_user_action', "Added instructor: $new_id");
         header('Location: /Creators-Space-GroupProject/backend/admin/users.php');
         exit;
@@ -99,12 +99,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $pdo->prepare("SELECT first_name, last_name, email FROM users WHERE id = ? AND role = 'user' AND (remove IS NULL OR remove = 0)");
                     $stmt->execute([$userId]);
                     $userToPromote = $stmt->fetch();
-                    
+
                     if ($userToPromote) {
                         // Update user role to instructor
                         $stmt = $pdo->prepare("UPDATE users SET role = 'instructor' WHERE id = ? AND role = 'user' AND (remove IS NULL OR remove = 0)");
                         $result = $stmt->execute([$userId]);
-                        
+
                         if ($result && $stmt->rowCount() > 0) {
                             // Send promotion email
                             try {
@@ -221,7 +221,7 @@ try {
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
