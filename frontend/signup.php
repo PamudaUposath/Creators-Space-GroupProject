@@ -523,7 +523,7 @@ include './includes/header.php';
 
       const formData = new FormData(this);
 
-      fetch('/backend/auth/signup_process.php', {
+      fetch('../backend/auth/signup_process.php', {
         method: 'POST',
         body: formData,
         credentials: 'same-origin'  // This ensures cookies/session are sent
@@ -548,12 +548,12 @@ include './includes/header.php';
           spinner.style.display = 'none';
           
           if (data.success) {
-            showMessage(data.message, 'success');
+            showMessage(data.message + ' You will be redirected to the login page in 3 seconds.', 'success');
             this.reset(); // Clear the form
             
             // Disable the form and show redirect message
             signupBtn.disabled = true;
-            signupBtn.textContent = 'Redirecting to Login...';
+            signupBtn.textContent = 'Account Created! Redirecting...';
             
             // Redirect to login page after 3 seconds
             setTimeout(() => {
