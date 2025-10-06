@@ -3,8 +3,10 @@
 session_start();
 
 // Check if user is logged in as instructor or admin
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || 
-    ($_SESSION['role'] !== 'instructor' && $_SESSION['role'] !== 'admin')) {
+if (
+    !isset($_SESSION['user_id']) || !isset($_SESSION['role']) ||
+    ($_SESSION['role'] !== 'instructor' && $_SESSION['role'] !== 'admin')
+) {
     header('Location: login.php');
     exit;
 }
@@ -18,6 +20,7 @@ $page_description = 'Communicate with your students and manage course discussion
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +28,7 @@ $page_description = 'Communicate with your students and manage course discussion
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -35,7 +38,7 @@ $page_description = 'Communicate with your students and manage course discussion
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
@@ -47,13 +50,13 @@ $page_description = 'Communicate with your students and manage course discussion
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.95) 0%, rgba(118,75,162,0.95) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
             backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding: 1rem 0;
             z-index: 1000;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .navbar::before {
@@ -63,7 +66,7 @@ $page_description = 'Communicate with your students and manage course discussion
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -112,13 +115,13 @@ $page_description = 'Communicate with your students and manage course discussion
             font-weight: 800;
             letter-spacing: -0.02em;
             transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             width: auto;
         }
 
         .navbar h1 a:hover {
-            color: #667eea !important;
-            text-shadow: 0 0 20px rgba(102,126,234,0.8);
+            color: #5a73e5 !important;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
             transform: translateY(-1px);
         }
 
@@ -154,7 +157,7 @@ $page_description = 'Communicate with your students and manage course discussion
             letter-spacing: 0.3px;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             margin: 10px 2px;
         }
 
@@ -171,7 +174,7 @@ $page_description = 'Communicate with your students and manage course discussion
 
         .navbar .nav-links a:hover {
             color: #ffffff !important;
-            text-shadow: 0 0 8px rgba(255,255,255,0.6);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .navbar .nav-links a:hover::after {
@@ -183,12 +186,12 @@ $page_description = 'Communicate with your students and manage course discussion
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             padding: 0.4rem 0.8rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             max-width: fit-content;
         }
 
@@ -197,7 +200,7 @@ $page_description = 'Communicate with your students and manage course discussion
             font-weight: 500;
             font-size: 0.75rem;
             margin-right: 0.2rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             max-width: 60px;
             overflow: hidden;
@@ -220,7 +223,7 @@ $page_description = 'Communicate with your students and manage course discussion
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             color: #ffffff !important;
             margin: 10px 2px;
         }
@@ -232,7 +235,7 @@ $page_description = 'Communicate with your students and manage course discussion
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
 
@@ -243,8 +246,8 @@ $page_description = 'Communicate with your students and manage course discussion
         .navbar .btn.profile-btn {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
             color: #ffffff !important;
-            border-color: rgba(255,255,255,0.2) !important;
-            box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             font-size: 0.9rem !important;
             padding: 0 !important;
             width: 35px !important;
@@ -282,11 +285,11 @@ $page_description = 'Communicate with your students and manage course discussion
 
         .navbar .btn:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .navbar .btn.profile-btn:hover {
-            box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
 
         .navbar .btn.logout-btn:hover {
@@ -322,7 +325,7 @@ $page_description = 'Communicate with your students and manage course discussion
             background: rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         /* Main Content */
@@ -337,14 +340,14 @@ $page_description = 'Communicate with your students and manage course discussion
             width: 350px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
         }
 
         .sidebar-header {
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -465,7 +468,7 @@ $page_description = 'Communicate with your students and manage course discussion
 
         .chat-header {
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -537,7 +540,7 @@ $page_description = 'Communicate with your students and manage course discussion
         }
 
         .message.received .message-bubble {
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
             color: #2d3748;
             border-bottom-left-radius: 4px;
         }
@@ -558,7 +561,7 @@ $page_description = 'Communicate with your students and manage course discussion
         .message-input-container {
             padding: 1.5rem;
             background: rgba(255, 255, 255, 0.8);
-            border-top: 1px solid rgba(0,0,0,0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .message-input-form {
@@ -681,7 +684,9 @@ $page_description = 'Communicate with your students and manage course discussion
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Course Badge */
@@ -701,15 +706,238 @@ $page_description = 'Communicate with your students and manage course discussion
             .main-content {
                 flex-direction: column;
             }
-            
+
             .sidebar {
                 width: 100%;
                 height: 50vh;
             }
-            
+
             .navbar-container {
                 padding: 0 1rem;
             }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(26, 32, 46, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .sidebar-header {
+            background: rgba(26, 32, 46, 0.95);
+        }
+
+        body.dark-mode .tab-container {
+            background: rgba(26, 32, 46, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .sidebar-header h2 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar-subtitle {
+            color: #f7fafc;
+        }
+
+        body.dark-mode .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .search-box input {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .search-box input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .conversation-item,
+        body.dark-mode .student-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .conversation-item:hover,
+        body.dark-mode .student-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .conversation-item.active {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .conversation-name,
+        body.dark-mode .student-name {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .conversation-last-message,
+        body.dark-mode .student-email,
+        body.dark-mode .conversation-time {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .chat-area {
+            background: rgba(26, 32, 46, 0.95);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .chat-subtitle {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .messages-container {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .message {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .message.sent {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .message-content {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .message-time {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .message-input-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .message-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .message-input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .send-btn {
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
+        }
+
+        body.dark-mode .send-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        body.dark-mode .empty-state h3 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .empty-state p {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .typing-indicator {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .typing-text {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .section-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .online-status {
+            border: 2px solid #1a1a2e;
+        }
+
+        body.dark-mode .file-upload-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .file-upload-area:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .file-upload-icon {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .file-upload-text {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .file-upload-subtext {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .navbar {
+            background: rgba(26, 32, 46, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .navbar h1 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .navbar a {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .btn-logout {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        body.dark-mode .btn-logout:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #e53e3e 100%);
+        }
+
+        body.dark-mode .dropdown-menu {
+            background: rgba(26, 32, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .dropdown-menu a {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .dropdown-menu a:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        body.dark-mode .theme-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -724,14 +952,14 @@ $page_description = 'Communicate with your students and manage course discussion
                     Creators-Space
                 </a>
             </h1>
-            
+
             <div class="navbar-right">
                 <div class="nav-links align-items-center">
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
                     <a href="instructor-messages.php">Messages</a>
-                    
+
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">
                         <button id="theme-toggle-btn" class="theme-btn" title="Toggle Dark/Light Mode">
@@ -739,7 +967,7 @@ $page_description = 'Communicate with your students and manage course discussion
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- User Section -->
                 <div id="userSection">
                     <a href="#" class="btn profile-btn" title="Profile">
@@ -760,7 +988,7 @@ $page_description = 'Communicate with your students and manage course discussion
                 <h2 class="sidebar-title">Messages</h2>
                 <p class="sidebar-subtitle">Your conversations with students</p>
             </div>
-            
+
             <div class="conversation-list" id="conversationList">
                 <div class="loading">
                     <div class="spinner"></div>
@@ -787,17 +1015,20 @@ $page_description = 'Communicate with your students and manage course discussion
                 this.currentConversation = null;
                 this.conversations = [];
                 this.messages = [];
-                
+
                 // Check for pre-selected student from URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
                 const preSelectedStudentId = urlParams.get('student_id');
                 const preSelectedStudentName = urlParams.get('student_name');
                 const preSelectedCourseId = urlParams.get('course_id');
-                
+
                 this.loadConversations().then(() => {
                     // If there's a pre-selected student, start conversation with them
                     if (preSelectedStudentId) {
-                        this.currentConversation = { userId: preSelectedStudentId, courseId: preSelectedCourseId };
+                        this.currentConversation = {
+                            userId: preSelectedStudentId,
+                            courseId: preSelectedCourseId
+                        };
                         this.loadMessages(preSelectedStudentId, preSelectedCourseId);
                     }
                 });
@@ -807,7 +1038,7 @@ $page_description = 'Communicate with your students and manage course discussion
                 try {
                     const response = await fetch('/Creators-Space-GroupProject/backend/communication/get_conversations.php');
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         this.conversations = data.data.conversations;
                         this.renderConversations();
@@ -823,7 +1054,7 @@ $page_description = 'Communicate with your students and manage course discussion
 
             renderConversations() {
                 const container = document.getElementById('conversationList');
-                
+
                 if (this.conversations.length === 0) {
                     container.innerHTML = `
                         <div class="empty-conversation">
@@ -884,8 +1115,12 @@ $page_description = 'Communicate with your students and manage course discussion
                 });
                 document.querySelector(`[data-conversation-id="${conversationId}"]`).classList.add('active');
 
-                this.currentConversation = { id: conversationId, userId: userId, courseId: courseId };
-                
+                this.currentConversation = {
+                    id: conversationId,
+                    userId: userId,
+                    courseId: courseId
+                };
+
                 // Load messages with course context
                 await this.loadMessages(userId, courseId);
             }
@@ -897,29 +1132,32 @@ $page_description = 'Communicate with your students and manage course discussion
                     console.log('Loading messages for OTHER user ID:', otherUserId);
                     console.log('Course ID:', courseId);
                     console.log('Type of otherUserId:', typeof otherUserId);
-                    
+
                     let url = `/Creators-Space-GroupProject/backend/communication/get_messages.php?other_user_id=${otherUserId}`;
                     if (courseId) url += `&course_id=${courseId}`;
-                    
+
                     console.log('Fetching from URL:', url);
 
                     const response = await fetch(url);
                     console.log('Response status:', response.status);
                     console.log('Response ok:', response.ok);
-                    
+
                     const data = await response.json();
-                    
+
                     console.log('Full API Response:', data);
-                    
+
                     if (data.success) {
                         this.messages = data.data.messages;
                         console.log('Messages loaded:', this.messages.length, 'messages');
                         console.log('Messages array:', this.messages);
                         this.renderMessages(data.data.other_user);
-                        
+
                         // Set current conversation if not already set
                         if (!this.currentConversation || this.currentConversation.userId !== otherUserId) {
-                            this.currentConversation = { userId: otherUserId, courseId: courseId };
+                            this.currentConversation = {
+                                userId: otherUserId,
+                                courseId: courseId
+                            };
                         }
                     } else {
                         console.error('Failed to load messages:', data.message);
@@ -935,9 +1173,9 @@ $page_description = 'Communicate with your students and manage course discussion
                 console.log('renderMessages called with:', otherUser);
                 console.log('this.messages:', this.messages);
                 console.log('messages length:', this.messages.length);
-                
+
                 const chatContent = document.getElementById('chatContent');
-                
+
                 const chatHTML = `
                     <div class="chat-header">
                         <div class="chat-user-info">
@@ -981,7 +1219,7 @@ $page_description = 'Communicate with your students and manage course discussion
                 `;
 
                 chatContent.innerHTML = chatHTML;
-                
+
                 // Auto-resize textarea
                 const textarea = document.getElementById('messageInput');
                 textarea.addEventListener('input', () => {
@@ -1010,7 +1248,7 @@ $page_description = 'Communicate with your students and manage course discussion
 
             async sendMessage(event) {
                 event.preventDefault();
-                
+
                 if (!this.currentConversation) {
                     this.showError('Please select a conversation first');
                     return;
@@ -1038,15 +1276,15 @@ $page_description = 'Communicate with your students and manage course discussion
                     });
 
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         // Clear input
                         messageInput.value = '';
                         messageInput.style.height = 'auto';
-                        
+
                         // Reload messages
                         await this.loadMessages(this.currentConversation.userId);
-                        
+
                         // Update conversations list
                         await this.loadConversations();
                     } else {
@@ -1072,13 +1310,21 @@ $page_description = 'Communicate with your students and manage course discussion
                 const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
                 if (diffDays === 0) {
-                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return date.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                 } else if (diffDays === 1) {
                     return 'Yesterday';
                 } else if (diffDays < 7) {
-                    return date.toLocaleDateString([], { weekday: 'short' });
+                    return date.toLocaleDateString([], {
+                        weekday: 'short'
+                    });
                 } else {
-                    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                    return date.toLocaleDateString([], {
+                        month: 'short',
+                        day: 'numeric'
+                    });
                 }
             }
 
@@ -1115,7 +1361,7 @@ $page_description = 'Communicate with your students and manage course discussion
         // Theme toggle functionality
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeIcon = document.getElementById('theme-icon');
-        
+
         // Load saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -1124,11 +1370,11 @@ $page_description = 'Communicate with your students and manage course discussion
         } else {
             themeIcon.className = 'fas fa-moon';
         }
-        
+
         // Theme toggle functionality
         themeToggleBtn.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            
+
             if (document.body.classList.contains('dark-mode')) {
                 themeIcon.className = 'fas fa-sun';
                 localStorage.setItem('theme', 'dark');
@@ -1136,7 +1382,7 @@ $page_description = 'Communicate with your students and manage course discussion
                 themeIcon.className = 'fas fa-moon';
                 localStorage.setItem('theme', 'light');
             }
-            
+
             // Add a little animation to the button
             themeToggleBtn.style.transform = 'scale(0.9)';
             setTimeout(() => {
@@ -1145,4 +1391,5 @@ $page_description = 'Communicate with your students and manage course discussion
         });
     </script>
 </body>
+
 </html>

@@ -16,42 +16,197 @@ $message_type = '';
 
 // Handle certificate issuance
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'issue_certificate') {
+    // Enable debugging
+    $debug_log = [];
+    $debug_log[] = "=== CERTIFICATE ISSUANCE DEBUG START ===";
+    $debug_log[] = "Timestamp: " . date('Y-m-d H:i:s');
+    
     try {
         $enrollment_id = intval($_POST['enrollment_id']);
         $user_id = intval($_POST['user_id']);
         $course_id = intval($_POST['course_id']);
         
-        // Check if certificate already exists
-        $stmt = $pdo->prepare("SELECT id FROM certificates WHERE user_id = ? AND course_id = ?");
-        $stmt->execute([$user_id, $course_id]);
+        $debug_log[] = "Input Parameters:";
+        $debug_log[] = "  Enrollment ID: $enrollment_id";
+        $debug_log[] = "  User ID: $user_id";
+        $debug_log[] = "  Course ID: $course_id";
         
-        if (!$stmt->fetch()) {
-            // Generate certificate code
-            $certificate_code = 'CERT-' . strtoupper(substr(md5($course_id . $user_id . time()), 0, 8));
-            
-            // Insert certificate
-            $stmt = $pdo->prepare("
-                INSERT INTO certificates (user_id, course_id, certificate_code, issued_at)
-                VALUES (?, ?, ?, NOW())
-            ");
-            $stmt->execute([$user_id, $course_id, $certificate_code]);
-            
-            // Update enrollment as completed
-            $stmt = $pdo->prepare("
-                UPDATE enrollments SET status = 'completed', completed_at = NOW(), progress = 100
-                WHERE id = ?
-            ");
-            $stmt->execute([$enrollment_id]);
-            
-            $message = "Certificate issued successfully! Certificate ID: $certificate_code";
-            $message_type = "success";
-        } else {
-            $message = "Certificate already exists for this student and course.";
+        // First, check the student's progress
+        $stmt = $pdo->prepare("SELECT progress FROM enrollments WHERE id = ? AND user_id = ? AND course_id = ?");
+        $stmt->execute([$enrollment_id, $user_id, $course_id]);
+        $enrollment = $stmt->fetch();
+        
+        $debug_log[] = "Progress Check:";
+        $debug_log[] = "  Found enrollment: " . ($enrollment ? 'Yes' : 'No');
+        if ($enrollment) {
+            $debug_log[] = "  Progress: " . $enrollment['progress'] . "%";
+        }
+        
+        if (!$enrollment) {
+            $debug_log[] = "ERROR: Enrollment not found";
+            $message = "Enrollment not found.";
             $message_type = "error";
+        } elseif ($enrollment['progress'] < 80) {
+            $debug_log[] = "ERROR: Progress insufficient (" . $enrollment['progress'] . "% < 80%)";
+            $message = "Certificate can only be issued to students with 80% or higher progress. Current progress: " . $enrollment['progress'] . "%";
+            $message_type = "error";
+        } else {
+            $debug_log[] = "✅ Progress check passed (" . $enrollment['progress'] . "% >= 80%)";
+            
+            // Check if certificate already exists
+            $stmt = $pdo->prepare("SELECT id FROM certificates WHERE user_id = ? AND course_id = ?");
+            $stmt->execute([$user_id, $course_id]);
+            $existing_cert = $stmt->fetch();
+            
+            $debug_log[] = "Certificate Existence Check:";
+            $debug_log[] = "  Existing certificate: " . ($existing_cert ? 'Yes (ID: ' . $existing_cert['id'] . ')' : 'No');
+            
+            if (!$existing_cert) {
+                $debug_log[] = "🎯 Proceeding with certificate issuance...";
+                
+                // Generate certificate code
+                $certificate_code = 'CERT-' . strtoupper(substr(md5($course_id . $user_id . time()), 0, 8));
+                $debug_log[] = "Generated certificate code: $certificate_code";
+                
+                // Get student and course details for email
+                $stmt = $pdo->prepare("
+                    SELECT 
+                        u.first_name, u.last_name, u.email,
+                        c.title as course_title,
+                        c.level,
+                        CONCAT(inst.first_name, ' ', COALESCE(inst.last_name, '')) as instructor_name
+                    FROM users u
+                    JOIN courses c ON c.id = ?
+                    LEFT JOIN users inst ON c.instructor_id = inst.id
+                    WHERE u.id = ?
+                ");
+                $stmt->execute([$course_id, $user_id]);
+                $details = $stmt->fetch();
+                
+                $debug_log[] = "Student Details Retrieved:";
+                $debug_log[] = "  Name: " . ($details ? $details['first_name'] . ' ' . $details['last_name'] : 'Not found');
+                $debug_log[] = "  Email: " . ($details ? $details['email'] : 'Not found');
+                $debug_log[] = "  Course: " . ($details ? $details['course_title'] : 'Not found');
+                
+                // Insert certificate
+                $stmt = $pdo->prepare("
+                    INSERT INTO certificates (user_id, course_id, certificate_code, issued_at)
+                    VALUES (?, ?, ?, NOW())
+                ");
+                $stmt->execute([$user_id, $course_id, $certificate_code]);
+                $debug_log[] = "✅ Certificate record inserted into database";
+                
+                // Update enrollment as completed
+                $stmt = $pdo->prepare("
+                    UPDATE enrollments SET status = 'completed', completed_at = NOW(), progress = 100
+                    WHERE id = ?
+                ");
+                $stmt->execute([$enrollment_id]);
+                $debug_log[] = "✅ Enrollment updated to completed status";
+                
+                // Generate and send certificate email
+                $debug_log[] = "📧 Starting certificate generation and email process...";
+                require_once '../backend/lib/certificate_html_generator.php';
+                require_once '../backend/lib/email_service.php';
+                $debug_log[] = "✅ Required libraries loaded";
+                
+                try {
+                    // Generate certificate HTML (works without GD extension)
+                    $debug_log[] = "🎓 Generating certificate HTML...";
+                    $certificatePath = generateCertificateHTML(
+                        $certificate_code,
+                        $details['first_name'] . ' ' . $details['last_name'],
+                        $details['course_title'],
+                        $details['level']
+                    );
+                    
+                    $debug_log[] = "✅ Certificate generated at: " . $certificatePath;
+                    $debug_log[] = "File exists: " . (file_exists($certificatePath) ? 'Yes' : 'No');
+                    if (file_exists($certificatePath)) {
+                        $debug_log[] = "File size: " . filesize($certificatePath) . " bytes";
+                    }
+                    
+                    // Get the certificate URL for sharing
+                    $certificateUrl = 'http://localhost/Creators-Space-GroupProject/storage/certificates/' . basename($certificatePath);
+                    $debug_log[] = "Certificate URL: " . $certificateUrl;
+                    
+                    // Try to send email with certificate
+                    $debug_log[] = "📬 Attempting to send certificate email...";
+                    $debug_log[] = "Email parameters:";
+                    $debug_log[] = "  To: " . $details['email'];
+                    $debug_log[] = "  Name: " . $details['first_name'] . ' ' . $details['last_name'];
+                    $debug_log[] = "  Course: " . $details['course_title'];
+                    $debug_log[] = "  Cert Code: " . $certificate_code;
+                    
+                    $emailSent = sendCertificateEmail(
+                        $details['email'],
+                        $details['first_name'] . ' ' . $details['last_name'],
+                        $details['course_title'],
+                        $certificate_code,
+                        $certificatePath,
+                        $details['level']
+                    );
+                    
+                    $debug_log[] = "Email sending result: " . ($emailSent ? 'SUCCESS' : 'FAILED');
+                    
+                    if ($emailSent) {
+                        $debug_log[] = "✅ SUCCESS: Certificate issued and email sent successfully!";
+                        $message = "🎉 Certificate issued successfully and sent via email!<br>";
+                        $message .= "<strong>Certificate ID:</strong> $certificate_code<br>";
+                        $message .= "<a href='$certificateUrl' target='_blank' style='color: #667eea;'>📜 View Certificate</a>";
+                        $message_type = "success";
+                    } else {
+                        $debug_log[] = "⚠️ Certificate issued but email failed to send";
+                        $message = "Certificate issued successfully! 🎉";
+                        // $message .= "<strong>Certificate ID:</strong> $certificate_code<br>";
+                        // $message .= "<strong>Student:</strong> " . htmlspecialchars($details['first_name'] . ' ' . $details['last_name']) . "<br>";
+                        // $message .= "<strong>Email:</strong> " . htmlspecialchars($details['email']) . "<br>";
+                        // $message .= "<a href='$certificateUrl' target='_blank' style='color: #667eea; font-weight: bold;'>📜 View Certificate</a><br>";
+                        // $message .= "<small style='color: #dc2626; font-weight: 500;'>⚠️ Email not sent - Please share the certificate link with the student manually</small>";
+                        $message_type = "success";
+                    }
+                } catch (Exception $e) {
+                    $debug_log[] = "ERROR in certificate/email process: " . $e->getMessage();
+                    $debug_log[] = "Stack trace: " . $e->getTraceAsString();
+                    $message = "Certificate issued successfully! Certificate ID: $certificate_code (Note: " . $e->getMessage() . ")";
+                    $message_type = "success";
+                }
+            } else {
+                $debug_log[] = "ERROR: Certificate already exists";
+                $message = "Certificate already exists for this student and course.";
+                $message_type = "error";
+            }
         }
     } catch (PDOException $e) {
+        $debug_log[] = "DATABASE ERROR: " . $e->getMessage();
+        $debug_log[] = "Stack trace: " . $e->getTraceAsString();
         $message = "Error issuing certificate: " . $e->getMessage();
         $message_type = "error";
+    } catch (Exception $e) {
+        $debug_log[] = "GENERAL ERROR: " . $e->getMessage();
+        $debug_log[] = "Stack trace: " . $e->getTraceAsString();
+        $message = "Error issuing certificate: " . $e->getMessage();
+        $message_type = "error";
+    }
+    
+    // Log debug information
+    $debug_log[] = "=== CERTIFICATE ISSUANCE DEBUG END ===";
+    error_log(implode("\n", $debug_log));
+    
+    // Also save debug log to a file for easy viewing
+    $debug_file = __DIR__ . '/../backend/logs/certificate_debug_' . date('Y-m-d') . '.log';
+    $debug_dir = dirname($debug_file);
+    if (!is_dir($debug_dir)) {
+        mkdir($debug_dir, 0755, true);
+    }
+    file_put_contents($debug_file, implode("\n", $debug_log) . "\n\n", FILE_APPEND | LOCK_EX);
+    
+    // Add debug info to message if in development
+    if (isset($_GET['debug']) && $_GET['debug'] === '1') {
+        $message .= "<br><br><details style='margin-top: 10px;'><summary style='cursor: pointer; color: #666;'>🐛 Debug Information (Click to expand)</summary>";
+        $message .= "<pre style='background: #f4f4f4; padding: 10px; border-radius: 5px; font-size: 12px; max-height: 300px; overflow-y: auto; margin-top: 10px;'>";
+        $message .= htmlspecialchars(implode("\n", $debug_log));
+        $message .= "</pre></details>";
     }
 }
 
@@ -85,30 +240,29 @@ try {
         LEFT JOIN certificates cert ON cert.user_id = u.id AND cert.course_id = c.id
         WHERE c.instructor_id = ?
     ";
-    
+
     $params = [$instructor_id];
-    
+
     if ($course_filter) {
         $query .= " AND c.id = ?";
         $params[] = $course_filter;
     }
-    
+
     if ($status_filter) {
         $query .= " AND e.status = ?";
         $params[] = $status_filter;
     }
-    
+
     $query .= " ORDER BY e.enrolled_at DESC";
-    
+
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     $enrollments = $stmt->fetchAll();
-    
+
     // Get instructor's courses for filter dropdown
     $stmt = $pdo->prepare("SELECT id, title FROM courses WHERE instructor_id = ? ORDER BY title");
     $stmt->execute([$instructor_id]);
     $courses = $stmt->fetchAll();
-    
 } catch (PDOException $e) {
     error_log("Error fetching students: " . $e->getMessage());
     $enrollments = [];
@@ -118,6 +272,7 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,7 +280,7 @@ try {
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -135,7 +290,7 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
@@ -148,13 +303,13 @@ try {
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.95) 0%, rgba(118,75,162,0.95) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
             backdrop-filter: blur(30px);
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding: 1rem 0;
             z-index: 1000;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .navbar::before {
@@ -164,7 +319,7 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -213,13 +368,13 @@ try {
             font-weight: 800;
             letter-spacing: -0.02em;
             transition: all 0.3s ease;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             width: auto;
         }
 
         .navbar h1 a:hover {
-            color: #667eea !important;
-            text-shadow: 0 0 20px rgba(102,126,234,0.8);
+            color: #5a73e5 !important;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
             transform: translateY(-1px);
         }
 
@@ -255,7 +410,7 @@ try {
             letter-spacing: 0.3px;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             margin: 10px 2px;
         }
 
@@ -272,7 +427,7 @@ try {
 
         .navbar .nav-links a:hover {
             color: #ffffff !important;
-            text-shadow: 0 0 8px rgba(255,255,255,0.6);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
         }
 
         .navbar .nav-links a:hover::after {
@@ -284,12 +439,12 @@ try {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             padding: 0.4rem 0.8rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             max-width: fit-content;
         }
 
@@ -298,7 +453,7 @@ try {
             font-weight: 500;
             font-size: 0.75rem;
             margin-right: 0.2rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             max-width: 60px;
             overflow: hidden;
@@ -321,7 +476,7 @@ try {
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
             color: #ffffff !important;
             margin: 10px 2px;
         }
@@ -333,7 +488,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s ease;
         }
 
@@ -344,8 +499,8 @@ try {
         .navbar .btn.profile-btn {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
             color: #ffffff !important;
-            border-color: rgba(255,255,255,0.2) !important;
-            box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
             font-size: 0.9rem !important;
             padding: 0 !important;
             width: 35px !important;
@@ -383,11 +538,11 @@ try {
 
         .navbar .btn:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         .navbar .btn.profile-btn:hover {
-            box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
         }
 
         .navbar .btn.logout-btn:hover {
@@ -405,8 +560,8 @@ try {
         }
 
         .theme-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
             padding: 0.6rem;
             border-radius: 50%;
@@ -430,7 +585,7 @@ try {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
 
@@ -439,10 +594,10 @@ try {
         }
 
         .theme-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
         }
 
         .theme-btn:active {
@@ -465,18 +620,18 @@ try {
         }
 
         body.dark-mode .navbar {
-            background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(20,20,40,0.95) 100%) !important;
-            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+            background: linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         body.dark-mode .theme-btn {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         body.dark-mode .theme-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.35);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.35);
         }
 
         .header-content {
@@ -507,7 +662,8 @@ try {
             transition: color 0.2s ease;
         }
 
-        .nav-links a:hover, .nav-links a.active {
+        .nav-links a:hover,
+        .nav-links a.active {
             color: #667eea;
         }
 
@@ -646,7 +802,8 @@ try {
             border-collapse: collapse;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
@@ -728,10 +885,25 @@ try {
             font-weight: 600;
         }
 
-        .status-active { background: rgba(72, 187, 120, 0.2); color: #38a169; }
-        .status-completed { background: rgba(72, 187, 120, 0.2); color: #38a169; }
-        .status-paused { background: rgba(237, 137, 54, 0.2); color: #dd6b20; }
-        .status-cancelled { background: rgba(245, 101, 101, 0.2); color: #e53e3e; }
+        .status-active {
+            background: rgba(72, 187, 120, 0.2);
+            color: #38a169;
+        }
+
+        .status-completed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #38a169;
+        }
+
+        .status-paused {
+            background: rgba(237, 137, 54, 0.2);
+            color: #dd6b20;
+        }
+
+        .status-cancelled {
+            background: rgba(245, 101, 101, 0.2);
+            color: #e53e3e;
+        }
 
         .certificate-info {
             display: flex;
@@ -834,17 +1006,27 @@ try {
             overflow-y: auto;
             animation: modalSlideIn 0.3s ease-out;
             /* Hide scrollbar */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* Internet Explorer 10+ */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
         }
 
         .modal-content::-webkit-scrollbar {
-            display: none; /* WebKit */
+            display: none;
+            /* WebKit */
         }
 
         @keyframes modalSlideIn {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
@@ -982,17 +1164,17 @@ try {
                 margin: 2% auto;
                 max-height: 90vh;
             }
-            
+
             .modal-body {
                 padding: 1.5rem;
             }
-            
+
             .modal-footer {
                 padding: 1rem 1.5rem !important;
                 flex-direction: row !important;
                 gap: 0.5rem;
             }
-            
+
             .modal-footer .btn {
                 flex: 1;
                 min-width: 100px;
@@ -1011,14 +1193,14 @@ try {
                     Creators-Space
                 </a>
             </h1>
-            
+
             <div class="navbar-right">
                 <div class="nav-links align-items-center">
                     <a href="instructor-dashboard.php">Dashboard</a>
                     <a href="instructor-courses.php">My Courses</a>
                     <a href="instructor-students.php">Students</a>
                     <a href="instructor-messages.php">Messages</a>
-                    
+
                     <!-- Dark/Light Mode Toggle -->
                     <div class="theme-toggle">
                         <button id="theme-toggle-btn" class="theme-btn" title="Toggle Dark/Light Mode">
@@ -1026,7 +1208,7 @@ try {
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- User Section -->
                 <div id="userSection">
                     <a href="#" class="btn profile-btn" title="Profile">
@@ -1135,7 +1317,7 @@ try {
                                     <?php echo date('M j, Y', strtotime($enrollment['enrolled_at'])); ?>
                                     <br>
                                     <span style="font-size: 0.8rem; color: #64748b;">
-                                        <?php 
+                                        <?php
                                         if ($enrollment['last_accessed']) {
                                             echo 'Last accessed: ' . date('M j', strtotime($enrollment['last_accessed']));
                                         } else {
@@ -1178,8 +1360,8 @@ try {
                                                 <input type="hidden" name="enrollment_id" value="<?php echo $enrollment['enrollment_id']; ?>">
                                                 <input type="hidden" name="user_id" value="<?php echo $enrollment['user_id']; ?>">
                                                 <input type="hidden" name="course_id" value="<?php echo $enrollment['course_id']; ?>">
-                                                <button type="submit" class="btn btn-success btn-small" 
-                                                        onclick="return confirm('Issue certificate for this student?');">
+                                                <button type="submit" class="btn btn-success btn-small"
+                                                    onclick="return confirm('Issue certificate for this student?');">
                                                     <i class="fas fa-certificate"></i> Issue Certificate
                                                 </button>
                                             </form>
@@ -1192,12 +1374,12 @@ try {
                                                 <i class="fas fa-check"></i> Completed
                                             </span>
                                         <?php endif; ?>
-                                        <button class="btn btn-primary btn-small" 
-                                                onclick="messageStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
+                                        <button class="btn btn-primary btn-small"
+                                            onclick="messageStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
                                             <i class="fas fa-envelope"></i> Message
                                         </button>
-                                        <button class="btn btn-danger btn-small" 
-                                                onclick="reportStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
+                                        <button class="btn btn-danger btn-small"
+                                            onclick="reportStudent(<?php echo $enrollment['user_id']; ?>, '<?php echo htmlspecialchars(addslashes($enrollment['first_name'] . ' ' . $enrollment['last_name'])); ?>', <?php echo $enrollment['course_id']; ?>)">
                                             <i class="fas fa-flag"></i> Report
                                         </button>
                                     </div>
@@ -1230,7 +1412,7 @@ try {
                             <option value="other">Other</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="reportSeverity">Severity:</label>
                         <select id="reportSeverity" name="severity" required>
@@ -1240,21 +1422,21 @@ try {
                             <option value="urgent">Urgent</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="reportSubject">Subject:</label>
                         <input type="text" id="reportSubject" name="subject" required placeholder="Brief description of the issue" maxlength="255">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="reportDescription">Detailed Description:</label>
                         <textarea id="reportDescription" name="description" required placeholder="Please provide detailed information about the issue..." rows="5"></textarea>
                     </div>
-                    
+
                     <input type="hidden" id="reportStudentId" name="student_id">
                     <input type="hidden" id="reportCourseId" name="course_id">
                 </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
                     <button type="submit" class="btn btn-danger">Submit Report</button>
@@ -1279,7 +1461,7 @@ try {
         // Theme toggle functionality
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeIcon = document.getElementById('theme-icon');
-        
+
         // Load saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -1288,11 +1470,11 @@ try {
         } else {
             themeIcon.className = 'fas fa-moon';
         }
-        
+
         // Theme toggle functionality
         themeToggleBtn.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
-            
+
             if (document.body.classList.contains('dark-mode')) {
                 themeIcon.className = 'fas fa-sun';
                 localStorage.setItem('theme', 'dark');
@@ -1300,7 +1482,7 @@ try {
                 themeIcon.className = 'fas fa-moon';
                 localStorage.setItem('theme', 'light');
             }
-            
+
             // Add a little animation to the button
             themeToggleBtn.style.transform = 'scale(0.9)';
             setTimeout(() => {
@@ -1318,16 +1500,20 @@ try {
         let currentStudentData = {};
 
         function reportStudent(studentId, studentName, courseId) {
-            currentStudentData = { studentId, studentName, courseId };
-            
+            currentStudentData = {
+                studentId,
+                studentName,
+                courseId
+            };
+
             // Set hidden form fields
             document.getElementById('reportStudentId').value = studentId;
             document.getElementById('reportCourseId').value = courseId;
-            
+
             // Update modal title
-            document.querySelector('#reportModal .modal-header h3').innerHTML = 
+            document.querySelector('#reportModal .modal-header h3').innerHTML =
                 `<i class="fas fa-flag"></i> Report Student: ${studentName}`;
-            
+
             // Show modal
             document.getElementById('reportModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -1350,16 +1536,16 @@ try {
         // Handle form submission
         document.getElementById('reportForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
-            
+
             try {
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData);
-                
+
                 const response = await fetch('../backend/api/submit_student_report.php', {
                     method: 'POST',
                     headers: {
@@ -1367,9 +1553,9 @@ try {
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert(`Report submitted successfully for ${currentStudentData.studentName}. Report ID: ${result.report_id}`);
                     closeReportModal();
@@ -1400,4 +1586,5 @@ try {
         console.log('Student management page loaded successfully');
     </script>
 </body>
+
 </html>

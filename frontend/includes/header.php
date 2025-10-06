@@ -1,7 +1,7 @@
 <?php
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Check if user is logged in
@@ -9,51 +9,52 @@ $isLoggedIn = isset($_SESSION['user_id']);
 $user = null;
 
 if ($isLoggedIn) {
-    // Fetch current user data from database to get latest profile image
-    try {
-        require_once __DIR__ . '/../../backend/config/db_connect.php';
-        $stmt = $pdo->prepare("
+  // Fetch current user data from database to get latest profile image
+  try {
+    require_once __DIR__ . '/../../backend/config/db_connect.php';
+    $stmt = $pdo->prepare("
             SELECT id, first_name, last_name, email, username, role, profile_image
             FROM users 
             WHERE id = ? AND is_active = 1
         ");
-        $stmt->execute([$_SESSION['user_id']]);
-        $dbUser = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($dbUser) {
-            $user = $dbUser;
-        } else {
-            // Fallback to session data if database query fails
-            $user = [
-                'id' => $_SESSION['user_id'],
-                'first_name' => $_SESSION['first_name'] ?? '',
-                'last_name' => $_SESSION['last_name'] ?? '',
-                'email' => $_SESSION['email'] ?? '',
-                'role' => $_SESSION['role'] ?? 'user',
-                'profile_image' => null
-            ];
-        }
-    } catch (PDOException $e) {
-        // Fallback to session data if database connection fails
-        $user = [
-            'id' => $_SESSION['user_id'],
-            'first_name' => $_SESSION['first_name'] ?? '',
-            'last_name' => $_SESSION['last_name'] ?? '',
-            'email' => $_SESSION['email'] ?? '',
-            'role' => $_SESSION['role'] ?? 'user',
-            'profile_image' => null
-        ];
+    $stmt->execute([$_SESSION['user_id']]);
+    $dbUser = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($dbUser) {
+      $user = $dbUser;
+    } else {
+      // Fallback to session data if database query fails
+      $user = [
+        'id' => $_SESSION['user_id'],
+        'first_name' => $_SESSION['first_name'] ?? '',
+        'last_name' => $_SESSION['last_name'] ?? '',
+        'email' => $_SESSION['email'] ?? '',
+        'role' => $_SESSION['role'] ?? 'user',
+        'profile_image' => null
+      ];
     }
+  } catch (PDOException $e) {
+    // Fallback to session data if database connection fails
+    $user = [
+      'id' => $_SESSION['user_id'],
+      'first_name' => $_SESSION['first_name'] ?? '',
+      'last_name' => $_SESSION['last_name'] ?? '',
+      'email' => $_SESSION['email'] ?? '',
+      'role' => $_SESSION['role'] ?? 'user',
+      'profile_image' => null
+    ];
+  }
 }
 
 // Handle any session messages
 $message = $_SESSION['message'] ?? '';
 if ($message) {
-    unset($_SESSION['message']);
+  unset($_SESSION['message']);
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="author" content="Anurag Vishwakarma Creators-Space">
@@ -69,7 +70,7 @@ if ($message) {
   $script_dir = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
   $projectRoot = '';
   if (strpos($script_dir, '/frontend') !== false) {
-      $projectRoot = substr($script_dir, 0, strpos($script_dir, '/frontend'));
+    $projectRoot = substr($script_dir, 0, strpos($script_dir, '/frontend'));
   }
   $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
   $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
@@ -94,14 +95,14 @@ if ($message) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
     integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
+
   <!-- Load additional page-specific CSS -->
   <?php if (isset($additionalCSS) && is_array($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
       <link rel="stylesheet" href="<?php echo $css; ?>">
     <?php endforeach; ?>
   <?php endif; ?>
-  
+
   <!-- Toast Notification Styles -->
   <style>
     .toast {
@@ -121,37 +122,37 @@ if ($message) {
       align-items: center;
       gap: 10px;
     }
-    
+
     .toast.show {
       transform: translateX(0);
       opacity: 1;
     }
-    
+
     .toast.success {
       background: #4CAF50;
     }
-    
+
     .toast.error {
       background: #f44336;
     }
-    
+
     .toast.warning {
       background: #ff9800;
     }
-    
+
     .toast.info {
       background: #2196F3;
     }
-    
+
     .toast-icon {
       font-size: 18px;
       flex-shrink: 0;
     }
-    
+
     .toast-message {
       flex: 1;
     }
-    
+
     .toast-close {
       background: none;
       border: none;
@@ -163,14 +164,14 @@ if ($message) {
       opacity: 0.7;
       flex-shrink: 0;
     }
-    
+
     .toast-close:hover {
       opacity: 1;
     }
 
     /* Enhanced Navbar Styles - Applied to All Pages */
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
       min-height: 100vh;
       padding-top: 80px;
     }
@@ -182,16 +183,16 @@ if ($message) {
       left: 0;
       right: 0;
       z-index: 1000;
-      background: linear-gradient(135deg, rgba(40,40,80,0.9) 0%, rgba(60,60,100,0.9) 100%) !important;
+      background: linear-gradient(135deg, rgba(40, 40, 80, 0.9) 0%, rgba(60, 60, 100, 0.9) 100%) !important;
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
-      border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
       padding: 0.8rem 0;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.15) !important;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15) !important;
       height: auto !important;
     }
-    
+
     .navbar::before {
       content: '';
       position: absolute;
@@ -199,15 +200,15 @@ if ($message) {
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    
+
     .navbar:hover::before {
       opacity: 1;
     }
-    
+
     .navbar-container {
       max-width: 1400px !important;
       margin: 0 auto;
@@ -218,18 +219,18 @@ if ($message) {
       position: relative;
       z-index: 2;
       height: 100% !important;
-      margin-right: auto!important;
+      margin-right: auto !important;
     }
-    
+
     .navbar-right {
       display: flex;
       align-items: center;
       gap: 2rem;
       margin-left: auto;
       justify-content: flex-end;
-      margin-left: auto!important;
+      margin-left: auto !important;
     }
-    
+
     /* Logo Section */
     .navbar h1 {
       margin: 0 !important;
@@ -239,7 +240,7 @@ if ($message) {
       font-weight: bold !important;
       color: black !important;
     }
-    
+
     .navbar h1 a {
       display: flex !important;
       align-items: center;
@@ -250,82 +251,52 @@ if ($message) {
       font-weight: 800;
       letter-spacing: -0.02em;
       transition: all 0.3s ease;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
       width: auto;
     }
-    
+
     .navbar h1 a:hover {
-      color: #667eea !important;
-      text-shadow: 0 0 20px rgba(102,126,234,0.8);
+      color: #5a73e5 !important;
+      text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
       transform: translateY(-1px);
     }
-    
+
     #navbar-logo {
       width: 50px !important;
       height: 50px !important;
       object-fit: contain;
       transition: all 0.3s ease;
     }
-    
+
     .navbar h1 a:hover #navbar-logo {
       transform: scale(1.05);
       filter: brightness(1.1);
     }
-    
+
     /* Navigation Links */
     .navbar .nav-links {
       display: flex !important;
       align-items: center;
-      gap: 1rem !important;
+      gap: 2rem !important;
       list-style: none;
       margin: 0;
       padding: 0;
     }
-    
-    /*.navbar .nav-links a {
+
+    .navbar .nav-links a {
       position: relative;
       color: #ffffff !important;
       text-decoration: none;
-      padding: 0.5rem 0; 
+      padding: 0.5rem 0;
       font-weight: 500;
       font-size: 0.95rem;
       letter-spacing: 0.3px;
       transition: all 0.3s ease;
       border-bottom: 2px solid transparent;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-      margin: 10px 2px; 
-    }*/
-
-    .navbar .nav-links a {
-      padding: 10px 15px; /* Biscuit-like size */
-      border-radius: 25px; /* Oval shape */
-      background-color: rgba(255, 255, 255, 0.15); /* Light background */
-      margin: 10px 8px; /* Spacing */
-      display: inline-block; /* Ensure proper shaping */
-      position: relative; /* For pseudo-element */
-      color: #ffffff; /* Text color */
-      text-decoration: none; /* Remove default underline */
-      transition: all 0.3s ease; /* Smooth transition */
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      margin: 10px 2px;
     }
 
-    .navbar .nav-links a::before {
-      content: '';
-      position: absolute;
-      top: -2px; /* Adjust to fit around the link */
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 27px; /* Slightly larger than link to cover edges */
-      background: linear-gradient(90deg, #667eea, #764ba2); /* Same gradient */
-      z-index: -1; /* Behind the text */
-      opacity: 0; /* Hidden by default */
-      transition: opacity 0.3s ease; /* Smooth fade */
-    }
-    
-    .navbar .nav-links a:hover::before {
-      opacity: 1; /* Show gradient outline on hover */
-    }  
-    
     .navbar .nav-links a::after {
       content: '';
       position: absolute;
@@ -336,13 +307,12 @@ if ($message) {
       background: linear-gradient(90deg, #667eea, #764ba2);
       transition: width 0.3s ease;
     }
-    
+
     .navbar .nav-links a:hover {
       color: #ffffff !important;
-      text-shadow: 0 0 8px rgba(255,255,255,0.6);
-      transform: scale(1.05); /* Enlargement on hover */
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
-    
+
     .navbar .nav-links a:hover::after {
       width: 100%;
     }
@@ -381,15 +351,20 @@ if ($message) {
     }
 
     .dropdown-toggle {
-      padding: 12px 25px; /* Biscuit-like size */
-      border-radius: 25px; /* Oval shape */
-      background-color: rgba(255, 255, 255, 0.15); /* Light background */
-      margin: 10px 8px; /* Spacing */
-      display: inline-block; /* Ensure proper shaping */
-      position: relative; /* For pseudo-element */
-      color: #ffffff; /* Text color */
-      text-decoration: none; /* Remove default underline */
-      transition: all 0.3s ease; /* Smooth transition */
+      display: flex !important;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.5rem 0;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      transition: all 0.3s ease;
+      position: relative;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+      margin: 10px 2px;
     }
 
     .dropdown-toggle::after {
@@ -401,33 +376,6 @@ if ($message) {
       height: 2px;
       background: linear-gradient(90deg, #667eea, #764ba2);
       transition: width 0.3s ease;
-    }
-
-    .dropdown-toggle:hover {
-      transform: scale(1.05); /* Enlargement on hover */
-    }
-  
-    .dropdown-toggle::before {
-      content: '';
-      position: absolute;
-      top: -2px; /* Adjust to fit around the link */
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 27px; /* Slightly larger than link to cover edges */
-      background: linear-gradient(90deg, #667eea, #764ba2); /* Same gradient */
-      z-index: -1; /* Behind the text */
-      opacity: 0; /* Hidden by default */
-      transition: opacity 0.3s ease; /* Smooth fade */
-    }    
-
-    .dropdown-toggle:hover::before {
-      opacity: 1; /* Show gradient outline on hover */
-    }
-
-    .navbar .nav-links a::after,
-    .dropdown-toggle::after {
-      display: none; /* Disable the original underline */
     }
 
     .dropdown-toggle:hover::after {
@@ -448,7 +396,7 @@ if ($message) {
       position: absolute;
       top: 100%;
       left: 0;
-      background: linear-gradient(135deg, rgba(40,40,80,0.95) 0%, rgba(60,60,100,0.95) 100%);
+      background: linear-gradient(135deg, rgba(40, 40, 80, 0.95) 0%, rgba(60, 60, 100, 0.95) 100%);
       min-width: 200px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       border-radius: 12px;
@@ -480,7 +428,7 @@ if ($message) {
       font-size: 0.9rem;
       transition: all 0.3s ease;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
       margin: 0 !important;
       width: 100%;
       clear: both;
@@ -496,9 +444,9 @@ if ($message) {
     }
 
     .dropdown-menu a:hover {
-      background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%);
-      color: #667eea !important;
-      text-shadow: 0 0 8px rgba(102,126,234,0.5);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+      color: #5a73e5 !important;
+      text-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
       text-align: left !important;
       padding-left: 24px;
       transform: translateX(4px);
@@ -513,36 +461,37 @@ if ($message) {
       border-bottom-left-radius: 12px;
       border-bottom-right-radius: 12px;
     }
-    
+
     /* Authentication Section */
-    #authSection, #userSection {
+    #authSection,
+    #userSection {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    
+
     #userSection {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.15);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 25px;
       padding: 0.4rem 0.8rem;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       max-width: fit-content;
     }
-    
+
     #userSection span {
       color: #ffffff !important;
       font-weight: 500;
       font-size: 0.75rem;
       margin-right: 0.2rem;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
       white-space: nowrap;
       max-width: 60px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    
+
     /* Modern Button Styles */
     .navbar .btn {
       display: inline-flex;
@@ -559,11 +508,11 @@ if ($message) {
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(20px);
-      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
       color: #ffffff !important;
       margin: 10px 2px;
     }
-    
+
     .navbar .btn::before {
       content: '';
       position: absolute;
@@ -571,33 +520,33 @@ if ($message) {
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
       transition: left 0.5s ease;
     }
-    
+
     .navbar .btn:hover::before {
       left: 100%;
     }
-    
+
     .navbar .btn.login {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%) !important;
       color: #ffffff !important;
-      border-color: rgba(255,255,255,0.2) !important;
-      box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
-    
+
     .navbar .btn.signup {
-      background: rgba(255,255,255,0.1) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
       color: #ffffff !important;
-      border-color: rgba(255,255,255,0.3) !important;
-      box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
     }
-    
+
     .navbar .btn.profile-btn {
       background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
       color: #ffffff !important;
-      border-color: rgba(255,255,255,0.2) !important;
-      box-shadow: 0 8px 25px rgba(76,175,80,0.3);
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
       font-size: 0.9rem !important;
       padding: 0 !important;
       width: 35px !important;
@@ -613,16 +562,16 @@ if ($message) {
       text-align: center !important;
       line-height: 1 !important;
     }
-    
+
     .navbar .btn.admin-btn {
       background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
       color: #ffffff !important;
-      border-color: rgba(255,255,255,0.2);
-      box-shadow: 0 8px 25px rgba(255,107,107,0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
       font-size: 0.65rem;
       padding: 0.3rem 0.5rem;
     }
-    
+
     .navbar .btn.logout-btn {
       background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
       color: #ffffff !important;
@@ -641,25 +590,25 @@ if ($message) {
       gap: 0.25rem;
       box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
     }
-    
+
     .navbar .btn:hover {
       transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     }
-    
+
     .navbar .btn.login:hover {
-      box-shadow: 0 15px 35px rgba(102,126,234,0.4);
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
     }
-    
+
     .navbar .btn.signup:hover {
-      background: rgba(255,255,255,0.2) !important;
-      box-shadow: 0 15px 35px rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 15px 35px rgba(255, 255, 255, 0.2);
     }
-    
+
     .navbar .btn.profile-btn:hover {
-      box-shadow: 0 15px 35px rgba(76,175,80,0.4);
+      box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
     }
-    
+
     .navbar-profile-img {
       width: 32px;
       height: 32px;
@@ -668,24 +617,24 @@ if ($message) {
       border: 2px solid rgba(255, 255, 255, 0.3);
       transition: all 0.3s ease;
     }
-    
+
     .navbar-profile-img:hover {
       border-color: rgba(255, 255, 255, 0.8);
       transform: scale(1.1);
     }
-    
+
     body.dark-mode .navbar-profile-img {
       border-color: rgba(100, 181, 246, 0.5);
     }
-    
+
     body.dark-mode .navbar-profile-img:hover {
       border-color: rgba(100, 181, 246, 1);
     }
-    
+
     .navbar .btn.admin-btn:hover {
-      box-shadow: 0 15px 35px rgba(255,107,107,0.4);
+      box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
     }
-    
+
     .navbar .btn.logout-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
@@ -701,8 +650,8 @@ if ($message) {
     }
 
     .theme-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
       padding: 0.6rem;
       border-radius: 50%;
@@ -726,7 +675,7 @@ if ($message) {
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
       transition: left 0.5s ease;
     }
 
@@ -735,10 +684,10 @@ if ($message) {
     }
 
     .theme-btn:hover {
-      background: rgba(255,255,255,0.2);
-      border-color: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
       transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(255,255,255,0.1);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
     }
 
     .theme-btn:active {
@@ -761,18 +710,18 @@ if ($message) {
     }
 
     body.dark-mode .navbar {
-      background: linear-gradient(135deg, rgba(10,10,20,0.95) 0%, rgba(20,20,40,0.95) 100%) !important;
-      border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+      background: linear-gradient(135deg, rgba(10, 10, 20, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
     body.dark-mode .theme-btn {
-      background: rgba(255,255,255,0.15);
-      border-color: rgba(255,255,255,0.25);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     body.dark-mode .theme-btn:hover {
-      background: rgba(255,255,255,0.25);
-      border-color: rgba(255,255,255,0.35);
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.35);
     }
 
     /* Dark mode for all content sections */
@@ -808,13 +757,13 @@ if ($message) {
     body.dark-mode .blog-card,
     body.dark-mode .project-card,
     body.dark-mode .card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: #ffffff;
     }
 
     /* If the site needs card backgrounds dark but card text should remain black, force it here */
-    body.dark-mode .card,
+    /* body.dark-mode .card,
     body.dark-mode .card h1,
     body.dark-mode .card h2,
     body.dark-mode .card h3,
@@ -823,43 +772,43 @@ if ($message) {
     body.dark-mode .card span,
     body.dark-mode .card a {
       color: #000000 !important;
-    }
+    } */
 
     body.dark-mode .course-card:hover,
     body.dark-mode .tech-card:hover,
     body.dark-mode .blog-card:hover,
     body.dark-mode .project-card:hover,
     body.dark-mode .card:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
     /* Dark mode for forms and inputs */
     body.dark-mode input,
     body.dark-mode textarea,
     body.dark-mode select {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
     }
 
     body.dark-mode input::placeholder,
     body.dark-mode textarea::placeholder {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     /* Dark mode for buttons */
     body.dark-mode .btn:not(.hero-btn):not(.course-btn):not(.cta-btn),
     body.dark-mode button:not(.hero-btn):not(.course-btn):not(.cta-btn) {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
     }
 
     body.dark-mode .btn:hover:not(.hero-btn):not(.course-btn):not(.cta-btn),
     body.dark-mode button:hover:not(.hero-btn):not(.course-btn):not(.cta-btn) {
-      background: rgba(255,255,255,0.2);
-      border-color: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     /* Dark mode for specific sections */
@@ -868,7 +817,7 @@ if ($message) {
     }
 
     body.dark-mode .technologies-section {
-      background: rgba(255,255,255,0.02);
+      background: rgba(255, 255, 255, 0.02);
     }
 
     body.dark-mode .section-title {
@@ -887,26 +836,26 @@ if ($message) {
 
     /* Dark mode for tables */
     body.dark-mode table {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       color: #ffffff;
     }
 
     body.dark-mode th,
     body.dark-mode td {
-      border-color: rgba(255,255,255,0.1);
+      border-color: rgba(255, 255, 255, 0.1);
       color: #ffffff;
     }
 
     /* Dark mode for modals and overlays */
     body.dark-mode .modal,
     body.dark-mode .overlay {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.8);
       color: #ffffff;
     }
 
     body.dark-mode .modal-content {
       background: #1a1a2e;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     /* Mobile Responsive Design */
@@ -916,42 +865,42 @@ if ($message) {
         top: 80px !important;
         left: 0 !important;
         right: 0 !important;
-        background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(30,30,60,0.95) 100%) !important;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(30, 30, 60, 0.95) 100%) !important;
         backdrop-filter: blur(30px) !important;
         flex-direction: column !important;
         gap: 0 !important;
         padding: 2rem 0 !important;
         transform: translateX(-100%) !important;
         transition: transform 0.3s ease !important;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         width: 100vw !important;
         height: 100vh !important;
         justify-content: center !important;
         z-index: 1000 !important;
       }
-      
+
       .navbar .nav-links.active {
         transform: translateX(0) !important;
         display: flex !important;
       }
-      
+
       .navbar .nav-links a {
         width: 100%;
         text-align: center;
         padding: 1.5rem 2rem !important;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         font-size: 1rem !important;
         margin: 0 !important;
       }
-      
+
       .navbar .nav-links a::after {
         display: none;
       }
-      
+
       .navbar .nav-links a:hover {
-        background: rgba(102,126,234,0.1);
-        color: #667eea !important;
+        background: rgba(102, 126, 234, 0.1);
+        color: #5a73e5 !important;
       }
 
       /* Mobile dropdown styles */
@@ -964,7 +913,7 @@ if ($message) {
         justify-content: center;
         padding: 1.5rem 2rem !important;
         font-size: 1rem !important;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .dropdown-menu {
@@ -972,7 +921,7 @@ if ($message) {
         width: 100%;
         box-shadow: none;
         border: none;
-        background: rgba(102,126,234,0.1);
+        background: rgba(102, 126, 234, 0.1);
         border-radius: 0;
         opacity: 1;
         visibility: visible;
@@ -990,39 +939,40 @@ if ($message) {
       .dropdown-menu a {
         padding: 1rem 2rem !important;
         font-size: 0.95rem !important;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         background: transparent;
       }
 
       .dropdown-menu a:hover {
-        background: rgba(102,126,234,0.2);
+        background: rgba(102, 126, 234, 0.2);
         padding-left: 2.5rem !important;
       }
-      
-      #authSection, #userSection {
+
+      #authSection,
+      #userSection {
         position: fixed;
         bottom: 2rem;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(0,0,0,0.9);
+        background: rgba(0, 0, 0, 0.9);
         backdrop-filter: blur(30px);
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 25px;
         padding: 1rem 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
-      
+
       .theme-toggle {
         position: fixed;
         top: 15px;
         right: 80px;
         z-index: 1001;
       }
-      
+
       .navbar h1 a {
         font-size: 1.2rem !important;
       }
-      
+
       #navbar-logo {
         width: 40px !important;
         height: 40px !important;
@@ -1031,20 +981,22 @@ if ($message) {
 
     /* Navbar Scroll Effect */
     .navbar.scrolled {
-      background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(20,20,40,0.95) 100%) !important;
-      box-shadow: 0 10px 50px rgba(0,0,0,0.3) !important;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 40, 0.95) 100%) !important;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3) !important;
       padding: 0.5rem 0;
     }
   </style>
-  
+
   <?php if (isset($additionalCSS)): ?>
     <?php foreach ($additionalCSS as $css): ?>
       <link rel="stylesheet" href="<?php echo $css; ?>">
     <?php endforeach; ?>
   <?php endif; ?>
-  
+
   <?php if (isset($customStyles)): ?>
-    <style><?php echo $customStyles; ?></style>
+    <style>
+      <?php echo $customStyles; ?>
+    </style>
   <?php endif; ?>
 </head>
 <body<?php echo isset($bodyClass) ? ' class="' . $bodyClass . '"' : ''; ?>>
@@ -1053,17 +1005,17 @@ if ($message) {
   <div class="navbar">
     <div class="navbar-container">
       <h1>
-          <a href="index.php">
-              <img id="navbar-logo" width="80px" src="./assets/images/logo-nav-light.png" alt="logo Creators-Space">
-              Creators-Space
-          </a>
+        <a href="index.php">
+          <img id="navbar-logo" width="80px" src="./assets/images/logo-nav-light.png" alt="logo Creators-Space">
+          Creators-Space
+        </a>
       </h1>
-      
+
       <div class="navbar-right">
         <div class="nav-links align-items-center">
           <a href="index.php">Home</a>
           <a href="about.php">About Us</a>
-          
+
           <!-- Learning Dropdown -->
           <div class="dropdown">
             <a href="#" class="dropdown-toggle">Learning <i class="fas fa-chevron-down"></i></a>
@@ -1072,7 +1024,7 @@ if ($message) {
               <a href="internship.php">Internship</a>
             </div>
           </div>
-          
+
           <!-- Resources Dropdown -->
           <div class="dropdown">
             <a href="#" class="dropdown-toggle">Resources <i class="fas fa-chevron-down"></i></a>
@@ -1082,9 +1034,9 @@ if ($message) {
               <a href="./certificate.php">Verify Certificates</a>
             </div>
           </div>
-          
+
           <a href="services.php">Services</a>
-          
+
           <!-- My Courses - Only show when logged in -->
           <?php if ($isLoggedIn): ?>
             <a href="mycourses.php">My Courses</a>
@@ -1096,7 +1048,7 @@ if ($message) {
               <span class="cart-counter" style="display: none;">0</span>
             </a>
           <?php endif; ?>
-          
+
           <!-- Dark/Light Mode Toggle -->
           <div class="theme-toggle">
             <button id="theme-toggle-btn" class="theme-btn" title="Toggle Dark/Light Mode">
@@ -1104,7 +1056,7 @@ if ($message) {
             </button>
           </div>
         </div>
-          
+
         <!-- Authentication Section -->
         <?php if (!$isLoggedIn): ?>
           <div id="authSection">
@@ -1138,7 +1090,7 @@ if ($message) {
     document.addEventListener('DOMContentLoaded', function() {
       const themeToggleBtn = document.getElementById('theme-toggle-btn');
       const themeIcon = document.getElementById('theme-icon');
-      
+
       // Load saved theme preference
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
@@ -1147,11 +1099,11 @@ if ($message) {
       } else {
         themeIcon.className = 'fas fa-moon';
       }
-      
+
       // Theme toggle functionality
       themeToggleBtn.addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');
-        
+
         if (document.body.classList.contains('dark-mode')) {
           themeIcon.className = 'fas fa-sun';
           localStorage.setItem('theme', 'dark');
@@ -1159,7 +1111,7 @@ if ($message) {
           themeIcon.className = 'fas fa-moon';
           localStorage.setItem('theme', 'light');
         }
-        
+
         // Add a little animation to the button
         themeToggleBtn.style.transform = 'scale(0.9)';
         setTimeout(() => {
@@ -1173,7 +1125,7 @@ if ($message) {
       try {
         const response = await fetch('../backend/api/cart.php');
         const data = await response.json();
-        
+
         const counter = document.querySelector('.cart-counter');
         if (counter) {
           if (data.success && data.items && data.items.length > 0) {
@@ -1194,17 +1146,17 @@ if ($message) {
 
     // Update cart counter when page loads (for logged in users only)
     <?php if ($isLoggedIn): ?>
-    document.addEventListener('DOMContentLoaded', updateCartCounter);
+      document.addEventListener('DOMContentLoaded', updateCartCounter);
     <?php endif; ?>
   </script>
-  
+
   <!-- Load additional page-specific JavaScript -->
   <?php if (isset($additionalJS) && is_array($additionalJS)): ?>
     <?php foreach ($additionalJS as $js): ?>
       <script src="<?php echo $js; ?>"></script>
     <?php endforeach; ?>
   <?php endif; ?>
-  
+
   <!-- AI Learning Assistant -->
   <script src="./src/js/ai-agent.js"></script>
 

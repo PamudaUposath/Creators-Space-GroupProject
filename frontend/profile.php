@@ -5,7 +5,7 @@ require_once __DIR__ . '/../backend/config/db_connect.php';
 // Set page-specific variables
 $pageTitle = "My Profile";
 $pageDescription = "View and edit your profile information.";
-$additionalCSS = ['./src/css/profile.css'];
+$additionalCSS = ['./src/css/profile.css?v=' . time()];
 $additionalJS = ['./src/js/profile.js'];
 
 // Check if user is logged in
@@ -114,6 +114,11 @@ include './includes/header.php';
                         <div class="avatar-overlay" onclick="openImageUpload()">
                             <i class="fas fa-camera"></i>
                         </div>
+                        <?php if (!empty($user['profile_image'])): ?>
+                        <div class="avatar-remove" id="removeImageBtn" title="Remove profile picture" onclick="removeProfileImage();">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <?php endif; ?>
                         <input type="file" id="imageUpload" accept="image/*" style="display: none;">
                     </div>
                     
@@ -226,7 +231,7 @@ include './includes/header.php';
                         </div>
                         <div class="info-item">
                             <label>Email *</label>
-                            <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                            <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" required disabled>
                         </div>
                         <div class="info-item">
                             <label>Username</label>
@@ -343,5 +348,81 @@ include './includes/header.php';
         <span class="notification-text">Profile updated successfully!</span>
     </div>
 </div>
+
+<!-- Inline JavaScript for Profile Image Removal -->
+<script>
+function removeProfileImage() {
+    if (!confirm('Are you sure you want to remove your profile picture?')) {
+        return;
+    }
+    
+    const removeBtn = document.getElementById('removeImageBtn');
+    if (!removeBtn) {
+        alert('Remove button not found');
+        return;
+    }
+    
+    const originalContent = removeBtn.innerHTML;
+    removeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    // Use XMLHttpRequest instead of fetch for better debugging
+    const xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '../backend/api/profile.php', true);
+    xhr.withCredentials = true;
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            console.log('XHR Status:', xhr.status);
+            console.log('XHR Response Text:', xhr.responseText);
+            
+            if (xhr.status === 200) {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    console.log('Parsed JSON:', data);
+                    
+                    if (data.success) {
+                        // Update profile image to default
+                        const profileImage = document.getElementById('profileImage');
+                        const defaultImage = './assets/images/userIcon_Square.png';
+                        profileImage.src = defaultImage;
+                        
+                        // Hide the remove button
+                        removeBtn.style.display = 'none';
+                        
+                        alert('Profile picture removed successfully!');
+                        setTimeout(() => location.reload(), 1000);
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to remove profile picture'));
+                    }
+                } catch (e) {
+                    console.error('JSON Parse Error:', e);
+                    console.log('Raw response:', xhr.responseText);
+                    
+                    // If JSON parsing fails, just assume it worked and refresh
+                    alert('Operation completed. Refreshing page...');
+                    location.reload();
+                }
+            } else {
+                console.error('HTTP Error:', xhr.status, xhr.statusText);
+                alert('HTTP Error: ' + xhr.status + '. The operation might have worked. Refreshing page...');
+                location.reload();
+            }
+            
+            // Restore button content
+            if (removeBtn) {
+                removeBtn.innerHTML = originalContent;
+            }
+        }
+    };
+    
+    xhr.onerror = function() {
+        console.error('XHR Network Error');
+        alert('Network error occurred. The operation might have worked. Refreshing page...');
+        location.reload();
+    };
+    
+    xhr.send();
+}
+</script>
 
 <?php include './includes/footer.php'; ?>

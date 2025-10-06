@@ -1,6 +1,37 @@
 <?php
 // backend/auth/login_process.php
 
+// Start session first, before any headers
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Set CORS headers to allow frontend requests
+$allowedOrigins = [
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://localhost:3000',
+    'http://localhost:8080',
+    'http://localhost/Creators-Space-GroupProject',
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowedOrigins) || strpos($origin, 'localhost') !== false || strpos($origin, '127.0.0.1') !== false) {
+    header("Access-Control-Allow-Origin: $origin");
+} else {
+    header("Access-Control-Allow-Origin: http://localhost");
+}
+
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true'); // Allow cookies/sessions
+header('Content-Type: application/json');
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
+
 require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../lib/helpers.php';
 
@@ -29,11 +60,11 @@ if (empty($password)) {
 }
 
 try {
-    // Get user by email
+    // Get user by email (excluding removed users)
     $stmt = $pdo->prepare("
         SELECT id, first_name, last_name, email, username, password_hash, role, is_active, profile_image 
         FROM users 
-        WHERE email = ? 
+        WHERE email = ? AND (remove IS NULL OR remove = 0)
         LIMIT 1
     ");
     $stmt->execute([$email]);

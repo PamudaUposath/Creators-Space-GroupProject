@@ -178,12 +178,12 @@ function getPlatformStatistics($pdo) {
     try {
         $stats = [];
         
-        // Get total students enrolled (users with role 'user')
-        $stmt = $pdo->query("SELECT COUNT(*) as total_students FROM users WHERE role = 'user' AND is_active = 1");
+        // Get total students enrolled (users with role 'user', excluding removed)
+        $stmt = $pdo->query("SELECT COUNT(*) as total_students FROM users WHERE role = 'user' AND is_active = 1 AND (remove IS NULL OR remove = 0)");
         $stats['students'] = $stmt->fetchColumn();
         
-        // Get total expert instructors (users with role 'instructor')
-        $stmt = $pdo->query("SELECT COUNT(*) as total_instructors FROM users WHERE role = 'instructor' AND is_active = 1");
+        // Get total expert instructors (users with role 'instructor', excluding removed)
+        $stmt = $pdo->query("SELECT COUNT(*) as total_instructors FROM users WHERE role = 'instructor' AND is_active = 1 AND (remove IS NULL OR remove = 0)");
         $stats['instructors'] = $stmt->fetchColumn();
         
         // Get total courses available
@@ -194,7 +194,7 @@ function getPlatformStatistics($pdo) {
         $stmt = $pdo->query("
             SELECT 
                 COUNT(DISTINCT user_id) as completed_students,
-                (SELECT COUNT(*) FROM users WHERE role = 'user' AND is_active = 1) as total_students
+                (SELECT COUNT(*) FROM users WHERE role = 'user' AND is_active = 1 AND (remove IS NULL OR remove = 0)) as total_students
             FROM enrollments 
             WHERE progress = 100.00 OR completed_at IS NOT NULL
         ");
@@ -240,6 +240,102 @@ function formatNumber($number) {
         return round($number / 1000, 1) . 'K';
     } else {
         return $number;
+    }
+}
+
+/**
+ * Get featured courses from database
+ */
+function getFeaturedCourses($pdo, $limit = 3) {
+    try {
+        // First try to get courses marked as featured
+        $stmt = $pdo->prepare("
+            SELECT c.id, c.title, c.description, c.image_url, c.duration, c.level, 
+                   c.price, c.category, c.slug,
+                   u.first_name as instructor_first_name, u.last_name as instructor_last_name,
+                   COUNT(e.id) as enrollment_count
+            FROM courses c 
+            LEFT JOIN users u ON c.instructor_id = u.id 
+            LEFT JOIN enrollments e ON c.id = e.course_id 
+            WHERE c.is_active = 1 AND c.featured = 1 
+            GROUP BY c.id 
+            ORDER BY c.created_at DESC 
+            LIMIT ?
+        ");
+        
+        $stmt->execute([$limit]);
+        $courses = $stmt->fetchAll();
+        
+        // If no featured courses, get most popular courses (by enrollment count)
+        if (empty($courses)) {
+            $stmt = $pdo->prepare("
+                SELECT c.id, c.title, c.description, c.image_url, c.duration, c.level, 
+                       c.price, c.category, c.slug,
+                       u.first_name as instructor_first_name, u.last_name as instructor_last_name,
+                       COUNT(e.id) as enrollment_count
+                FROM courses c 
+                LEFT JOIN users u ON c.instructor_id = u.id 
+                LEFT JOIN enrollments e ON c.id = e.course_id 
+                WHERE c.is_active = 1 
+                GROUP BY c.id 
+                ORDER BY enrollment_count DESC, c.created_at DESC 
+                LIMIT ?
+            ");
+            
+            $stmt->execute([$limit]);
+            $courses = $stmt->fetchAll();
+        }
+        
+        // Add some default data and format the courses
+        foreach ($courses as &$course) {
+            // Generate badge based on enrollment count or other criteria
+            if (!isset($course['badge'])) {
+                if ($course['enrollment_count'] > 100) {
+                    $course['badge'] = 'Popular';
+                } elseif (strtotime($course['created_at'] ?? '') > strtotime('-30 days')) {
+                    $course['badge'] = 'New';
+                } else {
+                    $course['badge'] = 'Trending';
+                }
+            }
+            
+            // Generate rating (placeholder - you can implement actual rating system later)
+            if (!isset($course['rating'])) {
+                $course['rating'] = number_format(4.5 + (rand(3, 9) / 10), 1);
+                $course['review_count'] = $course['enrollment_count'] > 0 ? 
+                    rand(max(1, $course['enrollment_count'] / 5), $course['enrollment_count']) : 
+                    rand(50, 500);
+            }
+            
+            // Format instructor name
+            $course['instructor_name'] = trim(($course['instructor_first_name'] ?? '') . ' ' . ($course['instructor_last_name'] ?? ''));
+            if (empty($course['instructor_name'])) {
+                $course['instructor_name'] = 'Creators Space Team';
+            }
+            
+            // Ensure image URL is available
+            if (empty($course['image_url'])) {
+                // Set default images based on category or title
+                if (stripos($course['title'], 'web') !== false || stripos($course['title'], 'full stack') !== false) {
+                    $course['image_url'] = './assets/images/full-stack-web-developer.png';
+                } elseif (stripos($course['title'], 'python') !== false || stripos($course['title'], 'data') !== false) {
+                    $course['image_url'] = './assets/images/webdev.png';
+                } elseif (stripos($course['title'], 'ui') !== false || stripos($course['title'], 'ux') !== false || stripos($course['title'], 'design') !== false) {
+                    $course['image_url'] = './assets/images/google-looker-seeklogo.svg';
+                } else {
+                    $course['image_url'] = './assets/images/webdev.png';
+                }
+            }
+            
+            // Format level for display
+            $course['level_display'] = ucfirst($course['level'] ?? 'beginner');
+        }
+        
+        return $courses;
+        
+    } catch (Exception $e) {
+        error_log("Error fetching featured courses: " . $e->getMessage());
+        return [];
     }
 }
 ?>

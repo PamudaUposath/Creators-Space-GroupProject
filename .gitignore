@@ -100,3 +100,4 @@ sample_data/
 
 # Error Files
 php_errors.log
+backend/config/email_config.php

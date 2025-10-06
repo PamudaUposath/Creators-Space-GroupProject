@@ -25,6 +25,7 @@ if (isset($_SESSION['payment_success'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,28 +41,29 @@ if (isset($_SESSION['payment_success'])) {
             align-items: center;
             justify-content: center;
         }
-        
+
         .success-container {
             max-width: 500px;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             text-align: center;
             padding: 50px 30px;
             animation: slideUp 0.6s ease-out;
         }
-        
+
         @keyframes slideUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .success-icon {
             width: 80px;
             height: 80px;
@@ -73,32 +75,40 @@ if (isset($_SESSION['payment_success'])) {
             margin: 0 auto 20px;
             animation: pulse 2s infinite;
         }
-        
+
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
-        
+
         .success-icon i {
             color: white;
             font-size: 2.5em;
         }
-        
+
         h1 {
             color: #4CAF50;
             margin-bottom: 20px;
             font-weight: bold;
         }
-        
+
         .success-message {
             color: #666;
             margin-bottom: 30px;
             line-height: 1.6;
         }
-        
+
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
@@ -106,12 +116,12 @@ if (isset($_SESSION['payment_success'])) {
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-success {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             border: none;
@@ -121,12 +131,12 @@ if (isset($_SESSION['payment_success'])) {
             font-weight: 600;
             transition: all 0.3s ease;
         }
-        
+
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
         }
-        
+
         .order-info {
             background: #f8f9fa;
             border-radius: 10px;
@@ -134,17 +144,17 @@ if (isset($_SESSION['payment_success'])) {
             margin: 20px 0;
             border-left: 4px solid #4CAF50;
         }
-        
+
         .order-info h5 {
             color: #4CAF50;
             margin-bottom: 10px;
         }
-        
+
         .order-info p {
             margin: 5px 0;
             color: #666;
         }
-        
+
         .user-welcome {
             background: #e8f5e8;
             border-radius: 10px;
@@ -154,33 +164,34 @@ if (isset($_SESSION['payment_success'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="success-container">
         <div class="success-icon">
             <i class="fas fa-check"></i>
         </div>
-        
+
         <h1>Payment Successful!</h1>
-        
+
         <?php if ($user): ?>
             <div class="user-welcome">
                 <h5>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>! 🎉</h5>
                 <p>Your payment has been processed successfully.</p>
             </div>
         <?php endif; ?>
-        
+
         <div class="success-message">
             <p><strong>Congratulations!</strong> Your courses are now available in your account.</p>
             <p>You can start learning immediately and access all course materials!</p>
         </div>
-        
+
         <div class="order-info">
             <h5><i class="fas fa-info-circle"></i> What's Next?</h5>
             <p><i class="fas fa-graduation-cap"></i> Access your courses from "My Courses"</p>
             <p><i class="fas fa-envelope"></i> Check your email for order confirmation</p>
             <p><i class="fas fa-certificate"></i> Complete courses to earn certificates</p>
         </div>
-        
+
         <div class="action-buttons">
             <?php if ($isLoggedIn): ?>
                 <a href="mycourses.php" class="btn btn-success">
@@ -191,25 +202,25 @@ if (isset($_SESSION['payment_success'])) {
                 <i class="fas fa-plus"></i> Browse More Courses
             </a>
         </div>
-        
+
         <div class="mt-4">
             <a href="index.php" class="text-muted" style="text-decoration: none;">
                 <i class="fas fa-home"></i> Return to Homepage
             </a>
         </div>
     </div>
-    
+
     <script>
         // Auto-redirect after 30 seconds if logged in
         <?php if ($isLoggedIn): ?>
-        setTimeout(function() {
-            const autoRedirect = confirm("Would you like to view your courses now?");
-            if (autoRedirect) {
-                window.location.href = 'mycourses.php';
-            }
-        }, 30000);
+            setTimeout(function() {
+                const autoRedirect = confirm("Would you like to view your courses now?");
+                if (autoRedirect) {
+                    window.location.href = 'mycourses.php';
+                }
+            }, 30000);
         <?php endif; ?>
-        
+
         // Confetti effect
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.querySelector('.success-container');
@@ -226,11 +237,11 @@ if (isset($_SESSION['payment_success'])) {
                     pointer-events: none;
                 `;
                 document.body.appendChild(confetti);
-                
+
                 setTimeout(() => confetti.remove(), 3000);
             }
         });
-        
+
         // Add confetti animation styles
         const style = document.createElement('style');
         style.textContent = `
@@ -244,4 +255,5 @@ if (isset($_SESSION['payment_success'])) {
         document.head.appendChild(style);
     </script>
 </body>
+
 </html>

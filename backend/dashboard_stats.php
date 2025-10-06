@@ -82,10 +82,10 @@ try {
 
     // Overall totals
     echo "\n🎯 Overall Totals:\n";
-    $totalUsers = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'user'")->fetchColumn();
+    $totalUsers = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'user' AND (remove IS NULL OR remove = 0)")->fetchColumn();
     $totalCourses = $pdo->query("SELECT COUNT(*) FROM courses")->fetchColumn();
     $totalEnrollments = $pdo->query("SELECT COUNT(*) FROM enrollments")->fetchColumn();
-    $totalInstructors = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'instructor'")->fetchColumn();
+    $totalInstructors = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'instructor' AND (remove IS NULL OR remove = 0)")->fetchColumn();
     $totalRevenue = $pdo->query("
         SELECT SUM(c.price) 
         FROM enrollments e 

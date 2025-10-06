@@ -1,0 +1,442 @@
+/* Enhanced video player styles with certificate validation */
+
+/* Watch warning and violation notifications */
+.watch-warning,
+.skip-violation-warning {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 152, 0, 0.95);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.skip-violation-warning {
+    background: rgba(231, 76, 60, 0.95);
+    top: 100px;
+}
+
+.watch-warning i,
+.skip-violation-warning i {
+    font-size: 1rem;
+}
+
+/* Certificate status indicators */
+.watch-integrity-indicator,
+.certificate-status {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 6px 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.certificate-status {
+    margin-left: 10px;
+}
+
+.certificate-status.eligible {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: rgba(46, 204, 113, 0.4);
+    color: #2ecc71;
+}
+
+.certificate-status.not-eligible {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.4);
+    color: #e74c3c;
+}
+
+/* Notification styles for certificate validation */
+.violation-limit-notification,
+.skip-prevention-notification,
+.certificate-eligible-notification,
+.certificate-ineligible-notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 15px;
+    font-size: 1rem;
+    z-index: 1002;
+    text-align: center;
+    max-width: 80%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    animation: slideIn 0.3s ease;
+}
+
+.violation-limit-notification {
+    background: rgba(231, 76, 60, 0.95);
+    border: 2px solid #e74c3c;
+}
+
+.certificate-eligible-notification {
+    background: rgba(46, 204, 113, 0.95);
+    border: 2px solid #2ecc71;
+}
+
+.certificate-ineligible-notification {
+    background: rgba(231, 76, 60, 0.95);
+    border: 2px solid #e74c3c;
+}
+
+.skip-prevention-notification {
+    background: rgba(52, 152, 219, 0.95);
+    border: 2px solid #3498db;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+}
+
+.violation-limit-notification i,
+.certificate-eligible-notification i,
+.certificate-ineligible-notification i,
+.skip-prevention-notification i {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.skip-prevention-notification i {
+    font-size: 1rem;
+    margin-bottom: 0;
+    margin-right: 6px;
+    display: inline;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Enhanced video controls */
+.video-player {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+    display: block;
+}
+
+/* Disable video controls that allow skipping */
+.video-player::-webkit-media-controls-timeline {
+    display: none !important;
+}
+
+.video-player::-webkit-media-controls-current-time-display,
+.video-player::-webkit-media-controls-time-remaining-display {
+    display: none !important;
+}
+
+/* Progress bar styling updates */
+.lesson-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    width: 0%;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.lesson-progress-bar.invalid-watch {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+.lesson-progress-bar.warning-watch {
+    background: linear-gradient(90deg, #f39c12, #e67e22);
+}
+
+/* Video actions button updates */
+.video-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.video-actions .restart-btn {
+    background: #e74c3c;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.video-actions .restart-btn:hover {
+    background: #c0392b;
+}
+
+/* Mobile responsive updates */
+@media (max-width: 768px) {
+
+    .watch-warning,
+    .skip-violation-warning {
+        font-size: 0.8rem;
+        padding: 10px 16px;
+        max-width: 90%;
+    }
+
+    .violation-limit-notification,
+    .certificate-eligible-notification,
+    .certificate-ineligible-notification {
+        padding: 16px 20px;
+        font-size: 0.9rem;
+        max-width: 95%;
+    }
+
+    .watch-integrity-indicator,
+    .certificate-status {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+
+    .video-actions {
+        gap: 8px;
+    }
+}
+
+.video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.video-container {
+    background: #1a1a1a;
+    border-radius: 15px;
+    padding: 0;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.video-header {
+    background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.video-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.video-wrapper {
+    position: relative;
+    background: #000;
+}
+
+.video-player {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+    display: block;
+}
+
+.video-controls {
+    background: #2a2a2a;
+    padding: 15px 25px;
+    color: white;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.lesson-progress {
+    background: #444;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.lesson-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.video-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.speed-control {
+    background: #444;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.resume-notification {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    z-index: 1001;
+    animation: slideDown 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Progress indicator styles */
+.course-progress-indicator {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 8px 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: conic-gradient(#5a73e5 0deg, #764ba2 calc(var(--progress) * 3.6deg), rgba(255, 255, 255, 0.2) calc(var(--progress) * 3.6deg));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.progress-circle::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #2a2a2a;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .video-container {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
+
+    .video-header {
+        padding: 15px 20px;
+    }
+
+    .video-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .video-controls {
+        padding: 12px 20px;
+    }
+
+    .video-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+}

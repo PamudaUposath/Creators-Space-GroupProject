@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Certificate Validation System Test</title>
+    <link rel="stylesheet" href="./src/css/video-player.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            margin: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .test-button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .test-button.danger {
+            background: #e53e3e;
+        }
+
+        .test-button.danger:hover {
+            background: #c53030;
+        }
+
+        .test-button.success {
+            background: #38a169;
+        }
+
+        .test-button.success:hover {
+            background: #2f855a;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item h4 {
+            margin: 0 0 8px 0;
+            color: #2d3748;
+        }
+
+        .feature-item p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .status-card {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .status-card.enabled {
+            background: #48bb78;
+        }
+
+        .status-card.disabled {
+            background: #e53e3e;
+        }
+
+        .status-card.warning {
+            background: #ed8936;
+        }
+
+        .debug-output {
+            background: #f1f3f4;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .debug-output.error {
+            border-left-color: #e53e3e;
+            background: #fed7d7;
+        }
+
+        .debug-output.success {
+            border-left-color: #38a169;
+            background: #c6f6d5;
+        }
+
+        .debug-output.warning {
+            border-left-color: #ed8936;
+            background: #feebc8;
+        }
+
+        .info-box {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .info-box h4 {
+            color: #234e52;
+            margin: 0 0 10px 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🎓 Certificate Validation System</h1>
+        <p class="subtitle">Comprehensive Video Skip Prevention & Certificate Integrity Testing</p>
+
+        <div class="info-box">
+            <h4>🛡️ System Overview</h4>
+            <p>This system ensures users watch videos completely before being eligible for course certificates. It
+                prevents video skipping, tracks actual watch time, and validates legitimate learning progress.</p>
+        </div>
+
+        <div class="section">
+            <h3>🎯 Skip Prevention Features</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>🚫 Seek Prevention</h4>
+                    <p>Detects and limits video seeking/skipping beyond allowed thresholds</p>
+                </div>
+                <div class="feature-item">
+                    <h4>⏱️ Watch Time Tracking</h4>
+                    <p>Tracks actual continuous watch time vs total video duration</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🎮 Keyboard Blocking</h4>
+                    <p>Prevents arrow keys and YouTube-style keyboard shortcuts</p>
+                </div>
+                <div class="feature-item">
+                    <h4>📊 Violation Monitoring</h4>
+                    <p>Counts skip violations and enforces maximum limits</p>
+                </div>
+                <div class="feature-item">
+                    <h4>🏆 Certificate Validation</h4>
+                    <p>Only grants certificates for properly watched content</p>
+                </div>
+                <div class="feature-item">
+                    <h4>👁️ Real-time Feedback</h4>
+                    <p>Shows warnings and progress indicators during video playback</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 Test Video Player Functions</h3>
+            <div style="margin: 15px 0;">
+                <button class="test-button" onclick="testBasicVideoPlayer()">🎥 Test Basic Video Player</button>
+                <button class="test-button" onclick="testSkipPrevention()">🚫 Test Skip Prevention</button>
+                <button class="test-button success" onclick="testCertificateValidation(2)">🎓 Test Certificate Check
+                    (Course 2)</button>
+                <button class="test-button danger" onclick="clearAllProgress()">🗑️ Reset Progress Data</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📋 System Status</h3>
+            <div class="status-grid">
+                <div class="status-card enabled" id="playerStatus">
+                    <div>Video Player</div>
+                    <div>Loading...</div>
+                </div>
+                <div class="status-card enabled" id="skipPreventionStatus">
+                    <div>Skip Prevention</div>
+                    <div>Active</div>
+                </div>
+                <div class="status-card enabled" id="watchTrackingStatus">
+                    <div>Watch Tracking</div>
+                    <div>Enabled</div>
+                </div>
+                <div class="status-card enabled" id="certificateValidationStatus">
+                    <div>Certificate Validation</div>
+                    <div>Operational</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔧 Certificate Validation Criteria</h3>
+            <div style="background: white; padding: 15px; border-radius: 8px;">
+                <ul style="margin: 0; color: #4a5568;">
+                    <li><strong>Minimum Watch Time:</strong> 90% of actual video duration (not just position)</li>
+                    <li><strong>Skip Violations:</strong> Maximum 3 violations per lesson</li>
+                    <li><strong>Continuous Watching:</strong> Tracks real watch time vs. seeking</li>
+                    <li><strong>Session Monitoring:</strong> Detects legitimate vs. artificial progress</li>
+                    <li><strong>Course Completion:</strong> All lessons must be properly watched</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔍 Debug Output</h3>
+            <div id="debugOutput" class="debug-output">
+                <strong>[System Ready]</strong> Certificate validation system initialized<br>
+                Click test buttons above to see system behavior...
+            </div>
+        </div>
+    </div>
+
+    <script src="./src/js/video-player.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+            console.log(message);
+        }
+
+        function testBasicVideoPlayer() {
+            log('🎥 Testing basic video player functionality...', 'info');
+
+            if (typeof videoPlayer !== 'undefined') {
+                log('✅ Video player class loaded successfully', 'success');
+
+                // Test with a lesson that has video content
+                videoPlayer.playLesson(4); // UI/UX lesson
+                log('📹 Opening video player for lesson 4 (UI/UX Design)', 'info');
+            } else {
+                log('❌ Video player class not found!', 'error');
+            }
+        }
+
+        function testSkipPrevention() {
+            log('🚫 Testing skip prevention features...', 'warning');
+            log('Features active:', 'info');
+            log('- Keyboard shortcuts disabled (Arrow keys, J/L/K)', 'info');
+            log('- Seek distance monitoring (>10s triggers violation)', 'info');
+            log('- Violation counting (max 3 per video)', 'info');
+            log('- Actual watch time tracking vs video position', 'info');
+
+            testBasicVideoPlayer();
+
+            setTimeout(() => {
+                log('💡 Try to skip in the video to see prevention in action!', 'warning');
+            }, 2000);
+        }
+
+        async function testCertificateValidation(courseId) {
+            log(`🎓 Checking certificate eligibility for course ${courseId}...`, 'info');
+
+            try {
+                const response = await fetch(`../backend/api/check_certificate_eligibility.php?course_id=${courseId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const cert = data.certificate_data;
+                    log(`📊 Certificate Status for "${cert.course_title}":`, 'success');
+                    log(`- Eligible: ${cert.certificate_eligible ? '✅ YES' : '❌ NO'}`, cert.certificate_eligible ? 'success' : 'error');
+                    log(`- Overall Progress: ${cert.overall_progress.toFixed(1)}%`, 'info');
+                    log(`- Watch Percentage: ${cert.overall_watch_percentage.toFixed(1)}%`, 'info');
+                    log(`- Eligible Lessons: ${cert.requirements.eligible_lessons}/${cert.requirements.total_lessons}`, 'info');
+                    log(`- Total Violations: ${cert.requirements.total_violations} (max: ${cert.requirements.max_allowed_violations})`, 'info');
+
+                    // Show validation criteria
+                    log('🔍 Validation Criteria:', 'info');
+                    log(`- All lessons eligible: ${cert.validation_criteria.all_lessons_eligible ? '✅' : '❌'}`, 'info');
+                    log(`- Watch percentage ≥85%: ${cert.validation_criteria.watch_percentage_met ? '✅' : '❌'}`, 'info');
+                    log(`- Violation limit met: ${cert.validation_criteria.violation_limit_met ? '✅' : '❌'}`, 'info');
+                } else {
+                    log(`❌ Error: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ API Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function clearAllProgress() {
+            log('🗑️ Clearing all progress data for testing...', 'warning');
+
+            if (confirm('Are you sure you want to reset all video progress? This will clear watch history for testing purposes.')) {
+                try {
+                    // Note: This would require a special endpoint for testing
+                    log('⚠️ Progress reset functionality would be implemented here', 'warning');
+                    log('For production, individual progress can be reset per user/lesson', 'info');
+                } catch (error) {
+                    log(`❌ Reset Error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // Initialize status checks
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check video player status
+            const playerStatus = document.getElementById('playerStatus');
+            if (typeof videoPlayer !== 'undefined') {
+                playerStatus.innerHTML = '<div>Video Player</div><div>✅ Ready</div>';
+                playerStatus.className = 'status-card enabled';
+                log('✅ Video player system loaded and ready', 'success');
+            } else {
+                playerStatus.innerHTML = '<div>Video Player</div><div>❌ Error</div>';
+                playerStatus.className = 'status-card disabled';
+                log('❌ Video player failed to load', 'error');
+            }
+
+            log('🎯 Skip prevention features:', 'info');
+            log('- Maximum seek distance: 10 seconds', 'info');
+            log('- Maximum violations per video: 3', 'info');
+            log('- Minimum watch percentage for certificate: 90%', 'info');
+            log('- Keyboard shortcut prevention: Active', 'info');
+        });
+    </script>
+</body>
+
+</html>

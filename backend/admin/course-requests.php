@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     $request_id = intval($_POST['request_id']);
                     $admin_notes = trim($_POST['admin_notes'] ?? '');
-                    
+
                     // Get the request details
                     $stmt = $pdo->prepare("SELECT * FROM course_requests WHERE id = ? AND status = 'pending'");
                     $stmt->execute([$request_id]);
                     $request = $stmt->fetch();
-                    
+
                     if ($request) {
                         // Start transaction
                         $pdo->beginTransaction();
-                        
+
                         // Create the course
                         $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $request['title']));
                         $stmt = $pdo->prepare("
@@ -44,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $request['level'],
                             $request['category']
                         ]);
-                        
+
                         $course_id = $pdo->lastInsertId();
-                        
+
                         // Update the request status
                         $stmt = $pdo->prepare("
                             UPDATE course_requests 
@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             WHERE id = ?
                         ");
                         $stmt->execute([$_SESSION['user_id'], $admin_notes, $course_id, $request_id]);
-                        
+
                         $pdo->commit();
-                        
+
                         $message = "Course request approved successfully! Course has been created.";
                         $message_type = "success";
                     } else {
@@ -73,12 +73,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $message_type = "error";
                 }
                 break;
-                
+
             case 'reject_request':
                 try {
                     $request_id = intval($_POST['request_id']);
                     $admin_notes = trim($_POST['admin_notes'] ?? '');
-                    
+
                     $stmt = $pdo->prepare("
                         UPDATE course_requests 
                         SET status = 'rejected', 
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         WHERE id = ? AND status = 'pending'
                     ");
                     $stmt->execute([$_SESSION['user_id'], $admin_notes, $request_id]);
-                    
+
                     if ($stmt->rowCount() > 0) {
                         $message = "Course request rejected.";
                         $message_type = "success";
@@ -126,7 +126,7 @@ try {
             cr.requested_at DESC
     ");
     $course_requests = $stmt->fetchAll();
-    
+
     // Get statistics
     $stmt = $pdo->query("
         SELECT 
@@ -137,7 +137,6 @@ try {
         FROM course_requests
     ");
     $stats = $stmt->fetch();
-    
 } catch (PDOException $e) {
     error_log("Error fetching course requests: " . $e->getMessage());
     $course_requests = [];
@@ -147,13 +146,14 @@ try {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Requests - Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -163,16 +163,18 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f8fafc;
+            background: #d7d8d8ff;
             color: #333;
             min-height: 100vh;
         }
+
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -180,28 +182,34 @@ try {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .logo {
             font-size: 24px;
             font-weight: bold;
         }
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
+
         .nav {
             background: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .nav-content {
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .nav-links {
             display: flex;
             gap: 2rem;
         }
+
         .nav-links a {
             text-decoration: none;
             color: #555;
@@ -210,11 +218,13 @@ try {
             border-radius: 6px;
             transition: all 0.3s;
         }
+
         .nav-links a:hover,
         .nav-links a.active {
             background: #667eea;
             color: white;
         }
+
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -293,10 +303,21 @@ try {
             color: white;
         }
 
-        .stat-icon.requests { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .stat-icon.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .stat-icon.approved { background: linear-gradient(135deg, #10b981, #059669); }
-        .stat-icon.rejected { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .stat-icon.requests {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-icon.pending {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .stat-icon.approved {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .stat-icon.rejected {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
 
         .stat-number {
             font-size: 2rem;
@@ -790,7 +811,7 @@ try {
                 </div>
             <?php endif; ?>
         </div>
-        </main>
+    </main>
 
     <script>
         // Auto-hide messages
@@ -806,4 +827,5 @@ try {
         }, 5000);
     </script>
 </body>
+
 </html>

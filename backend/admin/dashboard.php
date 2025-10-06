@@ -9,8 +9,8 @@ requireAdmin();
 
 // Get dashboard statistics
 try {
-    // Get total users
-    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'user'");
+    // Get total users (excluding removed users)
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'user' AND (remove IS NULL OR remove = 0)");
     $totalUsers = $stmt->fetch()['total'];
 
     // Get total courses
@@ -21,8 +21,8 @@ try {
     $stmt = $pdo->query("SELECT COUNT(*) as total FROM enrollments");
     $totalEnrollments = $stmt->fetch()['total'];
 
-    // Get total instructors
-    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'instructor'");
+    // Get total instructors (excluding removed instructors)
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM users WHERE role = 'instructor' AND (remove IS NULL OR remove = 0)");
     $totalInstructors = $stmt->fetch()['total'];
 
     // Get total revenue
@@ -73,7 +73,6 @@ try {
         LIMIT 6
     ");
     $monthlyEnrollments = $stmt->fetchAll();
-    
 } catch (PDOException $e) {
     error_log("Dashboard error: " . $e->getMessage());
     $totalUsers = $totalCourses = $totalEnrollments = $totalInstructors = 0;
@@ -89,7 +88,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Creators-Space</title>
-    <link rel="shortcut icon" href="/frontend/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/svg+xml" href="assets/admin-favicon.svg">
+    <link rel="shortcut icon" href="assets/admin-favicon.svg" type="image/svg+xml">
     <style>
         * {
             margin: 0;
@@ -99,12 +99,12 @@ try {
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #d7d8d8ff;
             color: #333;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             color: white;
             padding: 1rem 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);

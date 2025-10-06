@@ -1,4 +1,275 @@
-# Contributing Guide
+# Contributing to Creators-Space E-Learning Platform
+
+Welcome to the Creators-Space project! We're excited to have you contribute to our comprehensive e-le---
+
+## 🧪 Testing Guidelines
+
+### Testing Requirements
+All contributions must include appropriate testing:
+
+#### Backend Testing
+```bash
+# Run PHP unit tests
+cd backend/test
+php -f run_tests.php
+
+# Database tests
+php -f test_database_connection.php
+php -f test_api_endpoints.php
+```
+
+#### Frontend Testing
+```bash
+# JavaScript testing
+npm test
+
+# Browser compatibility testing
+# Test on Chrome, Firefox, Safari, Edge
+# Mobile testing on iOS Safari, Chrome Mobile
+```
+
+#### Security Testing
+- Input validation testing
+- SQL injection prevention testing  
+- XSS protection verification
+- Authentication and authorization testing
+
+### Code Quality Standards
+
+#### PHP Code Standards
+- Follow PSR-12 coding standards
+- Use type hints and return types
+- Implement proper error handling
+- Document all public methods
+- Use prepared statements for database queries
+
+#### JavaScript Standards  
+- Use ES6+ features
+- Follow consistent naming conventions
+- Implement proper error handling
+- Comment complex logic
+- Optimize for performance
+
+#### Database Standards
+- Use indexes for frequently queried columns
+- Follow naming conventions (snake_case)
+- Include proper foreign key constraints
+- Document complex queries
+
+---
+
+## 🔒 Security & Production Considerations
+
+### Security Requirements
+- **Input Validation**: All user inputs must be validated and sanitized
+- **Authentication**: Implement proper session management and JWT handling
+- **Authorization**: Role-based access control for all endpoints
+- **Encryption**: Sensitive data must be encrypted at rest and in transit
+- **Logging**: Security events must be logged for audit purposes
+
+### Production Deployment
+- **Environment Variables**: Use secure configuration management
+- **Database Migration**: Follow proper migration procedures
+- **Cloud Services**: AWS S3 integration must follow security best practices
+- **Payment Processing**: PayHere integration must be PCI compliant
+- **Email Security**: PHPMailer must use secure SMTP with TLS
+
+### Performance Guidelines
+- **Database**: Optimize queries, use appropriate indexes
+- **Caching**: Implement caching where appropriate
+- **Media Delivery**: Optimize images and videos for web delivery
+- **CDN**: Properly configure AWS S3 for optimal content delivery
+
+---
+
+## 📋 Pull Request Process
+
+### Before Submitting
+1. **Code Review Checklist**:
+   - [ ] Code follows project standards
+   - [ ] All tests pass
+   - [ ] Security requirements met
+   - [ ] Documentation updated
+   - [ ] Performance impact considered
+
+2. **Testing Evidence**:
+   - [ ] Unit tests added/updated
+   - [ ] Manual testing completed
+   - [ ] Cross-browser testing (if frontend)
+   - [ ] Mobile responsiveness verified
+   - [ ] Security testing completed
+
+### PR Description Template
+```markdown
+## 📝 Description
+Brief description of changes
+
+## 🎯 Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+- [ ] Performance improvement
+- [ ] Security enhancement
+
+## 🧪 Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+- [ ] Security testing completed
+
+## 📸 Screenshots/Videos
+(If applicable, add screenshots or videos)
+
+## 🔗 Related Issues
+Closes #(issue_number)
+
+## 🚀 Deployment Notes
+(Any special deployment considerations)
+```
+
+### Code Review Process
+1. **Automated Checks**: All automated tests must pass
+2. **Peer Review**: At least one team member must review
+3. **Security Review**: Security-sensitive changes require security review
+4. **Performance Review**: Performance-critical changes require performance review
+5. **Documentation Review**: Documentation changes require technical writing review
+
+---
+
+## 🛡 Security Guidelines
+
+### Secure Coding Practices
+- **Input Validation**: Validate all inputs on both client and server side
+- **Output Encoding**: Properly encode outputs to prevent XSS
+- **Authentication**: Use secure password hashing (bcrypt)
+- **Session Management**: Implement secure session handling
+- **Database Security**: Use parameterized queries exclusively
+- **File Upload Security**: Validate file types and scan for malware
+- **API Security**: Implement rate limiting and authentication for all endpoints
+
+### Vulnerability Reporting
+If you discover a security vulnerability:
+1. **Do NOT create a public issue**
+2. Email security concerns to: security@creators-space.com
+3. Include detailed description and reproduction steps
+4. Allow reasonable time for fix before disclosure
+
+---
+
+## 🌐 Internationalization (i18n)
+
+### Multi-language Support
+- Use language files for all user-facing text
+- Support RTL languages
+- Consider cultural differences in UI/UX
+- Test with different character sets
+
+### Current Language Support
+- English (primary)
+- Sinhala (planned)
+- Tamil (planned)
+
+---
+
+## 📊 Performance & Monitoring
+
+### Performance Standards
+- **Page Load**: < 3 seconds on 3G connection
+- **API Response**: < 500ms for standard requests  
+- **Database Queries**: < 100ms for simple queries
+- **Image Optimization**: WebP format with fallbacks
+- **JavaScript Bundle**: < 250KB compressed
+
+### Monitoring & Analytics
+- Application performance monitoring
+- Error tracking and logging
+- User behavior analytics
+- Security event monitoring
+- Database performance monitoring
+
+---
+
+## 🚀 Release Process
+
+### Version Numbering
+We follow [Semantic Versioning](https://semver.org/):
+- **MAJOR**: Breaking changes
+- **MINOR**: New features (backward compatible)
+- **PATCH**: Bug fixes (backward compatible)
+
+### Release Checklist
+- [ ] All tests pass
+- [ ] Security review completed
+- [ ] Performance benchmarks met
+- [ ] Documentation updated
+- [ ] Database migrations tested
+- [ ] Backup procedures verified
+- [ ] Rollback plan documented
+
+---
+
+## 🤝 Community Guidelines
+
+### Code of Conduct
+- Be respectful and inclusive
+- Provide constructive feedback
+- Help newcomers learn
+- Maintain professional communication
+- Focus on technical merit
+
+### Communication Channels
+- **Issues**: Bug reports and feature requests
+- **Pull Requests**: Code contributions and reviews  
+- **Discussions**: General questions and suggestions
+- **Email**: Security concerns and private matters
+
+---
+
+## 📚 Additional Resources
+
+### Documentation
+- [API Documentation](backend/api/README.md)
+- [Database Schema](backend/ER_ASCII.txt)
+- [Deployment Guide](docs/INSTALL.md)
+- [Testing Guide](docs/SYSTEM_TEST.md)
+
+### External Resources
+- [PHP Best Practices](https://phptherightway.com/)
+- [JavaScript Best Practices](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide)
+- [AWS S3 Documentation](https://docs.aws.amazon.com/s3/)
+- [PayHere API Documentation](https://www.payhere.lk/developers)
+
+---
+
+## 📞 Getting Help
+
+### For Contributors
+- Check existing issues and documentation first
+- Ask questions in issue comments
+- Join our community discussions
+- Review similar projects for inspiration
+
+### For Maintainers
+- Provide timely feedback on contributions
+- Maintain clear documentation
+- Communicate changes effectively
+- Support contributor growth
+
+---
+
+**Thank you for contributing to Creators-Space! Your efforts help create a better learning platform for everyone.** 🎉nagement system. This guide will help you understand our production-ready codebase and contribute effectively.
+
+## 🚀 Quick Start for Contributors
+
+1. **Review the architecture**: Check our [README.md](README.md) and [backend documentation](backend/README.md)
+2. **Set up your development environment** (see Development Setup below)
+3. **Find an issue** or propose a new feature → **assign yourself**
+4. **Create a feature branch** from `main` → `git checkout -b feat/your-feature-name`
+5. **Make changes** following our coding standards and security practices
+6. **Test thoroughly** including unit tests and integration tests
+7. **Open a Pull Request** with detailed description and testing evidence
+8. **Collaborate on code review** → implement feedback → **merge when approved**ting Guide
 
 ## 🧭 TL;DR (Quick Start)
 
@@ -9,45 +280,138 @@
 5. **Ask for a review** → make requested changes → **merge** when approved.
 6. **Add your PR link** to the team’s Google Sheet.
 
+## 🎯 Areas Where You Can Contribute
+
+### 🔧 Backend Development (PHP 8.2+)
+- **API Development**: REST endpoints, authentication, data validation
+- **Database Optimization**: Query performance, indexing, schema improvements
+- **Security Enhancements**: Input sanitization, authentication, authorization
+- **AWS S3 Integration**: Media management, CDN optimization
+- **Payment Gateway**: PayHere integration improvements
+- **AI System**: Chatbot enhancements, knowledge base expansion
+
+### 🎨 Frontend Development (Modern Web)
+- **UI/UX Improvements**: Responsive design, accessibility, user experience
+- **JavaScript Enhancements**: ES6+ features, performance optimization
+- **Mobile Responsiveness**: Cross-device compatibility
+- **Progressive Web App**: Offline functionality, push notifications
+- **Performance**: Page load optimization, image compression
+
+### 🤖 AI & Machine Learning
+- **Chatbot Intelligence**: Conversation flow improvements
+- **Recommendation System**: Course suggestion algorithms
+- **Analytics**: User behavior analysis, learning pattern recognition
+- **Natural Language Processing**: Multi-language support
+
+### 📊 Testing & Quality Assurance
+- **Unit Testing**: PHP unit tests, JavaScript testing
+- **Integration Testing**: API testing, database testing
+- **Security Testing**: Vulnerability assessment, penetration testing
+- **Performance Testing**: Load testing, stress testing
+
+### 📚 Documentation & DevOps
+- **Technical Documentation**: API docs, deployment guides
+- **User Documentation**: Help guides, video tutorials
+- **DevOps**: CI/CD pipelines, Docker containerization
+- **Monitoring**: Application performance monitoring, error tracking
+
 ---
 
-## 💡 Ways You Can Contribute
+## 🏗 Development Environment Setup
 
-* **Report bugs** (something broken or confusing).
-* **Suggest enhancements** (new features or UX improvements).
-* **Improve UI/UX** (spacing, colors, typography, layout).
-* **Write documentation** (README/FAQs/screenshots).
-* **Refactor** (clean up code or reorganize files).
+### Prerequisites
+- **PHP**: 8.2 or higher
+- **MySQL**: 8.0 or higher
+- **Node.js**: 18+ (for frontend build tools)
+- **Composer**: PHP dependency manager
+- **Git**: Version control
 
-*No code experience? You can still help by testing, writing issues, and improving docs.*
+### Local Development Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/Creators-Space-GroupProject.git
+   cd Creators-Space-GroupProject
+   ```
+
+2. **Install PHP dependencies**
+   ```bash
+   cd backend
+   composer install
+   ```
+
+3. **Database setup**
+   ```bash
+   # Import the database schema
+   mysql -u root -p < backend/sql/creators_space(#final3-Pamuda).sql
+   
+   # Configure database connection
+   cp backend/config/database.example.php backend/config/database.php
+   # Edit database.php with your credentials
+   ```
+
+4. **Configure environment variables**
+   ```bash
+   # Backend configuration
+   cp backend/config/.env.example backend/config/.env
+   
+   # Update with your settings:
+   # - Database credentials
+   # - AWS S3 credentials
+   # - PayHere merchant details
+   # - SMTP settings for PHPMailer
+   ```
+
+5. **Frontend setup**
+   ```bash
+   cd frontend
+   npm install
+   npm run build
+   ```
+
+6. **Start development servers**
+   ```bash
+   # PHP development server (backend)
+   php -S localhost:8000 -t backend/public
+   
+   # Frontend development (if using build tools)
+   npm run dev
+   ```
 
 ---
 
-## 🗂 Project Workflow at a Glance
+## 🔄 Git Workflow & Branching Strategy
 
-**Default branches:**
+### Branch Structure
+- **`main`**: Production-ready code, stable releases
+- **`develop`**: Integration branch for features
+- **`feature/*`**: New feature development
+- **`hotfix/*`**: Critical production fixes
+- **`release/*`**: Release preparation
 
-* `main` → stable, presentation-ready
-* `development` → active work
+### Branch Naming Convention
+- **Features**: `feature/ai-chatbot-improvements`
+- **Bug fixes**: `bugfix/payment-gateway-validation`
+- **Hotfixes**: `hotfix/security-patch-v1.2.1`
+- **Releases**: `release/v1.3.0`
 
-**Your branches:**
+### Commit Message Standards
+We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-* Features: `feat/<short-name>`
-* Fixes: `fix/<short-name>`
-* Docs: `docs/<short-name>`
-* Refactors: `refactor/<short-name>`
+```
+<type>[optional scope]: <description>
 
-**Examples**
+[optional body]
 
-* `feat/change-password-ui`
-* `fix/bookmarks-not-saving`
-* `docs/add-contribution-guide`
+[optional footer(s)]
+```
 
----
-
-## 🔎 How to Find Something to Work On
-
-1. Go to **Issues** → filter by:
+**Examples:**
+- `feat(ai): add course recommendation algorithm`
+- `fix(auth): resolve JWT token expiration issue`
+- `docs(api): update payment endpoint documentation`
+- `perf(db): optimize course query performance`
+- `security(auth): implement rate limiting for login`
 
    * `good first issue` (easiest starting point)
    * `bug`, `enhancement`, `UI/UX`

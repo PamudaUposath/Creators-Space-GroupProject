@@ -3,8 +3,10 @@
 session_start();
 
 // Check if user is logged in as student or admin
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || 
-    ($_SESSION['role'] !== 'user' && $_SESSION['role'] !== 'admin')) {
+if (
+    !isset($_SESSION['user_id']) || !isset($_SESSION['role']) ||
+    ($_SESSION['role'] !== 'user' && $_SESSION['role'] !== 'admin')
+) {
     header('Location: login.php');
     exit;
 }
@@ -18,6 +20,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +28,7 @@ $page_description = 'Communicate with your instructors and get course support';
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         * {
             margin: 0;
@@ -35,7 +38,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
             line-height: 1.6;
@@ -128,7 +131,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* Main Content */
@@ -143,14 +146,14 @@ $page_description = 'Communicate with your instructors and get course support';
             width: 350px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
         }
 
         .sidebar-header {
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -168,7 +171,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
         .instructor-search {
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -224,7 +227,7 @@ $page_description = 'Communicate with your instructors and get course support';
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 0.5rem;
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .instructor-item:hover {
@@ -232,7 +235,8 @@ $page_description = 'Communicate with your instructors and get course support';
             border-color: rgba(102, 126, 234, 0.2);
         }
 
-        .conversation-avatar, .instructor-avatar {
+        .conversation-avatar,
+        .instructor-avatar {
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -245,12 +249,14 @@ $page_description = 'Communicate with your instructors and get course support';
             font-size: 0.9rem;
         }
 
-        .conversation-info, .instructor-info {
+        .conversation-info,
+        .instructor-info {
             flex: 1;
             min-width: 0;
         }
 
-        .conversation-name, .instructor-name {
+        .conversation-name,
+        .instructor-name {
             font-weight: 600;
             color: #2d3748;
             margin-bottom: 0.25rem;
@@ -307,7 +313,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
         .chat-header {
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -379,7 +385,7 @@ $page_description = 'Communicate with your instructors and get course support';
         }
 
         .message.received .message-bubble {
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
             color: #2d3748;
             border-bottom-left-radius: 4px;
         }
@@ -400,7 +406,7 @@ $page_description = 'Communicate with your instructors and get course support';
         .message-input-container {
             padding: 1.5rem;
             background: rgba(255, 255, 255, 0.8);
-            border-top: 1px solid rgba(0,0,0,0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .message-input-form {
@@ -506,7 +512,9 @@ $page_description = 'Communicate with your instructors and get course support';
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Course Badge */
@@ -524,7 +532,7 @@ $page_description = 'Communicate with your instructors and get course support';
         /* Tab System */
         .tab-container {
             display: flex;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             background: rgba(255, 255, 255, 0.8);
         }
 
@@ -558,15 +566,195 @@ $page_description = 'Communicate with your instructors and get course support';
             .main-content {
                 flex-direction: column;
             }
-            
+
             .sidebar {
                 width: 100%;
                 height: 50vh;
             }
-            
+
             .navbar-container {
                 padding: 0 1rem;
             }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar {
+            background: rgba(26, 32, 46, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .sidebar-header {
+            background: rgba(26, 32, 46, 0.95);
+        }
+
+        body.dark-mode .tab-container {
+            background: rgba(26, 32, 46, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .sidebar-header h2 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .sidebar-subtitle {
+            color: #f7fafc;
+        }
+
+        body.dark-mode .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .search-box input {
+            background: transparent;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .search-box input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .conversation-item,
+        body.dark-mode .instructor-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .conversation-item:hover,
+        body.dark-mode .instructor-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .conversation-item.active {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .conversation-name,
+        body.dark-mode .instructor-name {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .conversation-last-message,
+        body.dark-mode .instructor-role,
+        body.dark-mode .conversation-time {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .chat-area {
+            background: rgba(26, 32, 46, 0.95);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .chat-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .chat-subtitle {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .messages-container {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .message {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .message.sent {
+            background: rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .message-content {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .message-time {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .message-input-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .message-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .message-input::placeholder {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .send-btn {
+            background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
+        }
+
+        body.dark-mode .send-btn:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        body.dark-mode .empty-state h3 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .empty-state p {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .typing-indicator {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .typing-text {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .section-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .online-status {
+            border: 2px solid #1a1a2e;
+        }
+
+        body.dark-mode .file-upload-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .file-upload-area:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark-mode .file-upload-icon {
+            color: #a0aec0;
+        }
+
+        body.dark-mode .file-upload-text {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .file-upload-subtext {
+            color: #a0aec0;
         }
     </style>
 </head>
@@ -582,14 +770,14 @@ $page_description = 'Communicate with your instructors and get course support';
                 <h2 class="sidebar-title">Messages</h2>
                 <p class="sidebar-subtitle">Connect with your instructors</p>
             </div>
-            
+
             <!-- Tabs -->
             <div class="tab-container">
                 <button class="tab-button active" onclick="messaging.switchTab('conversations')">
                     Conversations
                 </button>
             </div>
-            
+
             <!-- Conversations Tab -->
             <div id="conversationsTab" class="tab-content active">
                 <div class="conversation-list" id="conversationList">
@@ -620,21 +808,24 @@ $page_description = 'Communicate with your instructors and get course support';
                 this.conversations = [];
                 this.messages = [];
                 this.currentTab = 'conversations';
-                
+
                 // Check for pre-selected instructor from URL parameters
                 const urlParams = new URLSearchParams(window.location.search);
                 const preSelectedInstructorId = urlParams.get('instructor_id');
                 const preSelectedInstructorName = urlParams.get('instructor_name');
                 const preSelectedCourseId = urlParams.get('course_id');
-                
+
                 this.loadConversations().then(() => {
                     // If there's a pre-selected instructor, start conversation with them
                     if (preSelectedInstructorId) {
-                        this.currentConversation = { userId: preSelectedInstructorId, courseId: preSelectedCourseId };
+                        this.currentConversation = {
+                            userId: preSelectedInstructorId,
+                            courseId: preSelectedCourseId
+                        };
                         this.loadMessages(preSelectedInstructorId, preSelectedCourseId);
                     }
                 });
-                
+
                 this.setupSearch();
             }
 
@@ -642,11 +833,11 @@ $page_description = 'Communicate with your instructors and get course support';
                 // Update tab buttons
                 document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
                 document.querySelector(`button[onclick="messaging.switchTab('${tab}')"]`).classList.add('active');
-                
+
                 // Update tab content
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                 document.getElementById(tab + 'Tab').classList.add('active');
-                
+
                 this.currentTab = tab;
             }
 
@@ -658,7 +849,7 @@ $page_description = 'Communicate with your instructors and get course support';
                 try {
                     const response = await fetch('/Creators-Space-GroupProject/backend/communication/get_conversations.php');
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         this.conversations = data.data.conversations;
                         this.renderConversations();
@@ -676,7 +867,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
             renderConversations() {
                 const container = document.getElementById('conversationList');
-                
+
                 if (this.conversations.length === 0) {
                     container.innerHTML = `
                         <div class="empty-conversation">
@@ -748,8 +939,12 @@ $page_description = 'Communicate with your instructors and get course support';
                     conversationElement.classList.add('active');
                 }
 
-                this.currentConversation = { id: conversationId, userId: userId, courseId: courseId };
-                
+                this.currentConversation = {
+                    id: conversationId,
+                    userId: userId,
+                    courseId: courseId
+                };
+
                 // Load messages with course context
                 await this.loadMessages(userId, courseId);
             }
@@ -759,22 +954,25 @@ $page_description = 'Communicate with your instructors and get course support';
                     console.log('Student loading messages for user:', otherUserId, 'course:', courseId);
                     let url = `/Creators-Space-GroupProject/backend/communication/get_messages.php?other_user_id=${otherUserId}`;
                     if (courseId) url += `&course_id=${courseId}`;
-                    
+
                     console.log('Student fetching from URL:', url);
 
                     const response = await fetch(url);
                     const data = await response.json();
-                    
+
                     console.log('Student API Response:', data);
-                    
+
                     if (data.success) {
                         this.messages = data.data.messages;
                         console.log('Student messages loaded:', this.messages.length, 'messages');
                         this.renderMessages(data.data.other_user);
-                        
+
                         // Set current conversation if not already set
                         if (!this.currentConversation || this.currentConversation.userId !== otherUserId) {
-                            this.currentConversation = { userId: otherUserId, courseId: courseId };
+                            this.currentConversation = {
+                                userId: otherUserId,
+                                courseId: courseId
+                            };
                         }
                     } else {
                         console.error('Student failed to load messages:', data.message);
@@ -788,7 +986,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
             renderMessages(otherUser) {
                 const chatContent = document.getElementById('chatContent');
-                
+
                 const chatHTML = `
                     <div class="chat-header">
                         <div class="chat-user-info">
@@ -829,7 +1027,7 @@ $page_description = 'Communicate with your instructors and get course support';
                 `;
 
                 chatContent.innerHTML = chatHTML;
-                
+
                 // Auto-resize textarea
                 const textarea = document.getElementById('messageInput');
                 textarea.addEventListener('input', () => {
@@ -858,7 +1056,7 @@ $page_description = 'Communicate with your instructors and get course support';
 
             async sendMessage(event) {
                 event.preventDefault();
-                
+
                 if (!this.currentConversation) {
                     this.showError('Please select a conversation first');
                     return;
@@ -886,15 +1084,15 @@ $page_description = 'Communicate with your instructors and get course support';
                     });
 
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         // Clear input
                         messageInput.value = '';
                         messageInput.style.height = 'auto';
-                        
+
                         // Reload messages
                         await this.loadMessages(this.currentConversation.userId);
-                        
+
                         // Update conversations list
                         await this.loadConversations();
                     } else {
@@ -920,13 +1118,21 @@ $page_description = 'Communicate with your instructors and get course support';
                 const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
                 if (diffDays === 0) {
-                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return date.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                 } else if (diffDays === 1) {
                     return 'Yesterday';
                 } else if (diffDays < 7) {
-                    return date.toLocaleDateString([], { weekday: 'short' });
+                    return date.toLocaleDateString([], {
+                        weekday: 'short'
+                    });
                 } else {
-                    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                    return date.toLocaleDateString([], {
+                        month: 'short',
+                        day: 'numeric'
+                    });
                 }
             }
 
@@ -961,4 +1167,5 @@ $page_description = 'Communicate with your instructors and get course support';
         const messaging = new StudentMessaging();
     </script>
 </body>
+
 </html>

@@ -37,7 +37,7 @@
 
 /* Button variants */
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
   color: #ffffff;
 }
 
@@ -159,7 +159,7 @@
 
 /* Cart and checkout buttons */
 .continue-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
   color: #ffffff;
   flex: 1;
 }
@@ -182,7 +182,7 @@
 
 /* Explore and action buttons */
 .explore-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #5a73e5 0%, #764ba2 100%);
   color: #ffffff;
   padding: 1rem 2rem;
   border-radius: 12px;
@@ -203,15 +203,15 @@
     padding: 0.8rem 1.2rem;
     font-size: 0.85rem;
   }
-  
+
   .btn-group {
     flex-direction: column;
   }
-  
+
   .btn-group .btn {
     width: 100%;
   }
-  
+
   .navbar .btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
@@ -223,12 +223,12 @@
     padding: 0.7rem 1rem;
     font-size: 0.8rem;
   }
-  
+
   .btn-sm {
     padding: 0.4rem 0.8rem;
     font-size: 0.75rem;
   }
-  
+
   .btn-lg {
     padding: 0.9rem 1.3rem;
     font-size: 0.9rem;

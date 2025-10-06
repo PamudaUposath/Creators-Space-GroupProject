@@ -1,3 +1,13 @@
+.body{
+
+
+}
+
+.hero-btn {
+  border-radius: 10px;
+  padding: 5px;
+}
+
 .services-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -8,13 +18,14 @@
 }
 
 .service-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  color: #ffffff;
 }
 
 .service-card:hover {
@@ -32,12 +43,10 @@
 .service-card h3 {
   font-size: 1.5rem;
   margin-bottom: 15px;
-  color: #2c3e50;
   font-weight: 700;
 }
 
 .service-card p {
-  color: #666;
   margin-bottom: 20px;
   line-height: 1.6;
 }
@@ -74,6 +83,12 @@
   color: #27ae60;
   font-weight: bold;
 }
+
+.services-grid .card,
+.services-grid .card * {
+  color: #000;
+}
+
 
 /* Dark mode styles */
 body.dark .service-card {
