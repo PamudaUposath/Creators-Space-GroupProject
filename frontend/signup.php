@@ -344,7 +344,7 @@ include './includes/header.php';
 
       <div id="message-container"></div>
 
-      <form id="signup-form" method="POST" action="./login.php">
+      <form id="signup-form" method="POST" action="../backend/auth/signup_process.php">
         <div class="form-columns">
           <div class="form-group">
             <label for="first_name">First Name</label>
@@ -526,7 +526,7 @@ include './includes/header.php';
       fetch('../backend/auth/signup_process.php', {
         method: 'POST',
         body: formData,
-        credentials: 'same-origin'  // This ensures cookies/session are sent
+        credentials: 'include'  // This ensures cookies/session are sent
       })
       .then(response => {
         console.log('Response status:', response.status, response.statusText);
@@ -564,14 +564,22 @@ include './includes/header.php';
             signupBtn.disabled = false;
             signupBtn.textContent = 'Create Account';
           }
-        })
-        .catch(error => {
-          console.error('Fetch error:', error);
-          showMessage('Network error occurred. Please check your connection and try again.', 'error');
+        } catch (parseError) {
+          console.error('JSON Parse error:', parseError);
+          console.log('Raw response was:', text);
+          showMessage('Server response error. Please try again.', 'error');
           spinner.style.display = 'none';
           signupBtn.disabled = false;
           signupBtn.textContent = 'Create Account';
-        });
+        }
+      })
+      .catch(error => {
+        console.error('Network error:', error);
+        showMessage('Network error occurred. Please check your connection and try again.', 'error');
+        spinner.style.display = 'none';
+        signupBtn.disabled = false;
+        signupBtn.textContent = 'Create Account';
+      });
     });
   </script>
 

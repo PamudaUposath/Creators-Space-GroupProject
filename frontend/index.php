@@ -12,6 +12,9 @@ require_once __DIR__ . '/../backend/lib/helpers.php';
 // Fetch real statistics from database
 $platformStats = getPlatformStatistics($pdo);
 
+// Fetch featured courses from database
+$featuredCourses = getFeaturedCourses($pdo, 3);
+
 // Include the header
 include_once './includes/header.php';
 ?>
@@ -94,89 +97,77 @@ include_once './includes/header.php';
       <p class="section-subtitle">Discover our most popular courses designed by industry experts</p>
     </div>
     <div class="courses-grid">
-      <div class="course-card">
-        <div class="course-image">
-          <img src="./assets/images/full-stack-web-developer.png" alt="Full Stack Development">
-          <div class="course-badge">Popular</div>
-        </div>
-        <div class="course-content">
-          <h3>Full Stack Web Development</h3>
-          <p>Master both frontend and backend development with modern technologies like React, Node.js, and MongoDB.</p>
-          <div class="course-meta">
-            <span class="course-duration"><i class="fas fa-clock"></i> 12 weeks</span>
-            <span class="course-level"><i class="fas fa-signal"></i> Intermediate</span>
-          </div>
-          <div class="course-footer">
-            <div class="course-rating">
-              <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-              </div>
-              <span>4.9 (2.1k reviews)</span>
+      <?php if (!empty($featuredCourses)): ?>
+        <?php foreach ($featuredCourses as $course): ?>
+          <div class="course-card" onclick="window.location.href='course-detail.php?id=<?php echo $course['id']; ?>'">
+            <div class="course-image">
+              <img src="<?php echo htmlspecialchars($course['image_url']); ?>" alt="<?php echo htmlspecialchars($course['title']); ?>">
+              <div class="course-badge"><?php echo htmlspecialchars($course['badge']); ?></div>
             </div>
-            <a href="courses.php" class="course-btn">Enroll Now</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="course-card">
-        <div class="course-image">
-          <img src="./assets/images/webdev.png" alt="Python Programming">
-          <div class="course-badge">New</div>
-        </div>
-        <div class="course-content">
-          <h3>Python for Data Science</h3>
-          <p>Learn Python programming and dive into data analysis, machine learning, and AI applications.</p>
-          <div class="course-meta">
-            <span class="course-duration"><i class="fas fa-clock"></i> 10 weeks</span>
-            <span class="course-level"><i class="fas fa-signal"></i> Beginner</span>
-          </div>
-          <div class="course-footer">
-            <div class="course-rating">
-              <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+            <div class="course-content">
+              <h3><?php echo htmlspecialchars($course['title']); ?></h3>
+              <p><?php echo htmlspecialchars(substr($course['description'], 0, 120)) . (strlen($course['description']) > 120 ? '...' : ''); ?></p>
+              <div class="course-meta">
+                <span class="course-duration"><i class="fas fa-clock"></i> <?php echo htmlspecialchars($course['duration'] ?: 'Self-paced'); ?></span>
+                <span class="course-level"><i class="fas fa-signal"></i> <?php echo htmlspecialchars($course['level_display']); ?></span>
               </div>
-              <span>4.8 (1.8k reviews)</span>
-            </div>
-            <a href="courses.php" class="course-btn">Enroll Now</a>
-          </div>
-        </div>
-      </div>
-      
-      <div class="course-card">
-        <div class="course-image">
-          <img src="./assets/images/google-looker-seeklogo.svg" alt="UI/UX Design">
-          <div class="course-badge">Trending</div>
-        </div>
-        <div class="course-content">
-          <h3>UI/UX Design Masterclass</h3>
-          <p>Create stunning user interfaces and experiences using modern design principles and tools.</p>
-          <div class="course-meta">
-            <span class="course-duration"><i class="fas fa-clock"></i> 8 weeks</span>
-            <span class="course-level"><i class="fas fa-signal"></i> Beginner</span>
-          </div>
-          <div class="course-footer">
-            <div class="course-rating">
-              <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+              <div class="course-footer">
+                <div class="course-rating">
+                  <div class="stars">
+                    <?php 
+                    $rating = floatval($course['rating']);
+                    $fullStars = floor($rating);
+                    $halfStar = ($rating - $fullStars) >= 0.5;
+                    
+                    for ($i = 0; $i < $fullStars; $i++): ?>
+                      <i class="fas fa-star"></i>
+                    <?php endfor;
+                    
+                    if ($halfStar): ?>
+                      <i class="fas fa-star-half-alt"></i>
+                    <?php endif;
+                    
+                    for ($i = $fullStars + ($halfStar ? 1 : 0); $i < 5; $i++): ?>
+                      <i class="far fa-star"></i>
+                    <?php endfor; ?>
+                  </div>
+                  <span><?php echo $course['rating']; ?> (<?php echo number_format($course['review_count']); ?> reviews)</span>
+                </div>
+                <a href="course-detail.php?id=<?php echo $course['id']; ?>" class="course-btn" onclick="event.stopPropagation();">Enroll Now</a>
               </div>
-              <span>4.7 (950 reviews)</span>
             </div>
-            <a href="courses.php" class="course-btn">Enroll Now</a>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <!-- Fallback content if no courses are available -->
+        <div class="course-card">
+          <div class="course-image">
+            <img src="./assets/images/full-stack-web-developer.png" alt="Coming Soon">
+            <div class="course-badge">Coming Soon</div>
+          </div>
+          <div class="course-content">
+            <h3>Exciting Courses Coming Soon!</h3>
+            <p>We're preparing amazing courses for you. Check back soon for updates.</p>
+            <div class="course-meta">
+              <span class="course-duration"><i class="fas fa-clock"></i> Coming Soon</span>
+              <span class="course-level"><i class="fas fa-signal"></i> All Levels</span>
+            </div>
+            <div class="course-footer">
+              <div class="course-rating">
+                <div class="stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span>5.0 (Soon)</span>
+              </div>
+              <a href="courses.php" class="course-btn">View All Courses</a>
+            </div>
           </div>
         </div>
-      </div>
+      <?php endif; ?>
     </div>
     <div class="section-cta">
       <a href="courses.php" class="view-all-btn">View All Courses <i class="fas fa-arrow-right"></i></a>
