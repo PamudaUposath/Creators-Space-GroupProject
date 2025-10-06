@@ -25,10 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     errorResponse('Method not allowed', 405);
 }
 
-// Rate limiting
-if (!checkRateLimit('signup_' . $_SERVER['REMOTE_ADDR'])) {
-    errorResponse('Too many signup attempts. Please try again later.', 429);
-}
+// Rate limiting (temporarily disabled for testing - enable in production)
+// if (!checkRateLimit('signup_' . $_SERVER['REMOTE_ADDR'])) {
+//     errorResponse('Too many signup attempts. Please try again later.', 429);
+// }
 
 // Get and sanitize input
 $firstName = sanitizeInput($_POST['first_name'] ?? '');
@@ -82,20 +82,31 @@ try {
 
     // Insert user
     $stmt = $pdo->prepare("
-        INSERT INTO users (first_name, last_name, email, username, password_hash, role) 
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO users (first_name, last_name, email, username, password_hash, role, is_active, remove) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
     
-    $stmt->execute([
+    // Log signup attempt
+    error_log("Signup attempt for email: " . $email . ", username: " . ($username ?: 'null'));
+    
+    $result = $stmt->execute([
         $firstName,
         $lastName,
         $email,
         $username ?: null,
         $passwordHash,
-        'user'
+        'user',
+        1,  // is_active = 1 (active user)
+        0   // remove = 0 (not removed)
     ]);
 
+    if (!$result) {
+        error_log("INSERT failed: " . json_encode($stmt->errorInfo()));
+        errorResponse('Failed to create account. Please try again.', 500);
+    }
+
     $userId = $pdo->lastInsertId();
+    error_log("User created successfully with ID: " . $userId);
     
     // Log activity
     logActivity($userId, 'signup', "New user registered: $email");

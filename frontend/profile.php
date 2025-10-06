@@ -231,7 +231,7 @@ include './includes/header.php';
                         </div>
                         <div class="info-item">
                             <label>Email *</label>
-                            <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                            <input type="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" required disabled>
                         </div>
                         <div class="info-item">
                             <label>Username</label>
