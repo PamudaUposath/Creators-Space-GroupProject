@@ -1,0 +1,32 @@
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": [
+        "http://localhost",
+        "http://localhost:3000", 
+        "http://localhost:8000",
+        "http://127.0.0.1",
+        "https://your-domain.com",
+        "*"
+      ],
+      "AllowedMethods": [
+        "GET",
+        "HEAD"
+      ],
+      "AllowedHeaders": [
+        "*",
+        "Range",
+        "Content-Type",
+        "Accept",
+        "Authorization"
+      ],
+      "ExposeHeaders": [
+        "Accept-Ranges",
+        "Content-Range", 
+        "Content-Encoding",
+        "Content-Length"
+      ],
+      "MaxAgeSeconds": 86400
+    }
+  ]
+}
